@@ -1,7 +1,6 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.infrastructure.repositories.impl;
+package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
@@ -10,24 +9,18 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.StringUtils;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
-import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsDTO;
-import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsPerMonthDTO;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.LendingRepository;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
-import pt.psoft.g1.psoftg1.readermanagement.services.ReaderAverageDto;
-import pt.psoft.g1.psoftg1.readermanagement.services.ReaderLendingsAvgPerMonthDto;
 import pt.psoft.g1.psoftg1.shared.services.Page;
-import pt.psoft.g1.psoftg1.usermanagement.model.User;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public interface SpringDataLendingRepository extends LendingRepository, LendingRepoCustom, CrudRepository<Lending, Long> {
     @Override
     @Query("SELECT l " +
-            "FROM Lending l " +
+            "FROM LendingEntity l " +
             "WHERE l.lendingNumber.lendingNumber = :lendingNumber")
     Optional<Lending> findByLendingNumber(String lendingNumber);
 
@@ -35,7 +28,7 @@ public interface SpringDataLendingRepository extends LendingRepository, LendingR
 
     @Override
     @Query("SELECT l " +
-            "FROM Lending l " +
+            "FROM LendingEntity l " +
             "JOIN Book b ON l.book.pk = b.pk " +
             "JOIN ReaderDetails r ON l.readerDetails.pk = r.pk " +
             "WHERE b.isbn.isbn = :isbn " +
@@ -44,13 +37,13 @@ public interface SpringDataLendingRepository extends LendingRepository, LendingR
 
     @Override
     @Query("SELECT COUNT (l) " +
-            "FROM Lending l " +
+            "FROM LendingEntity l " +
             "WHERE YEAR(l.startDate) = YEAR(CURRENT_DATE)")
     int getCountFromCurrentYear();
 
     @Override
     @Query("SELECT l " +
-            "FROM Lending l " +
+            "FROM LendingEntity l " +
                 "JOIN ReaderDetails r ON l.readerDetails.pk = r.pk " +
             "WHERE r.readerNumber.readerNumber = :readerNumber " +
                 "AND l.returnedDate IS NULL")
@@ -59,14 +52,14 @@ public interface SpringDataLendingRepository extends LendingRepository, LendingR
     @Override
     @Query(value =
             "SELECT AVG(DATEDIFF(day, l.start_date, l.returned_date)) " +
-            "FROM Lending l"
+            "FROM LendingEntity l"
             , nativeQuery = true)
     Double getAverageDuration();
 
     @Override
     @Query(value =
             "SELECT AVG(DATEDIFF(day, l.start_date, l.returned_date)) " +
-                    "FROM Lending l " +
+                    "FROM LendingEntity l " +
                     "JOIN BOOK b ON l.BOOK_PK = b.PK " +
                     "WHERE b.ISBN = :isbn"
             , nativeQuery = true)

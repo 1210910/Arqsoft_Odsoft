@@ -19,7 +19,7 @@ public interface SpringDataAuthorRepository extends AuthorRepository, CrudReposi
     @Query("SELECT new pt.psoft.g1.psoftg1.authormanagement.api.AuthorLendingView(a.name.name, COUNT(l.pk)) " +
             "FROM Book b " +
             "JOIN b.authors a " +
-            "JOIN Lending l ON l.book.pk = b.pk " +
+            "JOIN LendingH2Entity l ON l.book.pk = b.pk " +
             "GROUP BY a.name " +
             "ORDER BY COUNT(l) DESC")
     Page<AuthorLendingView> findTopAuthorByLendings(Pageable pageable);

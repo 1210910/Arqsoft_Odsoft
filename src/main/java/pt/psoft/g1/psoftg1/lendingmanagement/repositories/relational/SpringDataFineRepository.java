@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.infrastructure.repositories.impl;
+package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,8 +12,8 @@ public interface SpringDataFineRepository extends FineRepository, CrudRepository
 
     @Override
     @Query("SELECT f " +
-            "FROM Fine f " +
-            "JOIN Lending l ON f.lending.pk = l.pk " +
+            "FROM FineEntity f " +
+            "JOIN LendingEntity l ON f.lendingEntity.pk = l.pk " +
             "WHERE l.lendingNumber.lendingNumber = :lendingNumber")
     Optional<Fine> findByLendingNumber(String lendingNumber);
 

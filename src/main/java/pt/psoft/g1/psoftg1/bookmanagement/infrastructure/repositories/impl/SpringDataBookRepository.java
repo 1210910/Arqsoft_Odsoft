@@ -33,7 +33,7 @@ public interface SpringDataBookRepository  extends BookRepository, BookRepoCusto
     @Override
     @Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO(b, COUNT(l)) " +
                 "FROM Book b " +
-                "JOIN Lending l ON l.book = b " +
+                "JOIN LendingH2Entity l ON l.book = b " +
                 "WHERE l.startDate > :oneYearAgo " +
                 "GROUP BY b " +
                 "ORDER BY COUNT(l) DESC")

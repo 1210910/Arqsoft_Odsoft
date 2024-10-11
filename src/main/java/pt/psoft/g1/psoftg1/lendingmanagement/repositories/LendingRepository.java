@@ -23,4 +23,6 @@ public interface LendingRepository {
 
     void delete(Lending lending);
 
+//    List<ReaderAverageDto> getAverageMonthlyPerReader(LocalDate startDate, LocalDate endDate);
+
 }

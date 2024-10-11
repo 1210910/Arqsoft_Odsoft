@@ -15,6 +15,7 @@ import pt.psoft.g1.psoftg1.exceptions.LendingForbiddenException;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingEntity;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.LendingRepository;
 import pt.psoft.g1.psoftg1.lendingmanagement.services.CreateLendingRequest;
 import pt.psoft.g1.psoftg1.lendingmanagement.services.LendingService;
@@ -154,7 +155,7 @@ class LendingServiceImplTest {
     @Test
     void testSetReturned() {
         int year = 2024, seq = 888;
-        var notReturnedLending = lendingRepository.save(Lending.newBootstrappingLending(book,
+        var notReturnedLending = lendingRepository.save(LendingEntity.newBootstrappingLending(book,
                 readerDetails,
                 year,
                 seq,
