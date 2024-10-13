@@ -1,14 +1,18 @@
 package pt.psoft.g1.psoftg1.lendingmanagement.model;
 
+import jakarta.persistence.MappedSuperclass;
+
 import java.time.LocalDate;
 
 /**
  * The LendingNumber class handles business logic related to the identifier of a Lending.
  * It contains year and sequential number validation and string formatting rules.
  */
+
 public class LendingNumber {
 
     private final String lendingNumber;
+
 
     /**
      * Constructs a new LendingNumber object based on a year and a given sequential number.

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.util.StringUtils;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingEntity;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.LendingRepository;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 import pt.psoft.g1.psoftg1.shared.services.Page;
@@ -17,11 +18,11 @@ import pt.psoft.g1.psoftg1.shared.services.Page;
 import java.time.LocalDate;
 import java.util.*;
 
-public interface SpringDataLendingRepository extends LendingRepository, LendingRepoCustom, CrudRepository<Lending, Long> {
+public interface SpringDataLendingRepository extends LendingRepository, LendingRepoCustom ,CrudRepository<LendingEntity, Long> {
     @Override
     @Query("SELECT l " +
             "FROM LendingEntity l " +
-            "WHERE l.lendingNumber.lendingNumber = :lendingNumber")
+            "WHERE l.lendingNumberEntity.lendingNumber = :lendingNumber")
     Optional<Lending> findByLendingNumber(String lendingNumber);
 
     //http://www.h2database.com/html/commands.html

@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.LendingNumber;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * The {@code LendingEntity} class defines the persistence model for the Lending system.
@@ -24,10 +26,7 @@ public class LendingEntity extends Lending {
     private Long pk;
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "lendingNumber", column = @Column(name = "LENDING_NUMBER", nullable = false, unique = true))
-    })
-    private LendingNumberEntity lendingNumber; // Reference to the embedded LendingNumberEntity
+    private LendingNumberEntity lendingNumberEntity; // Reference to the embedded LendingNumberEntity
 
 
     @NotNull
@@ -62,26 +61,39 @@ public class LendingEntity extends Lending {
      *
      * @param book the book being lent.
      * @param readerDetails the reader borrowing the book.
-     * @param lendingNumber the unique lending number.
+
      * @param seq sequential number for the lending.
      * @param lendingDuration the lending duration in days.
      * @param fineValuePerDayInCents fine value per overdue day.
      */
-    public LendingEntity(Book book, ReaderDetails readerDetails, LendingNumberEntity lendingNumber, int seq, int lendingDuration, int fineValuePerDayInCents) {
-        super(book, readerDetails, seq, lendingDuration, fineValuePerDayInCents);
-        this.lendingNumber = lendingNumber; // Initialize the lending number
+    public LendingEntity(Book book, ReaderDetails readerDetails, int seq, int lendingDuration, int fineValuePerDayInCents) {
+        try {
+            this.book = Objects.requireNonNull(book);
+            this.readerDetails = Objects.requireNonNull(readerDetails);
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Null objects passed to lending");
+        }
+        this.lendingNumberEntity = new LendingNumberEntity(seq);
+        this.startDate = LocalDate.now();
+        this.limitDate = LocalDate.now().plusDays(lendingDuration);
+        this.returnedDate = null;
     }
 
     /**
      * Factory method for bootstrapping.
      */
-    public static LendingEntity newBootstrappingLending(Book book, ReaderDetails readerDetails, LendingNumberEntity lendingNumber, int year, int seq,
+    public static LendingEntity newBootstrappingLending(Book book, ReaderDetails readerDetails, int year, int seq,
                                                         LocalDate startDate, LocalDate returnedDate, int lendingDuration,
                                                         int fineValuePerDayInCents) {
-        LendingEntity lendingEntity = new LendingEntity(book, readerDetails, lendingNumber, seq, lendingDuration, fineValuePerDayInCents);
+        LendingEntity lendingEntity = new LendingEntity(book, readerDetails, seq, lendingDuration, fineValuePerDayInCents);
         lendingEntity.startDate = startDate;
         lendingEntity.limitDate = startDate.plusDays(lendingDuration);
         lendingEntity.returnedDate = returnedDate;
         return lendingEntity;
     }
+
+    public String getLendingNumber() {
+        return this.lendingNumberEntity.toString();
+    }
+
 }

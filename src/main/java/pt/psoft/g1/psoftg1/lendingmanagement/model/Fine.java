@@ -1,5 +1,6 @@
 package pt.psoft.g1.psoftg1.lendingmanagement.model;
 
+import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,13 +12,14 @@ import java.util.Objects;
  * <p>It stores its current value, and the associated {@code Lending}.
  * */
 @Getter
+
 public class Fine {
 
-    @PositiveOrZero
+
     private final int fineValuePerDayInCents;
 
     /** Fine value in Euro cents */
-    @PositiveOrZero
+
     private int centsValue;
 
     @Setter

@@ -1,5 +1,6 @@
 package pt.psoft.g1.psoftg1.lendingmanagement.model;
 
+import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -22,20 +23,21 @@ import java.util.Optional;
  * natural key ({@code LendingNumber}) with its own business rules.
  */
 @Getter
+
 public class Lending {
 
     private LendingNumber lendingNumber;
 
-    @NotNull
+
     private Book book;
 
-    @NotNull
+
     private ReaderDetails readerDetails;
 
-    @NotNull
+
     private LocalDate startDate;
 
-    @NotNull
+
     private LocalDate limitDate;
 
     private LocalDate returnedDate;
@@ -43,7 +45,7 @@ public class Lending {
 
     private long version;
 
-    @Size(min = 0, max = 1024)
+
     private String commentary = null;
 
     private int fineValuePerDayInCents;
