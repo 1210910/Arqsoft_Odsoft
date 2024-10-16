@@ -104,7 +104,7 @@ class LendingServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        lendingRepository.delete(lending);
+        //lendingRepository.delete(lending);
         readerRepository.delete(readerDetails);
         userRepository.delete(reader);
         bookRepository.delete(book);
@@ -137,7 +137,7 @@ class LendingServiceImplTest {
         // 4th lending
         assertThrows(LendingForbiddenException.class, () -> lendingService.create(request));
 
-        lendingRepository.delete(lending3);
+       // lendingRepository.delete(lending3);
         lendingRepository.save(Lending.newBootstrappingLending(book,
                 readerDetails,
                 2024,
