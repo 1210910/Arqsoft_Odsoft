@@ -2,14 +2,21 @@ package pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.StaleObjectStateException;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.LendingNumber;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The {@code LendingEntity} class defines the persistence model for the Lending system.
@@ -19,7 +26,8 @@ import java.util.Objects;
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = {"LENDING_NUMBER"})})
-public class LendingEntity extends Lending {
+@NoArgsConstructor
+public class LendingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,19 +60,27 @@ public class LendingEntity extends Lending {
     @Version
     private long version;
 
-    protected LendingEntity() {
-        super(); // Default constructor for ORM
-    }
+    @Size(min = 0, max = 1024)
+    @Column(length = 1024)
+    private String commentary = null;
+
+    @Transient
+    private int fineValuePerDayInCents;
+    @Transient
+    private Integer daysUntilReturn;
+
+
+    private Integer daysOverdue;
 
     /**
-     * Constructs a new {@code LendingEntity} object by calling the parent {@code Lending} constructor.
+     * Constructs a new {@code Lending} object.
      *
-     * @param book the book being lent.
-     * @param readerDetails the reader borrowing the book.
-
-     * @param seq sequential number for the lending.
-     * @param lendingDuration the lending duration in days.
-     * @param fineValuePerDayInCents fine value per overdue day.
+     * @param book             {@code Book} object, which should be retrieved from the database.
+     * @param readerDetails    {@code Reader} object, which should be retrieved from the database.
+     * @param seq              sequential number, which should be obtained from the year's count on the database.
+     * @param lendingDuration  duration for the lending in days.
+     * @param fineValuePerDayInCents fine value per day in cents.
+     * @throws NullPointerException if any of the arguments is {@code null}
      */
     public LendingEntity(Book book, ReaderDetails readerDetails, int seq, int lendingDuration, int fineValuePerDayInCents) {
         try {
@@ -77,23 +93,110 @@ public class LendingEntity extends Lending {
         this.startDate = LocalDate.now();
         this.limitDate = LocalDate.now().plusDays(lendingDuration);
         this.returnedDate = null;
+        this.fineValuePerDayInCents = fineValuePerDayInCents;
+        setDaysUntilReturn();
+        setDaysOverdue();
+    }
+    @Builder
+    public LendingEntity(Book book, ReaderDetails readerDetails, LendingNumberEntity lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
+        try {
+            this.book = Objects.requireNonNull(book);
+            this.readerDetails = Objects.requireNonNull(readerDetails);
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Null objects passed to lending");
+        }
+        this.lendingNumberEntity = lendingNumber;
+        this.startDate = startDate;
+        this.limitDate = limitDate;
+        this.returnedDate = returnedDate;
+        this.fineValuePerDayInCents = fineValuePerDayInCents;
+        setDaysUntilReturn();
+        setDaysOverdue();
     }
 
-    /**
-     * Factory method for bootstrapping.
-     */
-    public static LendingEntity newBootstrappingLending(Book book, ReaderDetails readerDetails, int year, int seq,
-                                                        LocalDate startDate, LocalDate returnedDate, int lendingDuration,
-                                                        int fineValuePerDayInCents) {
-        LendingEntity lendingEntity = new LendingEntity(book, readerDetails, seq, lendingDuration, fineValuePerDayInCents);
-        lendingEntity.startDate = startDate;
-        lendingEntity.limitDate = startDate.plusDays(lendingDuration);
-        lendingEntity.returnedDate = returnedDate;
-        return lendingEntity;
+    public void setReturned(final long desiredVersion, final String commentary) {
+        if (this.returnedDate != null) {
+            throw new IllegalArgumentException("Book has already been returned!");
+        }
+
+        // Check current version
+        if (this.version != desiredVersion) {
+            throw new StaleObjectStateException("Object was already modified by another user", this.lendingNumberEntity);
+        }
+
+        if (commentary != null) {
+            this.commentary = commentary;
+        }
+
+        this.returnedDate = LocalDate.now();
+    }
+
+    public int getDaysDelayed() {
+        if (this.returnedDate != null) {
+            return Math.max((int) ChronoUnit.DAYS.between(this.limitDate, this.returnedDate), 0);
+        } else {
+            return Math.max((int) ChronoUnit.DAYS.between(this.limitDate, LocalDate.now()), 0);
+        }
+    }
+
+    private void setDaysUntilReturn() {
+        int daysUntilReturn = (int) ChronoUnit.DAYS.between(LocalDate.now(), this.limitDate);
+        this.daysUntilReturn = (this.returnedDate != null || daysUntilReturn < 0) ? null : daysUntilReturn;
+    }
+
+    private void setDaysOverdue() {
+        int days = getDaysDelayed();
+        this.daysOverdue = (days > 0) ? days : null;
+    }
+
+    public Optional<Integer> getDaysUntilReturn() {
+        setDaysUntilReturn();
+        return Optional.ofNullable(daysUntilReturn);
+    }
+
+    public Optional<Integer> getDaysOverdue() {
+        setDaysOverdue();
+        return Optional.ofNullable(daysOverdue);
+    }
+
+    public Optional<Integer> getFineValueInCents() {
+        Optional<Integer> fineValueInCents = Optional.empty();
+        int days = getDaysDelayed();
+        if (days > 0) {
+            fineValueInCents = Optional.of(fineValuePerDayInCents * days);
+        }
+        return fineValueInCents;
+    }
+
+    public String getTitle() {
+        return this.book.getTitle().toString();
     }
 
     public String getLendingNumber() {
         return this.lendingNumberEntity.toString();
+    }
+
+
+
+    /** Factory method for bootstrapping. */
+    public static LendingEntity newBootstrappingLending(Book book, ReaderDetails readerDetails,
+                                                  int year, int seq, LocalDate startDate,
+                                                  LocalDate returnedDate, int lendingDuration,
+                                                  int fineValuePerDayInCents) {
+        LendingEntity lending = new LendingEntity();
+
+        try {
+            lending.book = Objects.requireNonNull(book);
+            lending.readerDetails = Objects.requireNonNull(readerDetails);
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Null objects passed to lending");
+        }
+        lending.lendingNumberEntity = new LendingNumberEntity(year, seq);
+        lending.startDate = startDate;
+        lending.limitDate = startDate.plusDays(lendingDuration);
+        lending.fineValuePerDayInCents = fineValuePerDayInCents;
+        lending.returnedDate = returnedDate;
+        return lending;
     }
 
 }

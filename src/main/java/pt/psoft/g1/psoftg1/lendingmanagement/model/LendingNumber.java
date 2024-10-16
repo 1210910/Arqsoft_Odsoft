@@ -1,6 +1,8 @@
 package pt.psoft.g1.psoftg1.lendingmanagement.model;
 
 import jakarta.persistence.MappedSuperclass;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -8,10 +10,10 @@ import java.time.LocalDate;
  * The LendingNumber class handles business logic related to the identifier of a Lending.
  * It contains year and sequential number validation and string formatting rules.
  */
-
+@NoArgsConstructor
 public class LendingNumber {
 
-    private final String lendingNumber;
+    private  String lendingNumber;
 
 
     /**
@@ -34,6 +36,7 @@ public class LendingNumber {
      *
      * @param lendingNumber String containing the lending number.
      */
+    @Builder
     public LendingNumber(String lendingNumber) {
         if (lendingNumber == null)
             throw new IllegalArgumentException("Lending number cannot be null");
@@ -70,4 +73,6 @@ public class LendingNumber {
     public String toString() {
         return this.lendingNumber;
     }
+
+
 }

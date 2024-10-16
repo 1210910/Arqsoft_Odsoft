@@ -155,7 +155,7 @@ class LendingServiceImplTest {
     @Test
     void testSetReturned() {
         int year = 2024, seq = 888;
-        var notReturnedLending = lendingRepository.save(LendingEntity.newBootstrappingLending(book,
+        var notReturnedLending = lendingRepository.save(Lending.newBootstrappingLending(book,
                 readerDetails,
                 year,
                 seq,

@@ -3,7 +3,10 @@ package pt.psoft.g1.psoftg1.lendingmanagement.model;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
@@ -23,8 +26,9 @@ import java.util.Optional;
  * natural key ({@code LendingNumber}) with its own business rules.
  */
 @Getter
-
+@NoArgsConstructor
 public class Lending {
+
 
     private LendingNumber lendingNumber;
 
@@ -51,6 +55,8 @@ public class Lending {
     private int fineValuePerDayInCents;
 
     private Integer daysUntilReturn;
+
+    @Getter
     private Integer daysOverdue;
 
     /**
@@ -74,6 +80,22 @@ public class Lending {
         this.startDate = LocalDate.now();
         this.limitDate = LocalDate.now().plusDays(lendingDuration);
         this.returnedDate = null;
+        this.fineValuePerDayInCents = fineValuePerDayInCents;
+        setDaysUntilReturn();
+        setDaysOverdue();
+    }
+    @Builder
+    public Lending(Book book, ReaderDetails readerDetails, LendingNumber lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
+        try {
+            this.book = Objects.requireNonNull(book);
+            this.readerDetails = Objects.requireNonNull(readerDetails);
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Null objects passed to lending");
+        }
+        this.lendingNumber = lendingNumber;
+        this.startDate = startDate;
+        this.limitDate = limitDate;
+        this.returnedDate = returnedDate;
         this.fineValuePerDayInCents = fineValuePerDayInCents;
         setDaysUntilReturn();
         setDaysOverdue();
@@ -141,8 +163,7 @@ public class Lending {
         return this.lendingNumber.toString();
     }
 
-    /** Protected empty constructor for ORM only. */
-    protected Lending() {}
+
 
     /** Factory method for bootstrapping. */
     public static Lending newBootstrappingLending(Book book, ReaderDetails readerDetails,

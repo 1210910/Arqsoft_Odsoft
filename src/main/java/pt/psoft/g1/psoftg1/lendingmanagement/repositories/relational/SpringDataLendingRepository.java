@@ -1,5 +1,5 @@
 package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational;
-
+/*
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -67,12 +67,17 @@ public interface SpringDataLendingRepository extends LendingRepository, LendingR
     Double getAvgLendingDurationByIsbn(@Param("isbn") String isbn);
 
 
+
+
 }
+
 
 interface LendingRepoCustom {
     List<Lending> getOverdue(Page page);
     List<Lending> searchLendings(Page page, String readerNumber, String isbn, Boolean returned, LocalDate startDate, LocalDate endDate);
 //    List<ReaderAverageDto> getAverageMonthlyPerReader(LocalDate startDate, LocalDate endDate);
+
+
 
 }
 
@@ -81,6 +86,10 @@ class LendingRepoCustomImpl implements LendingRepoCustom {
     // get the underlying JPA Entity Manager via spring thru constructor dependency
     // injection
     private final EntityManager em;
+
+
+
+
 
     @Override
     public List<Lending> getOverdue(Page page)
@@ -106,6 +115,8 @@ class LendingRepoCustomImpl implements LendingRepoCustom {
 
         return q.getResultList();
     }
+
+
 
     public List<Lending> searchLendings(Page page, String readerNumber, String isbn, Boolean returned, LocalDate startDate, LocalDate endDate){
         final CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -210,5 +221,6 @@ class LendingRepoCustomImpl implements LendingRepoCustom {
 
 
         return null;
-    }*/
+    }
 }
+*/

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Fine;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
+
+import java.util.Objects;
 
 /**
  * The {@code FineEntity} class defines the data model for the Fine in the database.
@@ -33,18 +36,31 @@ public class FineEntity extends Fine {
     @JoinColumn(name = "lending_pk", nullable = false, unique = true)
     private LendingEntity lendingEntity;
 
-    /** Protected empty constructor for ORM only. */
-    protected FineEntity() {
-        super(); // Default constructor for ORM
+    /**
+     * Constructs a new {@code Fine} object. Sets the current value of the fine,
+     * as well as the fine value per day at the time of creation.
+     *
+     * @param lending transaction which generates this fine.
+     */
+    public FineEntity(LendingEntity lending) {
+        if (lending.getDaysDelayed() <= 0) {
+            throw new IllegalArgumentException("Lending is not overdue");
+        }
+        this.fineValuePerDayInCents = lending.getFineValuePerDayInCents();
+        this.centsValue = fineValuePerDayInCents * lending.getDaysDelayed();
+        this.lendingEntity = Objects.requireNonNull(lending);
     }
 
+    /** Protected empty constructor for ORM only. */
+    protected FineEntity() {
+        this.fineValuePerDayInCents = 0;
+    }
+
+
     /**
-     * Constructs a new {@code FineEntity} object by calling the parent {@code Fine} constructor.
-     *
-     * @param lendingEntity transaction which generates this fine.
+     * Recalculates the fine based on the current delayed days.
      */
-    public FineEntity(LendingEntity lendingEntity) {
-        super(lendingEntity); // Calls the Fine logic
-        this.lendingEntity = lendingEntity;
+    public void recalculateFine() {
+        this.centsValue = fineValuePerDayInCents * lendingEntity.getDaysDelayed();
     }
 }
