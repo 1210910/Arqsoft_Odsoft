@@ -36,7 +36,10 @@ public class LendingServiceImpl implements LendingService{
 
     @Override
     public Optional<Lending> findByLendingNumber(String lendingNumber){
-        return lendingRepository.findByLendingNumber(lendingNumber);
+        System.out.println(lendingRepository.findByLendingNumber(lendingNumber).get().getClass());
+        Optional<Lending> lending = lendingRepository.findByLendingNumber(lendingNumber);
+        System.out.println(lending);
+        return lending;
     }
 
     @Override

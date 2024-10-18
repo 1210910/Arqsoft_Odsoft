@@ -170,6 +170,7 @@ public class AuthorController {
         }
 
         String photoFile = authorDetails.getPhoto().getPhotoFile();
+        System.out.println(photoFile);
         byte[] image = this.fileStorageService.getFile(photoFile);
         String fileFormat = this.fileStorageService.getExtension(authorDetails.getPhoto().getPhotoFile())
                 .orElseThrow(() -> new ValidationException("Unable to get file extension"));

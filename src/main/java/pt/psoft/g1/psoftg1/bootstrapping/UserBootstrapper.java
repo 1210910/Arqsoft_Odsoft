@@ -52,7 +52,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
             //String dateFormat = LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String dateFormat = LocalDateTime.of(2024,1,20,0,0,0,0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, manuel.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, manuel.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
 
@@ -88,7 +88,7 @@ public class UserBootstrapper implements CommandLineRunner {
             final Reader joao = Reader.newReader("joao@gmail.com", "Joaoratao!123", "João Ratao");
             userRepository.save(joao);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 3, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, joao.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, joao.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
             //jdbcTemplate.update("UPDATE PUBLIC.T_USER SET CREATED_AT = ? WHERE USERNAME = ?", LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")), joao.getUsername());jdbcTemplate.update("UPDATE PUBLIC.T_USER SET CREATED_AT = ? WHERE USERNAME = ?", LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")), joao.getUsername());
@@ -115,7 +115,7 @@ public class UserBootstrapper implements CommandLineRunner {
             final Reader pedro = Reader.newReader("pedro@gmail.com", "Pedrodascenas!123", "Pedro Das Cenas");
             userRepository.save(pedro);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, pedro.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, pedro.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
             Optional<ReaderDetails> readerDetails3 = readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/3");
@@ -139,7 +139,7 @@ public class UserBootstrapper implements CommandLineRunner {
             final Reader catarina = Reader.newReader("catarina@gmail.com", "Catarinamartins!123", "Catarina Martins");
             userRepository.save(catarina);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 3, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, catarina.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, catarina.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
             Optional<ReaderDetails> readerDetails4 = readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/4");
@@ -163,7 +163,7 @@ public class UserBootstrapper implements CommandLineRunner {
             final Reader marcelo = Reader.newReader("marcelo@gmail.com", "Marcelosousa!123", "Marcelo Rebelo de Sousa");
             userRepository.save(marcelo);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, marcelo.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, marcelo.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
             Optional<ReaderDetails> readerDetails5 = readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/5");
@@ -187,7 +187,7 @@ public class UserBootstrapper implements CommandLineRunner {
             final Reader luis = Reader.newReader("luis@gmail.com", "Luismontenegro!123", "Luís Montenegro");
             userRepository.save(luis);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 3, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, luis.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, luis.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
             Optional<ReaderDetails> readerDetails5 = readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/6");
@@ -211,7 +211,7 @@ public class UserBootstrapper implements CommandLineRunner {
             final Reader antonio = Reader.newReader("antonio@gmail.com", "Antoniocosta!123", "António Costa");
             userRepository.save(antonio);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 6, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, antonio.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, antonio.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
             Optional<ReaderDetails> readerDetails5 = readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/7");
@@ -235,7 +235,7 @@ public class UserBootstrapper implements CommandLineRunner {
             final Reader andre = Reader.newReader("andre@gmail.com", "Andreventura!123", "André Ventura");
             userRepository.save(andre);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 5, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-            String query = String.format("UPDATE dbo.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, andre.getUsername());
+            String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, andre.getUsername());
             //jdbcTemplate.update(query);
             queriesToExecute.add(query);
             Optional<ReaderDetails> readerDetails5 = readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/8");
@@ -265,7 +265,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
     private void executeQueries() {
         for (String query : queriesToExecute) {
-            jdbcTemplate.update(query);
+            //jdbcTemplate.update(query);
         }
     }
 }

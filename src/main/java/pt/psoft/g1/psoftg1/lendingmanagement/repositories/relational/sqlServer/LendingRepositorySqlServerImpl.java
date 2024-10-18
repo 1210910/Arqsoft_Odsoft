@@ -5,7 +5,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Profile("sqlServer")
+@Qualifier("lendingSqlServerRepo")
 @Component
 public class LendingRepositorySqlServerImpl implements LendingRepository {
 
@@ -41,15 +45,29 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
 
     @Override
     public Optional<Lending> findByLendingNumber(String lendingNumber) {
-
-        return lendingRepositorySqlServer.findByLendingNumber(lendingNumber);
+        // use mapper to convert LendingEntity to Lending
+        if (lendingRepositorySqlServer.findByLendingNumber(lendingNumber).isEmpty()) {
+            return Optional.empty();
+        }else {
+            Lending lending = lendingEntityMapper.sqlServerToModel(lendingRepositorySqlServer.findByLendingNumber(lendingNumber).get());
+            System.out.println(lending);
+            return Optional.of(lending);
+        }
 
     }
 
     @Override
     public List<Lending> listByReaderNumberAndIsbn(String readerNumber, String isbn) {
         // Exemplo de delegação de uma busca
-        return this.lendingRepositorySqlServer.listByReaderNumberAndIsbn(readerNumber,isbn); // Implementar ou delegar para o repo JPA
+
+        List <Lending> lendings = new ArrayList<>();
+
+        for (LendingEntity lendingEntity : lendingRepositorySqlServer.listByReaderNumberAndIsbn(readerNumber, isbn)) {
+            lendings.add(lendingEntityMapper.sqlServerToModel(lendingEntity));
+        }
+
+        return lendings;
+
     }
 
     @Override
@@ -60,7 +78,14 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
 
     @Override
     public List<Lending> listOutstandingByReaderNumber(String readerNumber) {
-        return this.lendingRepositorySqlServer.listOutstandingByReaderNumber(readerNumber);
+        List <Lending> lendings = new ArrayList<>();
+
+        for (LendingEntity lendingEntity : lendingRepositorySqlServer.listOutstandingByReaderNumber(readerNumber)) {
+            lendings.add(lendingEntityMapper.sqlServerToModel(lendingEntity));
+        }
+
+        return lendings;
+
     }
 
     @Override
@@ -76,8 +101,8 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
     @Override
     public List<Lending> getOverdue(Page page) {
         final CriteriaBuilder cb = em.getCriteriaBuilder();
-        final CriteriaQuery<Lending> cq = cb.createQuery(Lending.class);
-        final Root<Lending> root = cq.from(Lending.class);
+        final CriteriaQuery<LendingEntity> cq = cb.createQuery(LendingEntity.class);
+        final Root<LendingEntity> root = cq.from(LendingEntity.class);
         cq.select(root);
 
         final List<Predicate> where = new ArrayList<>();
@@ -89,20 +114,26 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
         cq.where(where.toArray(new Predicate[0]));
         cq.orderBy(cb.asc(root.get("limitDate"))); // Order by limitDate, oldest first
 
-        final TypedQuery<Lending> q = em.createQuery(cq);
+        final TypedQuery<LendingEntity> q = em.createQuery(cq);
         q.setFirstResult((page.getNumber() - 1) * page.getLimit());
         q.setMaxResults(page.getLimit());
 
-        return q.getResultList();
+        List<Lending> lendings = new ArrayList<>();
+
+        for (LendingEntity lendingEntity : q.getResultList()) {
+            lendings.add(lendingEntityMapper.sqlServerToModel(lendingEntity));
+        }
+
+        return lendings;
     }
 
     @Override
     public List<Lending> searchLendings(Page page, String readerNumber, String isbn, Boolean returned, LocalDate startDate, LocalDate endDate) {
         final CriteriaBuilder cb = em.getCriteriaBuilder();
-        final CriteriaQuery<Lending> cq = cb.createQuery(Lending.class);
-        final Root<Lending> lendingRoot = cq.from(Lending.class);
-        final Join<Lending, Book> bookJoin = lendingRoot.join("book");
-        final Join<Lending, ReaderDetails> readerDetailsJoin = lendingRoot.join("readerDetails");
+        final CriteriaQuery<LendingEntity> cq = cb.createQuery(LendingEntity.class);
+        final Root<LendingEntity> lendingRoot = cq.from(LendingEntity.class);
+        final Join<LendingEntity, Book> bookJoin = lendingRoot.join("book");
+        final Join<LendingEntity, ReaderDetails> readerDetailsJoin = lendingRoot.join("readerDetails");
         cq.select(lendingRoot);
 
         final List<Predicate> where = new ArrayList<>();
@@ -126,11 +157,17 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
         cq.where(where.toArray(new Predicate[0]));
         cq.orderBy(cb.asc(lendingRoot.get("lendingNumber")));
 
-        final TypedQuery<Lending> q = em.createQuery(cq);
+        final TypedQuery<LendingEntity> q = em.createQuery(cq);
         q.setFirstResult((page.getNumber() - 1) * page.getLimit());
         q.setMaxResults(page.getLimit());
 
-        return q.getResultList();
+        List<Lending> lendings = new ArrayList<>();
+
+        for (LendingEntity lendingEntity : q.getResultList()) {
+            lendings.add(lendingEntityMapper.sqlServerToModel(lendingEntity));
+        }
+
+        return lendings;
     }
 
     @Override

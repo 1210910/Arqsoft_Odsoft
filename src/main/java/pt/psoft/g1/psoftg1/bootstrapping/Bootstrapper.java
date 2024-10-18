@@ -53,11 +53,11 @@ public class Bootstrapper implements CommandLineRunner {
     @Transactional
     public void run(final String... args) {
         createAuthors();
-        createGenres();
-        createBooks();
-        loadForbiddenNames();
-        createLendings();
-        createPhotos();
+        //createGenres();
+        //createBooks();
+        //loadForbiddenNames();
+        //createLendings();
+        //createPhotos();
     }
 
     private void createAuthors() {
@@ -65,6 +65,7 @@ public class Bootstrapper implements CommandLineRunner {
             final Author author = new Author("Manuel Antonio Pina",
                     "Manuel António Pina foi um jornalista e escritor português, premiado em 2011 com o Prémio Camões",
                     null);
+            System.out.println(author.getPhotoURI());
             authorRepository.save(author);
         }
         if (authorRepository.searchByNameName("Antoine de Saint Exupéry").isEmpty()) {
@@ -128,7 +129,7 @@ public class Bootstrapper implements CommandLineRunner {
             authorRepository.save(author);
         }
     }
-
+    /*
     private void createGenres() {
         if (genreRepository.findByString("Fantasia").isEmpty()) {
             final Genre g1 = new Genre("Fantasia");
@@ -538,8 +539,10 @@ public class Bootstrapper implements CommandLineRunner {
         /*Optional<Photo> photoJoao = photoRepository.findByPhotoFile("foto-joao.jpg");
         if(photoJoao.isEmpty()) {
             Photo photo = new Photo(Paths.get(""))
-        }*/
+        }
     }
+    */
+
 }
 
 

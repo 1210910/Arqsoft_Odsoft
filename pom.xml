@@ -115,7 +115,17 @@
 			<artifactId>mssql-jdbc</artifactId>
 			<version>11.2.0.jre8</version> <!-- Check the latest version on Maven Central -->
 		</dependency>
+
+		<!-- Mongo Driver -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+
+
 	</dependencies>
+
+
 
 	<build>
 		<plugins>

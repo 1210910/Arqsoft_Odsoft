@@ -24,10 +24,10 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorMapper mapper;
     private final PhotoRepository photoRepository;
 
-    @Override
-    public Iterable<Author> findAll() {
-        return authorRepository.findAll();
-    }
+    //@Override
+    //public Iterable<Author> findAll() {
+    //    return authorRepository.findAll();
+    //}
 
     @Override
     public Optional<Author> findByAuthorNumber(final Long authorNumber) {

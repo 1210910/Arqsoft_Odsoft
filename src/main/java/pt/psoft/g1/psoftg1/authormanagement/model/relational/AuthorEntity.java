@@ -1,31 +1,34 @@
-package pt.psoft.g1.psoftg1.authormanagement.model;
+package pt.psoft.g1.psoftg1.authormanagement.model.relational;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.StaleObjectStateException;
+import pt.psoft.g1.psoftg1.authormanagement.model.Bio;
 import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 import pt.psoft.g1.psoftg1.shared.model.Name;
 
-public class Author extends EntityWithPhoto {
-
+@Entity
+public class AuthorEntity extends EntityWithPhoto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "AUTHOR_NUMBER")
     @Getter
     private Long authorNumber;
 
+    @Version
     private long version;
 
+    @Embedded
     private Name name;
 
+    @Embedded
     private Bio bio;
 
     public void setName(String name) {
         this.name = new Name(name);
-    }
-
-    public void setAuthorNumber(Long authorNumber) {
-        this.authorNumber = authorNumber;
     }
 
     public void setBio(String bio) {
@@ -40,15 +43,14 @@ public class Author extends EntityWithPhoto {
         return authorNumber;
     }
 
-
-    public Author(String name, String bio, String photoURI) {
-
+    @Builder
+    public AuthorEntity(String name, String bio, String photoURI) {
         setName(name);
         setBio(bio);
         setPhotoInternal(photoURI);
     }
 
-    protected Author() {
+    protected AuthorEntity() {
         // got ORM only
     }
 
@@ -78,16 +80,5 @@ public class Author extends EntityWithPhoto {
     public String getBio() {
         return this.bio.toString();
     }
-
-    public String getPhotoURI() {
-        if (super.getPhoto() == null) {
-            return "";
-        }else {
-            return super.getPhoto().getPhotoFile();
-        }
-
-    }
-
-
 }
 

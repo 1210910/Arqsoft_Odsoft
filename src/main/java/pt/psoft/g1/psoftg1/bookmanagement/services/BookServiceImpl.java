@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
+import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
+
 import pt.psoft.g1.psoftg1.bookmanagement.model.*;
 import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,16 +50,16 @@ public class BookServiceImpl implements BookService {
 		}
 
 		List<Long> authorNumbers = request.getAuthors();
-		List<Author> authors = new ArrayList<>();
+		List<AuthorEntity> authors = new ArrayList<>();
 		for (Long authorNumber : authorNumbers) {
 
-			Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber);
-			if(temp.isEmpty()) {
-				continue;
-			}
-
-			Author author = temp.get();
-			authors.add(author);
+			//Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber);
+			//if(temp.isEmpty()) {
+			//	continue;
+			//}
+			//
+			//Author author = temp.get();
+			//authors.add(author);
 		}
 
 		MultipartFile photo = request.getPhoto();
@@ -92,7 +94,7 @@ public class BookServiceImpl implements BookService {
                 authors.add(author);
             }
 
-            request.setAuthorObjList(authors);
+            //request.setAuthorObjList(authors);
         }
 
 		MultipartFile photo = request.getPhoto();

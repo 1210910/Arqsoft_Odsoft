@@ -11,14 +11,14 @@ import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingEn
 import java.util.List;
 import java.util.Optional;
 
-@Component( "lendingRepositorySqlServer" )
+
 public interface LendingRepositorySqlServer extends CrudRepository<LendingEntity, Long> {
 
 
     @Query("SELECT l " +
             "FROM LendingEntity l " +
             "WHERE l.lendingNumberEntity.lendingNumber = :lendingNumber")
-    Optional<Lending> findByLendingNumber(String lendingNumber);
+    Optional<LendingEntity> findByLendingNumber(String lendingNumber);
 
     //http://www.h2database.com/html/commands.html
 
@@ -29,7 +29,7 @@ public interface LendingRepositorySqlServer extends CrudRepository<LendingEntity
             "JOIN ReaderDetails r ON l.readerDetails.pk = r.pk " +
             "WHERE b.isbn.isbn = :isbn " +
             "AND r.readerNumber.readerNumber = :readerNumber ")
-    List<Lending> listByReaderNumberAndIsbn(String readerNumber, String isbn);
+    List<LendingEntity> listByReaderNumberAndIsbn(String readerNumber, String isbn);
 
 
     @Query("SELECT COUNT (l) " +
@@ -43,19 +43,19 @@ public interface LendingRepositorySqlServer extends CrudRepository<LendingEntity
             "JOIN ReaderDetails r ON l.readerDetails.pk = r.pk " +
             "WHERE r.readerNumber.readerNumber = :readerNumber " +
             "AND l.returnedDate IS NULL")
-    List<Lending> listOutstandingByReaderNumber(@Param("readerNumber") String readerNumber);
+    List<LendingEntity> listOutstandingByReaderNumber(@Param("readerNumber") String readerNumber);
 
 
     @Query(value =
             "SELECT AVG(DATEDIFF(day, l.start_date, l.returned_date)) " +
-                    "FROM LendingEntity l"
+                    "FROM lending_entity l"
             , nativeQuery = true)
     Double getAverageDuration();
 
 
     @Query(value =
             "SELECT AVG(DATEDIFF(day, l.start_date, l.returned_date)) " +
-                    "FROM LendingEntity l " +
+                    "FROM lending_entity l " +
                     "JOIN BOOK b ON l.BOOK_PK = b.PK " +
                     "WHERE b.ISBN = :isbn"
             , nativeQuery = true)

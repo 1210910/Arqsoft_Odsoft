@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface AuthorService {
 
-    Iterable<Author> findAll();
+    //Iterable<Author> findAll();
 
     Optional<Author> findByAuthorNumber(Long authorNumber);
 

@@ -4,6 +4,8 @@ import jakarta.annotation.Nullable;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
+import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
+
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class UpdateBookRequest {
 
     private List<Long> authors;
 
-    private List<Author> authorObjList;
+    private List<AuthorEntity> authorObjList;
 
     public UpdateBookRequest(String isbn, String title, String genre, @NonNull List<Long> authors, String description) {
         this.isbn = isbn;
