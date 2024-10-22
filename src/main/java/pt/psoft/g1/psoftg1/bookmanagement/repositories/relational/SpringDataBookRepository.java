@@ -1,5 +1,5 @@
-package pt.psoft.g1.psoftg1.bookmanagement.infrastructure.repositories.impl;
-
+package pt.psoft.g1.psoftg1.bookmanagement.repositories.relational;
+/*
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -26,13 +26,13 @@ import java.util.Optional;
 public interface SpringDataBookRepository  extends BookRepository, BookRepoCustom, CrudRepository<Book, Isbn> {
 
     @Query("SELECT b " +
-            "FROM Book b " +
+            "FROM BookEntity b " +
             "WHERE b.isbn.isbn = :isbn")
     Optional<Book> findByIsbn(@Param("isbn") String isbn);
 
     @Override
     @Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO(b, COUNT(l)) " +
-                "FROM Book b " +
+                "FROM BookEntity b " +
                 "JOIN LendingEntity l ON l.book = b " +
                 "WHERE l.startDate > :oneYearAgo " +
                 "GROUP BY b " +
@@ -42,12 +42,12 @@ public interface SpringDataBookRepository  extends BookRepository, BookRepoCusto
 
     @Override
     @Query("SELECT b " +
-            "FROM Book b " +
+            "FROM BookEntity b " +
             "WHERE b.genre.genre LIKE %:genre%")
     List<Book> findByGenre(@Param("genre") String genre);
 
     @Override
-    @Query("SELECT b FROM Book b WHERE b.title.title LIKE %:title%")
+    @Query("SELECT b FROM BookEntity b WHERE b.title.title LIKE %:title%")
     List<Book> findByTitle(@Param("title") String title);
 
     @Override
@@ -119,3 +119,5 @@ class BookRepoCustomImpl implements BookRepoCustom {
         return q.getResultList();
     }
 }
+*/
+

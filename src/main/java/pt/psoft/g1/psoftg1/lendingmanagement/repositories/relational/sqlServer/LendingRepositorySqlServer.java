@@ -1,17 +1,15 @@
 package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational.sqlServer;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Component;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingEntity;
+import org.springframework.stereotype.Repository;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.LendingEntity;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Repository
 public interface LendingRepositorySqlServer extends CrudRepository<LendingEntity, Long> {
 
 
@@ -25,7 +23,7 @@ public interface LendingRepositorySqlServer extends CrudRepository<LendingEntity
 
     @Query("SELECT l " +
             "FROM LendingEntity l " +
-            "JOIN Book b ON l.book.pk = b.pk " +
+            "JOIN BookEntity b ON l.book.pk = b.pk " +
             "JOIN ReaderDetails r ON l.readerDetails.pk = r.pk " +
             "WHERE b.isbn.isbn = :isbn " +
             "AND r.readerNumber.readerNumber = :readerNumber ")

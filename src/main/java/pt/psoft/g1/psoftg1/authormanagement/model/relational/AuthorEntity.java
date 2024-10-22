@@ -11,6 +11,7 @@ import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 import pt.psoft.g1.psoftg1.shared.model.Name;
 
 @Entity
+@Table(name = "Author")
 public class AuthorEntity extends EntityWithPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,26 +53,6 @@ public class AuthorEntity extends EntityWithPhoto {
 
     protected AuthorEntity() {
         // got ORM only
-    }
-
-
-    public void applyPatch(final long desiredVersion, final UpdateAuthorRequest request) {
-        if (this.version != desiredVersion)
-            throw new StaleObjectStateException("Object was already modified by another user", this.authorNumber);
-        if (request.getName() != null)
-            setName(request.getName());
-        if (request.getBio() != null)
-            setBio(request.getBio());
-        if(request.getPhotoURI() != null)
-            setPhotoInternal(request.getPhotoURI());
-    }
-
-    public void removePhoto(long desiredVersion) {
-        if(desiredVersion != this.version) {
-            throw new ConflictException("Provided version does not match latest version of this object");
-        }
-
-        setPhotoInternal(null);
     }
     public String getName() {
         return this.name.toString();

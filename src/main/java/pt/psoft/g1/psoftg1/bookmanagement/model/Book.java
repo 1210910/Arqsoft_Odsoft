@@ -1,12 +1,12 @@
 package pt.psoft.g1.psoftg1.bookmanagement.model;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import org.hibernate.StaleObjectStateException;
 
-import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
+import lombok.Getter;
+
+
+import lombok.Setter;
+import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 
 import pt.psoft.g1.psoftg1.bookmanagement.services.UpdateBookRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
@@ -15,39 +15,26 @@ import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-@Entity
-@Table(name = "Book", uniqueConstraints = {
-        @UniqueConstraint(name = "uc_book_isbn", columnNames = {"ISBN"})
-})
+
+
 public class Book extends EntityWithPhoto {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    long pk;
-
-    @Version
+    @Setter
     @Getter
     private Long version;
-
-    @Embedded
-    Isbn isbn;
+    private Isbn isbn;
 
     @Getter
-    @Embedded
-    @NotNull
-    Title title;
+    private Title title;
 
     @Getter
-    @ManyToOne
-    @NotNull
-    Genre genre;
+    private Genre genre;
 
     @Getter
-    @ManyToMany
-    private List<AuthorEntity> authors = new ArrayList<>();
 
-    @Embedded
+    private List<Author> authors = new ArrayList<>();
+
+
     Description description;
 
     private void setTitle(String title) {this.title = new Title(title);}
@@ -60,11 +47,11 @@ public class Book extends EntityWithPhoto {
 
     private void setGenre(Genre genre) {this.genre = genre; }
 
-    private void setAuthors(List<AuthorEntity> authors) {this.authors = authors; }
+    private void setAuthors(List<Author> authors) {this.authors = authors; }
 
     public String getDescription(){ return this.description.toString(); }
 
-    public Book(String isbn, String title, String description, Genre genre, List<AuthorEntity> authors, String photoURI) {
+    public Book(String isbn, String title, String description, Genre genre, List<Author> authors, String photoURI) {
         setTitle(title);
         setIsbn(isbn);
         if(description != null)
@@ -94,13 +81,12 @@ public class Book extends EntityWithPhoto {
     }
 
     public void applyPatch(final Long desiredVersion, UpdateBookRequest request) {
-        if (!Objects.equals(this.version, desiredVersion))
-            throw new StaleObjectStateException("Object was already modified by another user", this.pk);
+
 
         String title = request.getTitle();
         String description = request.getDescription();
         Genre genre = request.getGenreObj();
-        List<AuthorEntity> authors = request.getAuthorObjList();
+        List<Author> authors = request.getAuthorObjList();
         String photoURI = request.getPhotoURI();
         if(title != null) {
             setTitle(title);

@@ -1,7 +1,5 @@
 package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational.sqlServer;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -9,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Fine;
 
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.FineEntity;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.FineEntity;
 
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.FineRepository;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.mappers.FineEntityMapper;
@@ -17,8 +15,8 @@ import pt.psoft.g1.psoftg1.lendingmanagement.repositories.mappers.FineEntityMapp
 
 import java.util.Optional;
 
-//@Profile("sqlServer")
-//@Qualifier("fineSqlServerRepo")
+@Profile("sqlServer")
+@Qualifier("fineSqlServerRepo")
 @Component
 public class FineRepositorySqlServerImpl  implements FineRepository {
 

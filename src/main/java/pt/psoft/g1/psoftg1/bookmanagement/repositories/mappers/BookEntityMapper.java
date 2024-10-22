@@ -1,26 +1,22 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.repositories.mappers;
+package pt.psoft.g1.psoftg1.bookmanagement.repositories.mappers;
+
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Title;
+import pt.psoft.g1.psoftg1.bookmanagement.model.relational.BookEntity;
 import pt.psoft.g1.psoftg1.bookmanagement.model.relational.TitleEntity;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.Fine;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.LendingNumber;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.FineEntity;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.LendingNumberEntity;
 import pt.psoft.g1.psoftg1.shared.model.Photo;
 
 @Mapper(componentModel = "spring")
-public interface FineEntityMapper {
+public interface BookEntityMapper {
 
-    Fine sqlServerToModel(FineEntity fineEntity);
+    @Mapping(target = "version", source = "entity.version")
+    Book toModel(BookEntity entity);
 
-    FineEntity modelToSqlServer(Fine fine);
 
-    @Mapping(target = "lendingNumber", source = "value")
-    LendingNumberEntity stringToLne (String value);
-    @Mapping(target = "lendingNumber", source = "value")
-    LendingNumber stringToLn (String value);
+    BookEntity toEntity(Book model);
 
     default String map(Photo value) {
         if (value == null) {
@@ -42,5 +38,4 @@ public interface FineEntityMapper {
         }
         return value.getTitle();  // Exemplo para Title
     }
-
 }

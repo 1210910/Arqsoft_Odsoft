@@ -34,7 +34,7 @@ public interface SpringDataGenreRepository extends GenreRepository, GenreRepoCus
     @Override
     @Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.GenreBookCountDTO(g.genre, COUNT(b))" +
             "FROM Genre g " +
-            "JOIN Book b ON b.genre.pk = g.pk " +
+            "JOIN BookEntity b ON b.genre.pk = g.pk " +
             "GROUP BY g " +
             "ORDER BY COUNT(b) DESC")
     Page<GenreBookCountDTO> findTop5GenreByBookCount(Pageable pageable);

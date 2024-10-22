@@ -1,11 +1,10 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel;
+package pt.psoft.g1.psoftg1.lendingmanagement.model.relational;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Fine;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 
 import java.util.Objects;
 

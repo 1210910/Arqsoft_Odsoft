@@ -40,7 +40,7 @@ public class UpdateBookRequest {
 
     private List<Long> authors;
 
-    private List<AuthorEntity> authorObjList;
+    private List<Author> authorObjList;
 
     public UpdateBookRequest(String isbn, String title, String genre, @NonNull List<Long> authors, String description) {
         this.isbn = isbn;

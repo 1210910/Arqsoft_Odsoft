@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -11,11 +12,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
+import pt.psoft.g1.psoftg1.bookmanagement.model.relational.BookEntity;
+import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
+import pt.psoft.g1.psoftg1.bookmanagement.repositories.relational.BookRepositorySqlServer;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.LendingRepository;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 import pt.psoft.g1.psoftg1.shared.services.Page;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingEntity;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.LendingEntity;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.mappers.LendingEntityMapper;
 
 import java.time.LocalDate;
@@ -31,15 +35,20 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
     private final LendingRepositorySqlServer lendingRepositorySqlServer;
     private final LendingEntityMapper lendingEntityMapper;
 
+    private final BookRepositorySqlServer bookRepository;
+
+
+
     @PersistenceContext
     private final EntityManager em;
 
 
     @Autowired
     @Lazy
-    public LendingRepositorySqlServerImpl(LendingRepositorySqlServer lendingRepositorySqlServer, LendingEntityMapper lendingEntityMapper, EntityManager em) {
+    public LendingRepositorySqlServerImpl(LendingRepositorySqlServer lendingRepositorySqlServer, LendingEntityMapper lendingEntityMapper, EntityManager em, BookRepositorySqlServer bookRepository) {
         this.lendingRepositorySqlServer = lendingRepositorySqlServer;
         this.lendingEntityMapper = lendingEntityMapper;
+        this.bookRepository= bookRepository;
         this.em = em;
     }
 
@@ -172,9 +181,29 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
 
     @Override
     public Lending save(Lending lending) {
-        // Converte Lending para LendingEntity
+
+
+
+        System.out.println(lending.getLendingNumber());
+        System.out.println(lending.getBook());
         LendingEntity entity = lendingEntityMapper.modelToSqlServer(lending);
-        System.out.println(entity.getLendingNumber());
+
+
+        if (entity.getBook() != null && entity.getBook().getIsbn() != null) {
+            Optional<BookEntity> existingBookOptional = bookRepository.findByIsbn(entity.getBook().getIsbn());
+            if (existingBookOptional.isPresent()) {
+                // Se o livro já existe, utiliza o livro existente
+                entity.setBook(existingBookOptional.get());
+            } else {
+                // Se o livro não existe, salva o novo livro
+                BookEntity savedBook = bookRepository.save(entity.getBook());
+                entity.setBook(savedBook);
+            }
+        }
+
+
+        System.out.println("Lending Number: " + entity.getLendingNumber());
+        System.out.println("BookEntity: " + entity.getBook().toString());
         LendingEntity savedEntity = lendingRepositorySqlServer.save(entity); // delega o save para o JPA
         return lendingEntityMapper.sqlServerToModel(savedEntity);
     }

@@ -70,7 +70,7 @@ public interface SpringDataReaderRepositoryImpl extends ReaderRepository, Reader
     @Query("SELECT NEW pt.psoft.g1.psoftg1.readermanagement.services.ReaderBookCountDTO(rd, count(l)) " +
             "FROM ReaderDetails rd " +
             "JOIN LendingEntity l ON l.readerDetails.pk = rd.pk " +
-            "JOIN Book b ON b.pk = l.book.pk " +
+            "JOIN BookEntity b ON b.pk = l.book.pk " +
             "JOIN Genre g ON g.pk = b.genre.pk " +
             "WHERE g.genre = :genre " +
             "AND l.startDate >= :startDate " +

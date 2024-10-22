@@ -11,23 +11,22 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.AuthorRepository;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
-import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
-import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.exceptions.NotFoundException;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingEntity;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingNumberEntity;
+import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.LendingRepository;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 import pt.psoft.g1.psoftg1.readermanagement.repositories.ReaderRepository;
 import pt.psoft.g1.psoftg1.shared.repositories.PhotoRepository;
 import pt.psoft.g1.psoftg1.shared.services.ForbiddenNameService;
+import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 @Component
 @RequiredArgsConstructor
@@ -53,10 +52,10 @@ public class Bootstrapper implements CommandLineRunner {
     @Transactional
     public void run(final String... args) {
         createAuthors();
-        //createGenres();
-        //createBooks();
-        //loadForbiddenNames();
-        //createLendings();
+        createGenres();
+        createBooks();
+        loadForbiddenNames();
+        createLendings();
         //createPhotos();
     }
 
@@ -127,9 +126,10 @@ public class Bootstrapper implements CommandLineRunner {
                             "Tuttle ganhou o Prémio John W. Campbell para Melhor Novo Escritor em 1974, recebeu o Prémio Nebula de Melhor Conto em 1982 por \"The Bone Flute\", que recusou, e o Prémio BSFA de Ficção Curta em 1989 por \"In Translation\".",
                     null);
             authorRepository.save(author);
+            System.out.println("authorCreated");
         }
     }
-    /*
+
     private void createGenres() {
         if (genreRepository.findByString("Fantasia").isEmpty()) {
             final Genre g1 = new Genre("Fantasia");
@@ -153,6 +153,7 @@ public class Bootstrapper implements CommandLineRunner {
         }
     }
 
+
     protected void createBooks() {
         Optional<Genre> genre = Optional.ofNullable(genreRepository.findByString("Infantil"))
                 .orElseThrow(() -> new NotFoundException("Cannot find genre"));
@@ -170,6 +171,7 @@ public class Bootstrapper implements CommandLineRunner {
                         authors,null);
 
                 bookRepository.save(book);
+                System.out.println("Book created");
             }
         }
 
@@ -444,7 +446,7 @@ public class Bootstrapper implements CommandLineRunner {
                 lending = Lending.newBootstrappingLending(books.get(i), readers.get(i*2), 2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
                 System.out.println("tou aqui");
                 System.out.println(lending.getLendingNumber());
-                System.out.println(lending.getBook().toString());
+                System.out.println(lending.getBook().getAuthors());
                 System.out.println(lending.getReaderDetails().toString());
                 lendingRepository.save(lending);
             }
@@ -534,7 +536,7 @@ public class Bootstrapper implements CommandLineRunner {
             }
         }
     }
-
+    /*
     private void createPhotos() {
         /*Optional<Photo> photoJoao = photoRepository.findByPhotoFile("foto-joao.jpg");
         if(photoJoao.isEmpty()) {

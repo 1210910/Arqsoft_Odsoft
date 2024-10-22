@@ -42,7 +42,6 @@ public class Author extends EntityWithPhoto {
 
 
     public Author(String name, String bio, String photoURI) {
-
         setName(name);
         setBio(bio);
         setPhotoInternal(photoURI);

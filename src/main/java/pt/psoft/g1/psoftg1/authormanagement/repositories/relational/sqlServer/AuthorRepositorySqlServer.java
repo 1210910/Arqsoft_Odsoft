@@ -18,16 +18,16 @@ public interface AuthorRepositorySqlServer extends CrudRepository<AuthorEntity, 
 
 
     @Query("SELECT new pt.psoft.g1.psoftg1.authormanagement.api.AuthorLendingView(a.name.name, COUNT(l.pk)) " +
-            "FROM Book b " +
+            "FROM BookEntity b " +
             "JOIN b.authors a " +
             "JOIN LendingEntity l ON l.book.pk = b.pk " +
             "GROUP BY a.name " +
             "ORDER BY COUNT(l) DESC")
     Page<AuthorLendingView> findTopAuthorByLendings(Pageable pageable);
 
-    @Query("SELECT DISTINCT coAuthor FROM Book b " +
+    @Query("SELECT DISTINCT coAuthor FROM BookEntity b " +
             "JOIN b.authors coAuthor " +
-            "WHERE b IN (SELECT b FROM Book b JOIN b.authors a WHERE a.authorNumber = :authorNumber) " +
+            "WHERE b IN (SELECT b FROM BookEntity b JOIN b.authors a WHERE a.authorNumber = :authorNumber) " +
             "AND coAuthor.authorNumber <> :authorNumber")
     List<AuthorEntity> findCoAuthorsByAuthorNumber(Long authorNumber);
 

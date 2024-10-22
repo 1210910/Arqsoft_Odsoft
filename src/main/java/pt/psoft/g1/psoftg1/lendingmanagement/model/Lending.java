@@ -185,4 +185,8 @@ public class Lending {
         lending.returnedDate = returnedDate;
         return lending;
     }
+
+    public void setBook(Book book) {
+        this.book=book;
+    }
 }

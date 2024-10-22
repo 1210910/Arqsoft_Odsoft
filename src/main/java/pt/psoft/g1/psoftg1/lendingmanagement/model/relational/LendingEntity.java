@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel;
+package pt.psoft.g1.psoftg1.lendingmanagement.model.relational;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
+import pt.psoft.g1.psoftg1.bookmanagement.model.relational.BookEntity;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.LendingNumber;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ import java.util.Optional;
         @UniqueConstraint(columnNames = {"LENDING_NUMBER"})})
 @NoArgsConstructor
 public class LendingEntity {
-
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pk;
@@ -36,10 +36,10 @@ public class LendingEntity {
     @Embedded
     private LendingNumberEntity lendingNumberEntity; // Reference to the embedded LendingNumberEntity
 
-
+    @Setter
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    private Book book;
+    @ManyToOne(fetch = FetchType.EAGER, optional =false)
+    private BookEntity book;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -77,28 +77,12 @@ public class LendingEntity {
      *
      * @param book             {@code Book} object, which should be retrieved from the database.
      * @param readerDetails    {@code Reader} object, which should be retrieved from the database.
-     * @param seq              sequential number, which should be obtained from the year's count on the database.
-     * @param lendingDuration  duration for the lending in days.
      * @param fineValuePerDayInCents fine value per day in cents.
      * @throws NullPointerException if any of the arguments is {@code null}
      */
-    public LendingEntity(Book book, ReaderDetails readerDetails, int seq, int lendingDuration, int fineValuePerDayInCents) {
-        try {
-            this.book = Objects.requireNonNull(book);
-            this.readerDetails = Objects.requireNonNull(readerDetails);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Null objects passed to lending");
-        }
-        this.lendingNumberEntity = new LendingNumberEntity(seq);
-        this.startDate = LocalDate.now();
-        this.limitDate = LocalDate.now().plusDays(lendingDuration);
-        this.returnedDate = null;
-        this.fineValuePerDayInCents = fineValuePerDayInCents;
-        setDaysUntilReturn();
-        setDaysOverdue();
-    }
+
     @Builder
-    public LendingEntity(Book book, ReaderDetails readerDetails, LendingNumberEntity lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
+    public LendingEntity(BookEntity book, ReaderDetails readerDetails, LendingNumberEntity lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
         try {
             this.book = Objects.requireNonNull(book);
             this.readerDetails = Objects.requireNonNull(readerDetails);
@@ -178,25 +162,5 @@ public class LendingEntity {
 
 
 
-    /** Factory method for bootstrapping. */
-    public static LendingEntity newBootstrappingLending(Book book, ReaderDetails readerDetails,
-                                                  int year, int seq, LocalDate startDate,
-                                                  LocalDate returnedDate, int lendingDuration,
-                                                  int fineValuePerDayInCents) {
-        LendingEntity lending = new LendingEntity();
-
-        try {
-            lending.book = Objects.requireNonNull(book);
-            lending.readerDetails = Objects.requireNonNull(readerDetails);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Null objects passed to lending");
-        }
-        lending.lendingNumberEntity = new LendingNumberEntity(year, seq);
-        lending.startDate = startDate;
-        lending.limitDate = startDate.plusDays(lendingDuration);
-        lending.fineValuePerDayInCents = fineValuePerDayInCents;
-        lending.returnedDate = returnedDate;
-        return lending;
-    }
 
 }

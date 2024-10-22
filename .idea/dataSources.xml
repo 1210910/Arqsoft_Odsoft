@@ -69,5 +69,12 @@
       <jdbc-url>mongodb+srv://lms.yibmo.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=LMS</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="psoft-g1" uuid="ce1f9a71-fba0-40b8-8916-58d98419b9c3">
+      <driver-ref>h2.unified</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+      <jdbc-url>jdbc:h2:~/psoft-g1</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

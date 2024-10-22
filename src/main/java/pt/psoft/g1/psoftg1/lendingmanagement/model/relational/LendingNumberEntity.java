@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel;
+package pt.psoft.g1.psoftg1.lendingmanagement.model.relational;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.LendingNumber;
 
 import java.time.LocalDate;
 

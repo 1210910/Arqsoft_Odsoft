@@ -91,6 +91,8 @@ public class BookController {
 
         BookView bookView = bookViewMapper.toBookView(book);
 
+        System.out.println(book.getVersion());
+
         return ResponseEntity.ok()
                 .eTag(Long.toString(book.getVersion()))
                 .body(bookView);
@@ -188,6 +190,8 @@ public class BookController {
         List<Book> booksByAuthorName = null;
         if (authorName != null)
             booksByAuthorName = bookService.findByAuthorName(authorName);
+
+        System.out.println(booksByAuthorName);
 
         Set<Book> bookSet = new HashSet<>();
         if (booksByTitle!= null)

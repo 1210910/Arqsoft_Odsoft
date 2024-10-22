@@ -1,17 +1,22 @@
-package pt.psoft.g1.psoftg1.bookmanagement.model;
+package pt.psoft.g1.psoftg1.bookmanagement.model.relational;
 
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
 
-
-public class Isbn implements Serializable {
-
+@Embeddable
+@EqualsAndHashCode
+public class IsbnEntity implements Serializable {
+    @Size(min = 10, max = 13)
+    @Column(name="ISBN", length = 16)
 
     String isbn;
 
-    public Isbn(String isbn) {
+    public IsbnEntity(String isbn) {
         if (isValidIsbn(isbn)) {
             this.isbn = isbn;
         } else {
@@ -19,7 +24,7 @@ public class Isbn implements Serializable {
         }
     }
 
-    protected Isbn() {};
+    protected IsbnEntity() {};
 
     private static boolean isValidIsbn(String isbn) {
         if(isbn == null)
