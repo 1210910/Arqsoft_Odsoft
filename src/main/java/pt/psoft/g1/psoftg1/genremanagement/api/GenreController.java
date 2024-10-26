@@ -22,6 +22,8 @@ public class GenreController {
     public ListResponse<GenreLendingsView> getAverageLendings(
             @Valid @RequestBody final SearchRequest<GetAverageLendingsQuery> query){
         final var list = genreService.getAverageLendings(query.getQuery(), query.getPage());
+        System.out.println("Entered on the avg Lendings Per Genre method.");
+        System.out.println("List: " + list);
         return new ListResponse<>(genreViewMapper.toGenreAvgLendingsView(list));
     }
 

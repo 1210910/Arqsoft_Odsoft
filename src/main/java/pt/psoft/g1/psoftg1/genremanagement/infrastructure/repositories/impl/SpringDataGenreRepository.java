@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.genremanagement.infrastructure.repositories.impl;
+/*package pt.psoft.g1.psoftg1.genremanagement.infrastructure.repositories.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
@@ -24,16 +24,16 @@ import java.util.*;
 
 public interface SpringDataGenreRepository extends GenreRepository, GenreRepoCustom, CrudRepository<Genre, Integer> {
 
-    @Query("SELECT g FROM Genre g")
+    @Query("SELECT g FROM GenreEntity g")
     List<Genre> findAllGenres();
 
     @Override
-    @Query("SELECT g FROM Genre g WHERE g.genre = :genreName" )
+    @Query("SELECT g FROM GenreEntity g WHERE g.genre = :genreName" )
     Optional<Genre> findByString(@Param("genreName")@NotNull String genre);
 
     @Override
     @Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.GenreBookCountDTO(g.genre, COUNT(b))" +
-            "FROM Genre g " +
+            "FROM GenreEntity g " +
             "JOIN BookEntity b ON b.genre.pk = g.pk " +
             "GROUP BY g " +
             "ORDER BY COUNT(b) DESC")
@@ -195,4 +195,4 @@ class GenreRepoCustomImpl implements GenreRepoCustom {
 
         return lendingsPerMonth;
     }
-}
+} */

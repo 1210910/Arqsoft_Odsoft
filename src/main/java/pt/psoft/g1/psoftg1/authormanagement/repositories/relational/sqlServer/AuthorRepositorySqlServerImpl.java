@@ -33,7 +33,7 @@ public class AuthorRepositorySqlServerImpl implements AuthorRepository {
         this.authorEntityMapper = authorEntityMapper;
     }
     @Override
-    public Optional<Author> findByAuthorNumber(Long authorNumber) {
+    public Optional<Author> findByAuthorNumber(String authorNumber) {
 
         if (authorRepositorySqlServer.findByAuthorNumber(authorNumber).isEmpty()) {
             return Optional.empty();
@@ -88,7 +88,7 @@ public class AuthorRepositorySqlServerImpl implements AuthorRepository {
     }
 
     @Override
-    public List<Author> findCoAuthorsByAuthorNumber(Long authorNumber) {
+    public List<Author> findCoAuthorsByAuthorNumber(String authorNumber) {
         List<Author> authors = new ArrayList<>();
 
         authorRepositorySqlServer.findCoAuthorsByAuthorNumber(authorNumber).forEach(authorEntity -> {

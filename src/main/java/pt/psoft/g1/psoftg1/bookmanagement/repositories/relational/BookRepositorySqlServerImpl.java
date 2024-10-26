@@ -94,10 +94,12 @@ public class BookRepositorySqlServerImpl implements BookRepository {
         return bookRepositorySqlServer.findTop5BooksLent(oneYearAgo, pageable);
     }
 
+
     @Override
-    public List<Book> findBooksByAuthorNumber(Long authorNumber) {
+    public List<Book> findBooksByAuthorNumber(String authorNumber) {
         List<Book> books = new ArrayList<>();
-         for (BookEntity bookEntity : bookRepositorySqlServer.findBooksByAuthorNumber(authorNumber)) {
+        // Put the string authorNumber to long
+         for (BookEntity bookEntity : bookRepositorySqlServer.findBooksByAuthorNumber(Long.parseLong(authorNumber))) {
              books.add(bookEntityMapper.toModel(bookEntity));
          }
             return books;

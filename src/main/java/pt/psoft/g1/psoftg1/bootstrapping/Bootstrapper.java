@@ -55,7 +55,7 @@ public class Bootstrapper implements CommandLineRunner {
         createGenres();
         createBooks();
         loadForbiddenNames();
-        createLendings();
+        //createLendings();
         //createPhotos();
     }
 
@@ -132,6 +132,7 @@ public class Bootstrapper implements CommandLineRunner {
 
     private void createGenres() {
         if (genreRepository.findByString("Fantasia").isEmpty()) {
+            System.out.println("TOU CA MALUCO");
             final Genre g1 = new Genre("Fantasia");
             genreRepository.save(g1);
         }
@@ -157,10 +158,13 @@ public class Bootstrapper implements CommandLineRunner {
     protected void createBooks() {
         Optional<Genre> genre = Optional.ofNullable(genreRepository.findByString("Infantil"))
                 .orElseThrow(() -> new NotFoundException("Cannot find genre"));
+        System.out.println("GENRE: " + genre);
         List<Author> author = authorRepository.searchByNameName("Manuel Antonio Pina");
+        System.out.println("AUTHOR: " + author.get(0).getName());
 
         // 1 - O País das Pessoas de Pernas Para o Ar
         if(bookRepository.findByIsbn("9789720706386").isEmpty()) {
+            System.out.println("entrei no if do find by isbn se este for empty");
             List<Author> authors = new ArrayList<>();
             if (genre.isPresent() && !author.isEmpty()) {
                 authors.add(author.get(0));
@@ -169,7 +173,8 @@ public class Bootstrapper implements CommandLineRunner {
                         "Fazendo uso do humor e do nonsense, o livro reúne quatro histórias divertidas e com múltiplos significados: um país onde as pessoas vivem de pernas para o ar, que nos é apresentado por um passarinho chamado Fausto; a vida de um peixinho vermelho que escrevia um livro que a Sara não sabia ler; um Menino Jesus que não queria ser Deus, pois só queria brincar como as outras crianças; um bolo que queria ser comido, mas que não foi, por causa do pecado da gula. ",
                         genre.get(),
                         authors,null);
-
+                System.out.println("A GUARDAR O LIVRO O PAIS DAS PESSOAS DE PERNAS PARA O AR");
+                System.out.println(book.getGenre());
                 bookRepository.save(book);
                 System.out.println("Book created");
             }
@@ -185,7 +190,7 @@ public class Bootstrapper implements CommandLineRunner {
                         "Como quem, vindo de países distantes fora de / si, chega finalmente aonde sempre esteve / e encontra tudo no seu lugar, / o passado no passado, o presente no presente, / assim chega o viajante à tardia idade / em que se confundem ele e o caminho. [...]",
                         genre.get(),
                         authors,null);
-
+                System.out.println("A GUARDAR O LIVRO COMO SE DESENHA UMA CASA");
                 bookRepository.save(book);
             }
         }
@@ -391,160 +396,160 @@ public class Bootstrapper implements CommandLineRunner {
         String fileName = "forbiddenNames.txt";
         forbiddenNameService.loadDataFromFile(fileName);
     }
-
-    private void createLendings() {
-        int i;
-        int seq = 0;
-        final var book1 = bookRepository.findByIsbn("9789720706386");
-        final var book2 = bookRepository.findByIsbn("9789723716160");
-        final var book3 = bookRepository.findByIsbn("9789895612864");
-        final var book4 = bookRepository.findByIsbn("9782722203402");
-        final var book5 = bookRepository.findByIsbn("9789722328296");
-        final var book6 = bookRepository.findByIsbn("9789895702756");
-        final var book7 = bookRepository.findByIsbn("9789897776090");
-        final var book8 = bookRepository.findByIsbn("9789896379636");
-        final var book9 = bookRepository.findByIsbn("9789896378905");
-        final var book10 = bookRepository.findByIsbn("9789896375225");
-        List<Book> books = new ArrayList<>();
-        if(book1.isPresent() && book2.isPresent()
-                && book3.isPresent() && book4.isPresent()
-                && book5.isPresent() && book6.isPresent()
-                && book7.isPresent() && book8.isPresent()
-                && book9.isPresent() && book10.isPresent())
-        {
-            books = List.of(new Book[]{book1.get(), book2.get(), book3.get(),
-                    book4.get(), book5.get(), book6.get(), book7.get(),
-                    book8.get(), book9.get(), book10.get()});
-        }
-
-        final var readerDetails1 = readerRepository.findByReaderNumber("2024/1");
-        final var readerDetails2 = readerRepository.findByReaderNumber("2024/2");
-        final var readerDetails3 = readerRepository.findByReaderNumber("2024/3");
-        final var readerDetails4 = readerRepository.findByReaderNumber("2024/4");
-        final var readerDetails5 = readerRepository.findByReaderNumber("2024/5");
-        final var readerDetails6 = readerRepository.findByReaderNumber("2024/6");
-
-        List<ReaderDetails> readers = new ArrayList<>();
-        if(readerDetails1.isPresent() && readerDetails2.isPresent() && readerDetails3.isPresent()){
-            readers = List.of(new ReaderDetails[]{readerDetails1.get(), readerDetails2.get(), readerDetails3.get(),
-                            readerDetails4.get(), readerDetails5.get(), readerDetails6.get()});
-        }
-
-        LocalDate startDate;
-        LocalDate returnedDate;
-        Lending lending;
-
-        //Lendings 1 through 3 (late, returned)
-        for(i = 0; i < 3; i++){
-            ++seq;
-            System.out.println(seq);
-            if(lendingRepository.findByLendingNumber("2024/" + (seq)).isEmpty()){
-
-                startDate = LocalDate.of(2024, 1,31-i);
-                returnedDate = LocalDate.of(2024,2,15+i);
-                System.out.println(books.get(i).toString());
-                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i*2), 2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
-                System.out.println("tou aqui");
-                System.out.println(lending.getLendingNumber());
-                System.out.println(lending.getBook().getAuthors());
-                System.out.println(lending.getReaderDetails().toString());
-                lendingRepository.save(lending);
-            }
-        }
-
-        //Lendings 4 through 6 (overdue, not returned)
-        for(i = 0; i < 3; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + (seq)).isEmpty()){
-                startDate = LocalDate.of(2024, 3,25+i);
-                lending = Lending.newBootstrappingLending(books.get(1+i), readers.get(1+i*2),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-        //Lendings 7 through 9 (late, overdue, not returned)
-        for(i = 0; i < 3; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
-                startDate = LocalDate.of(2024, 4,(1+2*i));
-                lending = Lending.newBootstrappingLending(books.get(3/(i+1)), readers.get(i*2),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-
-        //Lendings 10 through 12 (returned)
-        for(i = 0; i < 3; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
-                startDate = LocalDate.of(2024, 5,(i+1));
-                returnedDate = LocalDate.of(2024,5,(i+2));
-                lending = Lending.newBootstrappingLending(books.get(3-i), readers.get(1+i*2),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-
-        //Lendings 13 through 18 (returned)
-        for(i = 0; i < 6; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
-                startDate = LocalDate.of(2024, 5,(i+2));
-                returnedDate = LocalDate.of(2024,5,(i+2*2));
-                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-
-        //Lendings 19 through 23 (returned)
-        for(i = 0; i < 6; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
-                startDate = LocalDate.of(2024, 5,(i+8));
-                returnedDate = LocalDate.of(2024,5,(2*i+8));
-
-                lending = Lending.newBootstrappingLending(books.get(i), readers.get(1+i%4),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-
-        //Lendings 24 through 29 (returned)
-        for(i = 0; i < 6; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
-                startDate = LocalDate.of(2024, 5,(i+18));
-                returnedDate = LocalDate.of(2024,5,(2*i+18));
-                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i%2+2),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-
-        //Lendings 30 through 35 (not returned, not overdue)
-        for(i = 0; i < 6; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
-                startDate = LocalDate.of(2024, 6,(i/3+1));
-                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i%2+3),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-
-        //Lendings 36 through 45 (not returned, not overdue)
-        for(i = 0; i < 10; i++){
-            ++seq;
-            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
-                startDate = LocalDate.of(2024, 6,(2+i/4));
-                lending = Lending.newBootstrappingLending(books.get(i), readers.get(4-i%4),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
-                lendingRepository.save(lending);
-            }
-        }
-    }
-    /*
-    private void createPhotos() {
-        /*Optional<Photo> photoJoao = photoRepository.findByPhotoFile("foto-joao.jpg");
-        if(photoJoao.isEmpty()) {
-            Photo photo = new Photo(Paths.get(""))
-        }
-    }
-    */
-
+//
+//    private void createLendings() {
+//        int i;
+//        int seq = 0;
+//        final var book1 = bookRepository.findByIsbn("9789720706386");
+//        final var book2 = bookRepository.findByIsbn("9789723716160");
+//        final var book3 = bookRepository.findByIsbn("9789895612864");
+//        final var book4 = bookRepository.findByIsbn("9782722203402");
+//        final var book5 = bookRepository.findByIsbn("9789722328296");
+//        final var book6 = bookRepository.findByIsbn("9789895702756");
+//        final var book7 = bookRepository.findByIsbn("9789897776090");
+//        final var book8 = bookRepository.findByIsbn("9789896379636");
+//        final var book9 = bookRepository.findByIsbn("9789896378905");
+//        final var book10 = bookRepository.findByIsbn("9789896375225");
+//        List<Book> books = new ArrayList<>();
+//        if(book1.isPresent() && book2.isPresent()
+//                && book3.isPresent() && book4.isPresent()
+//                && book5.isPresent() && book6.isPresent()
+//                && book7.isPresent() && book8.isPresent()
+//                && book9.isPresent() && book10.isPresent())
+//        {
+//            books = List.of(new Book[]{book1.get(), book2.get(), book3.get(),
+//                    book4.get(), book5.get(), book6.get(), book7.get(),
+//                    book8.get(), book9.get(), book10.get()});
+//        }
+//
+//        final var readerDetails1 = readerRepository.findByReaderNumber("2024/1");
+//        final var readerDetails2 = readerRepository.findByReaderNumber("2024/2");
+//        final var readerDetails3 = readerRepository.findByReaderNumber("2024/3");
+//        final var readerDetails4 = readerRepository.findByReaderNumber("2024/4");
+//        final var readerDetails5 = readerRepository.findByReaderNumber("2024/5");
+//        final var readerDetails6 = readerRepository.findByReaderNumber("2024/6");
+//
+//        List<ReaderDetails> readers = new ArrayList<>();
+//        if(readerDetails1.isPresent() && readerDetails2.isPresent() && readerDetails3.isPresent()){
+//            readers = List.of(new ReaderDetails[]{readerDetails1.get(), readerDetails2.get(), readerDetails3.get(),
+//                            readerDetails4.get(), readerDetails5.get(), readerDetails6.get()});
+//        }
+//
+//        LocalDate startDate;
+//        LocalDate returnedDate;
+//        Lending lending;
+//
+//        //Lendings 1 through 3 (late, returned)
+//        for(i = 0; i < 3; i++){
+//            ++seq;
+//            System.out.println(seq);
+//            if(lendingRepository.findByLendingNumber("2024/" + (seq)).isEmpty()){
+//
+//                startDate = LocalDate.of(2024, 1,31-i);
+//                returnedDate = LocalDate.of(2024,2,15+i);
+//                System.out.println(books.get(i).toString());
+//                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i*2), 2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
+//                System.out.println("tou aqui");
+//                System.out.println(lending.getLendingNumber());
+//                System.out.println(lending.getBook().getAuthors());
+//                System.out.println(lending.getReaderDetails().toString());
+//                lendingRepository.save(lending);
+//            }
+//        }
+//
+//        //Lendings 4 through 6 (overdue, not returned)
+//        for(i = 0; i < 3; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + (seq)).isEmpty()){
+//                startDate = LocalDate.of(2024, 3,25+i);
+//                lending = Lending.newBootstrappingLending(books.get(1+i), readers.get(1+i*2),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//        //Lendings 7 through 9 (late, overdue, not returned)
+//        for(i = 0; i < 3; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
+//                startDate = LocalDate.of(2024, 4,(1+2*i));
+//                lending = Lending.newBootstrappingLending(books.get(3/(i+1)), readers.get(i*2),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//
+//        //Lendings 10 through 12 (returned)
+//        for(i = 0; i < 3; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
+//                startDate = LocalDate.of(2024, 5,(i+1));
+//                returnedDate = LocalDate.of(2024,5,(i+2));
+//                lending = Lending.newBootstrappingLending(books.get(3-i), readers.get(1+i*2),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//
+//        //Lendings 13 through 18 (returned)
+//        for(i = 0; i < 6; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
+//                startDate = LocalDate.of(2024, 5,(i+2));
+//                returnedDate = LocalDate.of(2024,5,(i+2*2));
+//                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//
+//        //Lendings 19 through 23 (returned)
+//        for(i = 0; i < 6; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
+//                startDate = LocalDate.of(2024, 5,(i+8));
+//                returnedDate = LocalDate.of(2024,5,(2*i+8));
+//
+//                lending = Lending.newBootstrappingLending(books.get(i), readers.get(1+i%4),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//
+//        //Lendings 24 through 29 (returned)
+//        for(i = 0; i < 6; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
+//                startDate = LocalDate.of(2024, 5,(i+18));
+//                returnedDate = LocalDate.of(2024,5,(2*i+18));
+//                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i%2+2),2024, seq, startDate, returnedDate, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//
+//        //Lendings 30 through 35 (not returned, not overdue)
+//        for(i = 0; i < 6; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
+//                startDate = LocalDate.of(2024, 6,(i/3+1));
+//                lending = Lending.newBootstrappingLending(books.get(i), readers.get(i%2+3),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//
+//        //Lendings 36 through 45 (not returned, not overdue)
+//        for(i = 0; i < 10; i++){
+//            ++seq;
+//            if(lendingRepository.findByLendingNumber("2024/" + seq).isEmpty()){
+//                startDate = LocalDate.of(2024, 6,(2+i/4));
+//                lending = Lending.newBootstrappingLending(books.get(i), readers.get(4-i%4),2024, seq, startDate, null, lendingDurationInDays, fineValuePerDayInCents);
+//                lendingRepository.save(lending);
+//            }
+//        }
+//    }
+//    /*
+//    private void createPhotos() {
+//        /*Optional<Photo> photoJoao = photoRepository.findByPhotoFile("foto-joao.jpg");
+//        if(photoJoao.isEmpty()) {
+//            Photo photo = new Photo(Paths.get(""))
+//        }
+//    }
+//    */
+//
 }
 
 

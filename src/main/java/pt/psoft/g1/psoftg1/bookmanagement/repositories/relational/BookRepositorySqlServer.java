@@ -29,7 +29,6 @@ public interface BookRepositorySqlServer extends CrudRepository<BookEntity, Long
     Page<BookCountDTO> findTop5BooksLent(@Param("oneYearAgo") LocalDate oneYearAgo, Pageable pageable);
 
 
-
     @Query("SELECT b " +
             "FROM BookEntity b " +
             "WHERE b.genre.genre LIKE %:genre%")

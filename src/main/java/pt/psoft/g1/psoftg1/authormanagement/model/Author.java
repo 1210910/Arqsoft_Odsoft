@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.StaleObjectStateException;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
@@ -12,7 +13,7 @@ import pt.psoft.g1.psoftg1.shared.model.Name;
 public class Author extends EntityWithPhoto {
 
     @Getter
-    private Long authorNumber;
+    private String authorNumber;
 
     private long version;
 
@@ -24,7 +25,7 @@ public class Author extends EntityWithPhoto {
         this.name = new Name(name);
     }
 
-    public void setAuthorNumber(Long authorNumber) {
+    public void setAuthorNumber(String authorNumber) {
         this.authorNumber = authorNumber;
     }
 
@@ -34,10 +35,6 @@ public class Author extends EntityWithPhoto {
 
     public Long getVersion() {
         return version;
-    }
-
-    public Long getId() {
-        return authorNumber;
     }
 
 
@@ -84,9 +81,6 @@ public class Author extends EntityWithPhoto {
         }else {
             return super.getPhoto().getPhotoFile();
         }
-
     }
-
-
 }
 

@@ -13,7 +13,6 @@ public interface AuthorEntityMapper {
     @Mapping(target = "authorNumber", source = "authorNumber")
     Author toDomain(AuthorEntity authorEntity);
 
-
     AuthorEntity toEntity(Author author);
 
     String map(Photo value);

@@ -1,11 +1,14 @@
 package pt.psoft.g1.psoftg1.authormanagement.model.mongodb;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.mongodb.EntityWithPhotoMongoDB;
@@ -15,7 +18,12 @@ import pt.psoft.g1.psoftg1.shared.model.mongodb.NameMongoDB;
 public class AuthorMongoDB extends EntityWithPhotoMongoDB {
 
     @Id
-    private String id;  // MongoDB uses String/ObjectId for IDs
+    @Getter
+    @Setter
+    private String authorNumber;
+
+//    @Field("authorNumber")
+//    private Long authorNumber;
 
     @Version
     private Long version;  // MongoDB versioning (optional, manual control)
@@ -26,7 +34,6 @@ public class AuthorMongoDB extends EntityWithPhotoMongoDB {
     @Field("bio")
     private BioMongoDB bio;
 
-    @Builder
     // Constructor, getters, setters
     public AuthorMongoDB(String name, String bio, String photoURI) {
         setName(name);
@@ -38,6 +45,10 @@ public class AuthorMongoDB extends EntityWithPhotoMongoDB {
         // for ORM or deserialization only
     }
 
+//    public void setAuthorNumber(Long authorNumber) {
+//        this.authorNumber = authorNumber;
+//    }
+
     public void setName(String name) {
         this.name = new NameMongoDB(name);
     }
@@ -48,7 +59,7 @@ public class AuthorMongoDB extends EntityWithPhotoMongoDB {
 
     public void applyPatch(final long desiredVersion, final UpdateAuthorRequest request) {
         if (!this.version.equals(desiredVersion)) {
-            throw new StaleObjectStateException("Object was already modified by another user", this.id);
+            throw new StaleObjectStateException("Object was already modified by another user", this.authorNumber);
         }
         if (request.getName() != null) {
             setName(request.getName());
@@ -76,11 +87,14 @@ public class AuthorMongoDB extends EntityWithPhotoMongoDB {
         return this.bio.toString();
     }
 
-    public String getId() {
-        return id;
-    }
+//    public Long getAuthorNumber() {
+//        return authorNumber;
+//    }
 
     public String getPhotoURI() {
+        if (this.getPhoto() == null || this.getPhoto().getPhotoFile() == null) {
+            return null; // Or return a default value, handle accordingly
+        }
         return this.getPhoto().getPhotoFile().toString();
     }
 }

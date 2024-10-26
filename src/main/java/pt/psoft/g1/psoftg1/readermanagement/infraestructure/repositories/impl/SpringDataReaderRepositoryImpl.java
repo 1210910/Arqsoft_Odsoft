@@ -71,7 +71,7 @@ public interface SpringDataReaderRepositoryImpl extends ReaderRepository, Reader
             "FROM ReaderDetails rd " +
             "JOIN LendingEntity l ON l.readerDetails.pk = rd.pk " +
             "JOIN BookEntity b ON b.pk = l.book.pk " +
-            "JOIN Genre g ON g.pk = b.genre.pk " +
+            "JOIN GenreEntity g ON g.pk = b.genre.pk " +
             "WHERE g.genre = :genre " +
             "AND l.startDate >= :startDate " +
             "AND l.startDate <= :endDate " +

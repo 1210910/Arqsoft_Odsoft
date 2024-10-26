@@ -9,6 +9,7 @@ import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
 import pt.psoft.g1.psoftg1.bookmanagement.services.UpdateBookRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
+import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class BookEntity extends EntityWithPhoto {
     @Getter
     @ManyToOne
     @NotNull
-    Genre genre;
+    GenreEntity genre;
 
     @Getter
     @ManyToMany
@@ -57,13 +58,13 @@ public class BookEntity extends EntityWithPhoto {
 
     private void setDescription(String description) {this.description = new DescriptionEntity(description); }
 
-    private void setGenre(Genre genre) {this.genre = genre; }
+    private void setGenre(GenreEntity genre) {this.genre = genre; }
 
     public void setAuthors(List<AuthorEntity> authors) {this.authors = authors; }
 
     public String getDescription(){ return this.description.toString(); }
 
-    public BookEntity(String isbn, String title, String description, Genre genre, List<AuthorEntity> authors, String photoURI) {
+    public BookEntity(String isbn, String title, String description, GenreEntity genre, List<AuthorEntity> authors, String photoURI) {
         setTitle(title);
         setIsbn(isbn);
         if(description != null)
