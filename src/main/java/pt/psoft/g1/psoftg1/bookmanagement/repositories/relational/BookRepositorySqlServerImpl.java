@@ -21,6 +21,8 @@ import pt.psoft.g1.psoftg1.bookmanagement.repositories.mappers.BookEntityMapper;
 import pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO;
 import pt.psoft.g1.psoftg1.bookmanagement.services.SearchBooksQuery;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
+import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
+import pt.psoft.g1.psoftg1.genremanagement.repositories.relational.GenreRepositorySqlServer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,14 +37,16 @@ public class BookRepositorySqlServerImpl implements BookRepository {
     private final BookRepositorySqlServer bookRepositorySqlServer;
     private final BookEntityMapper bookEntityMapper;
 
+    private final GenreRepositorySqlServer genreRepository;
     private final AuthorRepositorySqlServer authorRepository;
     private final EntityManager em;
 
     @Autowired
     @Lazy
-    public BookRepositorySqlServerImpl(BookRepositorySqlServer bookRepositorySqlServer, BookEntityMapper bookEntityMapper, AuthorRepositorySqlServer authorRepository, EntityManager em) {
+    public BookRepositorySqlServerImpl(BookRepositorySqlServer bookRepositorySqlServer, BookEntityMapper bookEntityMapper, GenreRepositorySqlServer genreRepository, AuthorRepositorySqlServer authorRepository, EntityManager em) {
         this.bookRepositorySqlServer = bookRepositorySqlServer;
         this.bookEntityMapper = bookEntityMapper;
+        this.genreRepository = genreRepository;
         this.authorRepository = authorRepository;
         this.em = em;
     }
@@ -83,7 +87,7 @@ public class BookRepositorySqlServerImpl implements BookRepository {
             return Optional.empty();
         }else{
             BookEntity book = bookRepositorySqlServer.findByIsbn(isbn).get();
-            System.out.println(book.getVersion());
+
             return Optional.of(bookEntityMapper.toModel(book)) ;
         }
 
@@ -110,7 +114,7 @@ public class BookRepositorySqlServerImpl implements BookRepository {
     public Book save(Book book) {
 
         BookEntity bookEntity = bookEntityMapper.toEntity(book);
-        System.out.println(bookEntity.getIsbn());
+
 
         List<AuthorEntity> authors = new ArrayList<>(); // Lista para autores que serão associados ao livro
 
@@ -124,11 +128,22 @@ public class BookRepositorySqlServerImpl implements BookRepository {
             authors.add(existingAuthor); // Adiciona o autor à lista de autores do livro
         }
 
+        if (bookEntity.getGenre() != null) {
+            // Verifica se o gênero já existe no banco de dados pelo nome
+            GenreEntity existingGenre = genreRepository.findByString(bookEntity.getGenre().getGenre()).get();
+            if (existingGenre == null) {
+                // Se o gênero não existe, salva o novo gênero
+                existingGenre = genreRepository.save(bookEntity.getGenre());
+                bookEntity.setGenre(existingGenre); // Atualiza o gênero da BookEntity com o gênero persistido
+            }
+            bookEntity.setGenre(existingGenre); // Atualiza o gênero da BookEntity com o gênero persistido
+        }
+
         // Atualiza a lista de autores da BookEntity com os autores persistidos
         bookEntity.setAuthors(authors);
 
         BookEntity savedEntity = bookRepositorySqlServer.save(bookEntity);
-        System.out.println(savedEntity.getAuthors());
+
         return bookEntityMapper.toModel(savedEntity);
 
     }

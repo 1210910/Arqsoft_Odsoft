@@ -28,14 +28,14 @@ public class AuthorEntity extends EntityWithPhotoEntity {
     private NameEntity name;
 
     @Embedded
-    private Bio bio;
+    private BioEntity bio;
 
     public void setName(String name) {
         this.name = new NameEntity(name);
     }
 
     public void setBio(String bio) {
-        this.bio = new Bio(bio);
+        this.bio = new BioEntity(bio);
     }
 
     public Long getVersion() {

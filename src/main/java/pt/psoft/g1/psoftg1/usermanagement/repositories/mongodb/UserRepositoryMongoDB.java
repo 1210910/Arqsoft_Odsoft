@@ -1,5 +1,6 @@
 package pt.psoft.g1.psoftg1.usermanagement.repositories.mongodb;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import pt.psoft.g1.psoftg1.usermanagement.model.mongodb.UserMongoDB;
@@ -7,6 +8,7 @@ import pt.psoft.g1.psoftg1.usermanagement.model.mongodb.UserMongoDB;
 import java.util.List;
 import java.util.Optional;
 
+@Profile("mongodb")
 public interface UserRepositoryMongoDB extends MongoRepository<UserMongoDB, String> {
 
     @Query("{ 'id': ?0 }")

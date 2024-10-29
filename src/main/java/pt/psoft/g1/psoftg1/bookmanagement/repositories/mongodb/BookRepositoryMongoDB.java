@@ -1,5 +1,6 @@
 package pt.psoft.g1.psoftg1.bookmanagement.repositories.mongodb;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -10,7 +11,7 @@ import pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
+@Profile("mongodb")
 public interface BookRepositoryMongoDB extends MongoRepository<BookMongoDB, String> {
 
     @Query("{ 'isbn.isbn': ?0 }")

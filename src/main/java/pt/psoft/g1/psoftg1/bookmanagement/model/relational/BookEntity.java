@@ -4,6 +4,7 @@ package pt.psoft.g1.psoftg1.bookmanagement.model.relational;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
 import pt.psoft.g1.psoftg1.bookmanagement.services.UpdateBookRequest;
@@ -11,7 +12,6 @@ import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
-import pt.psoft.g1.psoftg1.shared.model.relational.EntityWithPhotoEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Objects;
 @Table(name = "Book", uniqueConstraints = {
         @UniqueConstraint(name = "uc_book_isbn", columnNames = {"ISBN"})
 })
-public class BookEntity extends EntityWithPhotoEntity {
+public class BookEntity extends EntityWithPhoto {
     @Getter
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -59,7 +59,7 @@ public class BookEntity extends EntityWithPhotoEntity {
 
     private void setDescription(String description) {this.description = new DescriptionEntity(description); }
 
-    private void setGenre(GenreEntity genre) {this.genre = genre; }
+    public void setGenre(GenreEntity genre) {this.genre = genre; }
 
     public void setAuthors(List<AuthorEntity> authors) {this.authors = authors; }
 

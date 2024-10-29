@@ -1,39 +1,43 @@
-package pt.psoft.g1.psoftg1.readermanagement.repositories.mapper;
+package pt.psoft.g1.psoftg1.readermanagement.repositories.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
 import pt.psoft.g1.psoftg1.bookmanagement.model.Title;
-import pt.psoft.g1.psoftg1.bookmanagement.model.mongodb.TitleMongoDB;
+import pt.psoft.g1.psoftg1.bookmanagement.model.relational.TitleEntity;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
-import pt.psoft.g1.psoftg1.genremanagement.model.mongodb.GenreMongoDB;
+import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.readermanagement.model.BirthDate;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
-import pt.psoft.g1.psoftg1.readermanagement.model.mongodb.BirthDateMongoDB;
-import pt.psoft.g1.psoftg1.readermanagement.model.mongodb.ReaderDetailsMongoDB;
+
+import pt.psoft.g1.psoftg1.readermanagement.model.relational.BirthDateEntity;
+import pt.psoft.g1.psoftg1.readermanagement.model.relational.ReaderDetailsEntity;
+
 import pt.psoft.g1.psoftg1.shared.model.Name;
 import pt.psoft.g1.psoftg1.shared.model.Photo;
-import pt.psoft.g1.psoftg1.shared.model.mongodb.NameMongoDB;
-import pt.psoft.g1.psoftg1.shared.model.mongodb.PhotoMongoDB;
+import pt.psoft.g1.psoftg1.shared.model.relational.NameEntity;
+import pt.psoft.g1.psoftg1.shared.model.relational.PhotoEntity;
 
 import java.time.format.DateTimeFormatter;
 
 @Mapper(componentModel = "spring")
-public interface ReaderMapperMongoDB {
+public interface ReaderEntityMapper {
 
-    @Mapping(target = "readerNumber", source = "readerNumber", qualifiedByName = "map")
+    @Mapping(target = "readerNumber", source = "readerNumber", qualifiedByName = "map1")
+    @Mapping(target="birthDate", source="birthDate", qualifiedByName = "mapbde")
     @Mapping(target="gdpr", source="gdprConsent")
     @Mapping(target="marketing", source="marketingConsent")
     @Mapping(target="thirdParty", source="thirdPartySharingConsent")
-    ReaderDetails toDomain(ReaderDetailsMongoDB readerDetails);
-
-    @Mapping(target = "readerNumber", source = "readerNumber", qualifiedByName = "map")
+    ReaderDetails toModel(ReaderDetailsEntity readerDetails);
+    @Mapping(target = "readerNumber", source = "readerNumber", qualifiedByName = "map1")
+    @Mapping(target="birthDate", source="birthDate", qualifiedByName = "mapbd")
     @Mapping(target="gdpr", source="gdprConsent")
     @Mapping(target="marketing", source="marketingConsent")
     @Mapping(target="thirdParty", source="thirdPartySharingConsent")
-    ReaderDetailsMongoDB toMongoDB(ReaderDetails readerDetails);
+    ReaderDetailsEntity toEntity(ReaderDetails readerDetails);
 
-    @Named("map")
+    @Named("map1")
     default int map(String readerNumber) {
         if (readerNumber == null) {
             return 0;
@@ -49,14 +53,15 @@ public interface ReaderMapperMongoDB {
         }
         return Value.getGenre(); // Exemplo para Genre
     }
-
-    default  String map(BirthDateMongoDB birthDateMongoDB){
-        if (birthDateMongoDB == null){
+    @Named("mapbde")
+    default  String map(BirthDateEntity birthDateEntity){
+        if (birthDateEntity == null){
             return null;
         }
-        return birthDateMongoDB.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return birthDateEntity.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
+    @Named("mapbd")
     default String map(BirthDate birthDate){
         if (birthDate == null){
             return null;
@@ -65,11 +70,11 @@ public interface ReaderMapperMongoDB {
         return birthDate.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    default String map(GenreMongoDB value){
-        if (value == null){
+    default String map(GenreEntity Value){
+        if (Value == null){
             return null;
         }
-        return value.getGenre(); // Exemplo para Genre
+        return Value.getGenre(); // Exemplo para Genre
     }
 
     default String map(Photo photo) {
@@ -79,14 +84,14 @@ public interface ReaderMapperMongoDB {
         return photo.getPhotoFile();
     }
 
-    default String map(PhotoMongoDB photoMongoDB) {
-        if (photoMongoDB == null) {
+    default String map(PhotoEntity photoEntity) {
+        if (photoEntity == null) {
             return null;
         }
-        return photoMongoDB.getPhotoFile();
+        return photoEntity.getPhotoFile();
     }
 
-    default String map(TitleMongoDB value) {
+    default String map(TitleEntity value) {
         if (value == null) {
             return null;
         }
@@ -107,10 +112,12 @@ public interface ReaderMapperMongoDB {
         return value.getName(); // Exemplo para BioEntity
     }
 
-    default String map(NameMongoDB value) {
+    default String map(NameEntity value) {
         if (value == null) {
             return null;
         }
         return value.getName(); // Exemplo para BioEntity
     }
+
+
 }

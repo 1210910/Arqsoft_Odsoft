@@ -39,11 +39,14 @@ public interface LendingEntityMapper {
     LendingNumber stringToLn (String value);
 
 
+
+    @Mapping(target="birthDate", source="birthDate", qualifiedByName = "mapbde")
     @Mapping(target="gdpr", source="gdprConsent")
     @Mapping(target="marketing", source="marketingConsent")
     @Mapping(target="thirdParty", source="thirdPartySharingConsent")
     ReaderDetails toModel(ReaderDetailsEntity readerDetails);
 
+    @Mapping(target="birthDate", source="birthDate", qualifiedByName = "mapbd")
     @Mapping(target="gdpr", source="gdprConsent")
     @Mapping(target="marketing", source="marketingConsent")
     @Mapping(target="thirdParty", source="thirdPartySharingConsent")
@@ -97,6 +100,7 @@ public interface LendingEntityMapper {
         return value.getName(); // Exemplo para LendingNumberEntity
     }
 
+    @Named("mapbde")
     default  String map(BirthDateEntity birthDateEntity){
         if (birthDateEntity == null){
             return null;
@@ -104,6 +108,7 @@ public interface LendingEntityMapper {
         return birthDateEntity.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
+    @Named("mapbd")
     default String map(BirthDate birthDate){
         if (birthDate == null){
             return null;

@@ -168,6 +168,8 @@ public class LendingController {
         return new ListResponse<>(lendingViewMapper.toLendingView(readerList));
     }
 
+
+
 /*    @Operation(summary = "Get list monthly average lendings per reader")
     @GetMapping(value = "/averageMonthlyPerReader")
     public ListResponse<ReaderLendingsAvgPerMonthView>getAverageMonthlyPerReader(

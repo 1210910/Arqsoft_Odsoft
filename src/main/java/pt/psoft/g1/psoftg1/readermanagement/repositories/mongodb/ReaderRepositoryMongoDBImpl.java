@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 import pt.psoft.g1.psoftg1.readermanagement.model.mongodb.ReaderDetailsMongoDB;
 import pt.psoft.g1.psoftg1.readermanagement.repositories.ReaderRepository;
-import pt.psoft.g1.psoftg1.readermanagement.repositories.mapper.ReaderMapperMongoDB;
+import pt.psoft.g1.psoftg1.readermanagement.repositories.mappers.ReaderMapperMongoDB;
 import pt.psoft.g1.psoftg1.readermanagement.services.ReaderBookCountDTO;
 import pt.psoft.g1.psoftg1.readermanagement.services.SearchReadersQuery;
 

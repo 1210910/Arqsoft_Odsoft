@@ -10,8 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 @Getter
 @PropertySource({"classpath:config/library.properties"})
 public class Name {
-    @NotNull
-    @NotBlank
+
+
     String name;
     public Name(String name){
         setName(name);

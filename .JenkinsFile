@@ -94,7 +94,7 @@ pipeline {
             steps {
                 scripts{
 
-                    sh 'cd target && JENKINS_NODE_COOKIE=dontKillMe && nohup java -java proj-0.0.1-SNAPSHOT.jar '
+                    sh 'cd target && JENKINS_NODE_COOKIE=dontKillMe && nohup java -java proj-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.datasource.url=jdbc:h2:mem:testdb > output.log 2>&1 &'
                 }
 
 

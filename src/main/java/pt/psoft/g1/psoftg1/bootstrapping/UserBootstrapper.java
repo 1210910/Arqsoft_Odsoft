@@ -83,6 +83,7 @@ public class UserBootstrapper implements CommandLineRunner {
                         "readerPhotoTest.jpg",
                         interestList);
                 readerRepository.save(r1);
+
             }
         }
 
@@ -261,7 +262,7 @@ public class UserBootstrapper implements CommandLineRunner {
     private void createLibrarian(){
         // Maria
         if (userRepository.findByUsername("maria@gmail.com").isEmpty()) {
-            final User maria = Librarian.newLibrarian("maria@gmail.com", "Mariaroberta!123", "Maria Roberta");
+                final User maria = Librarian.newLibrarian("maria@gmail.com", "Mariaroberta!123", "Maria Roberta");
             userRepository.save(maria);
         }
     }

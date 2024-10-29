@@ -42,9 +42,11 @@ public class LendingEntity {
     @ManyToOne(fetch = FetchType.EAGER, optional =false)
     private BookEntity book;
 
+    @Setter
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private ReaderDetailsEntity readerDetails;
+
 
     @NotNull
     @Column(nullable = false, updatable = false)

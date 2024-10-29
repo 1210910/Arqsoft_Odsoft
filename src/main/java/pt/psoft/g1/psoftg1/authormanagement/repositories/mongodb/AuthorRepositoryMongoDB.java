@@ -1,5 +1,6 @@
 package pt.psoft.g1.psoftg1.authormanagement.repositories.mongodb;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,6 +12,7 @@ import pt.psoft.g1.psoftg1.authormanagement.model.mongodb.AuthorMongoDB;
 import java.util.List;
 import java.util.Optional;
 
+@Profile("mongodb")
 public interface AuthorRepositoryMongoDB extends MongoRepository<AuthorMongoDB, String> {
     // @Override
     //Optional<AuthorMongoDB> findById(String authorNumber);

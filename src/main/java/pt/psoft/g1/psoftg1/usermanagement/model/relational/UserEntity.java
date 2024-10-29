@@ -58,20 +58,25 @@ public class UserEntity implements UserDetails {
 	@Id
 	@GeneratedValue
 	@Getter
+	@Setter
 	@Column(name="USER_ID")
 	private Long id;
 
 	// optimistic lock concurrency control
+	@Setter
 	@Version
+	@Getter
 	private Long version;
 
 	// auditing info
+	@Setter
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
 	@Getter
 	private LocalDateTime createdAt;
 
 	// auditing info
+	@Setter
 	@LastModifiedDate
 	@Column(nullable = false)
 	@Getter
@@ -81,11 +86,14 @@ public class UserEntity implements UserDetails {
 	@CreatedBy
 	@Column(nullable = false, updatable = false)
 	@Getter
+	@Setter
 	private String createdBy;
 
 	// auditing info
 	@LastModifiedBy
 	@Column(nullable = false)
+	@Setter
+	@Getter
 	private String modifiedBy;
 
 	@Setter

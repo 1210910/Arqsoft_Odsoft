@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational.mongodb;
+package pt.psoft.g1.psoftg1.lendingmanagement.repositories.mongodb;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

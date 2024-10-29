@@ -1,13 +1,11 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational.mongodb;
+package pt.psoft.g1.psoftg1.lendingmanagement.repositories.mongodb;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.bookmanagement.model.mongodb.BookMongoDB;
-import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
 import pt.psoft.g1.psoftg1.bookmanagement.repositories.mongodb.BookRepositoryMongoDB;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.mongodb.LendingMongoDB;
@@ -143,5 +141,10 @@ public class LendingMongoDBRepositoryImpl implements LendingRepository {
         System.out.println("Days Until Return: " + savedEntity.getDaysUntilReturn());
         System.out.println("Days Overdue: " + savedEntity.getDaysOverdue());
         return lendingMapperMongoDB.toDomain(savedEntity);
+    }
+
+    @Override
+    public void delete(Lending lending) {
+        lendingMongoDBRepository.delete(lendingMapperMongoDB.toMongoDB(lending));
     }
 }

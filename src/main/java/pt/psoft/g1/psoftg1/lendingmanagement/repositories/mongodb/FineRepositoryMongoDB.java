@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lendingmanagement.repositories.relational.mongodb;
+package pt.psoft.g1.psoftg1.lendingmanagement.repositories.mongodb;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

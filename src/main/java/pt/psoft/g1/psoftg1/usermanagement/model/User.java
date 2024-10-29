@@ -56,6 +56,7 @@ public class User implements UserDetails {
 	private String id;
 
 	// optimistic lock concurrency control
+
 	private Long version;
 
 	// auditing info
@@ -83,12 +84,14 @@ public class User implements UserDetails {
 	@Getter
 	private String username;
 
+
 	@Getter
 	private String password;
 
 	@Getter
 //	@Setter
 	private Name name;
+
 
 	@Getter
 	private Set<Role> authorities = new HashSet<>();

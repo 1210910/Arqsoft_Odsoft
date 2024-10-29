@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class EmailAddress {
+
     String address;
 
     protected EmailAddress() {}

@@ -2,11 +2,15 @@ package pt.psoft.g1.psoftg1.readermanagement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
 
+
+@Getter
 
 public class ReaderNumber implements Serializable {
 
@@ -25,4 +29,6 @@ public class ReaderNumber implements Serializable {
     public String toString() {
         return this.readerNumber;
     }
+
+
 }

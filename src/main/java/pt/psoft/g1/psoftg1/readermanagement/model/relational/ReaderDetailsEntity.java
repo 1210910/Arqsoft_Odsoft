@@ -34,10 +34,10 @@ public class ReaderDetailsEntity extends EntityWithPhotoEntity {
 
     @Embedded
     @Getter
-    private BirthDate birthDate;
+    private BirthDateEntity birthDate;
 
     @Embedded
-    private PhoneNumber phoneNumber;
+    private PhoneNumberEntity phoneNumber;
 
     @Setter
     @Getter
@@ -74,8 +74,8 @@ public class ReaderDetailsEntity extends EntityWithPhotoEntity {
 
         setReader(reader);
         setReaderNumber(new ReaderNumberEntity(readerNumber));
-        setPhoneNumber(new PhoneNumber(phoneNumber));
-        setBirthDate(new BirthDate(birthDate));
+        setPhoneNumber(new PhoneNumberEntity(phoneNumber));
+        setBirthDate(new BirthDateEntity(birthDate));
         //By the client specifications, gdpr can only have the value of true. A setter will be created anyways in case we have accept no gdpr consent later on the project
         setGdprConsent(true);
 
@@ -85,7 +85,7 @@ public class ReaderDetailsEntity extends EntityWithPhotoEntity {
         setInterestList(interestList);
     }
 
-    private void setPhoneNumber(PhoneNumber number) {
+    private void setPhoneNumber(PhoneNumberEntity number) {
         if(number != null) {
             this.phoneNumber = number;
         }
@@ -97,7 +97,7 @@ public class ReaderDetailsEntity extends EntityWithPhotoEntity {
         }
     }
 
-    private void setBirthDate(BirthDate date) {
+    private void setBirthDate(BirthDateEntity date) {
         if(date != null) {
             this.birthDate = date;
         }
@@ -129,11 +129,11 @@ public class ReaderDetailsEntity extends EntityWithPhotoEntity {
         }
 
         if(birthDate != null) {
-            setBirthDate(new BirthDate(birthDate));
+            setBirthDate(new BirthDateEntity(birthDate));
         }
 
         if(phoneNumber != null) {
-            setPhoneNumber(new PhoneNumber(phoneNumber));
+            setPhoneNumber(new PhoneNumberEntity(phoneNumber));
         }
 
         if(marketing != this.marketingConsent) {
@@ -166,6 +166,7 @@ public class ReaderDetailsEntity extends EntityWithPhotoEntity {
     public String getReaderNumber(){
         return this.readerNumber.toString();
     }
+
 
     public String getPhoneNumber() { return this.phoneNumber.toString();}
 

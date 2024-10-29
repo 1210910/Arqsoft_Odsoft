@@ -6,6 +6,7 @@ import org.mapstruct.Mappings;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.authormanagement.model.Bio;
 import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
+import pt.psoft.g1.psoftg1.authormanagement.model.relational.BioEntity;
 import pt.psoft.g1.psoftg1.shared.model.Name;
 import pt.psoft.g1.psoftg1.shared.model.relational.NameEntity;
 import pt.psoft.g1.psoftg1.shared.model.Photo;
@@ -53,6 +54,13 @@ public interface AuthorEntityMapper {
             return null;
         }
         return bio.toString();
+    }
+
+    default String map(BioEntity bioEntity) {
+        if (bioEntity == null) {
+            return null;
+        }
+        return bioEntity.toString();
     }
 
 

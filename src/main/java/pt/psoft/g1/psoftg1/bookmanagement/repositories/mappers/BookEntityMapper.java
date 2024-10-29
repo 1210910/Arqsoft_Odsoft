@@ -21,18 +21,18 @@ public interface BookEntityMapper {
 
     BookEntity toEntity(Book model);
 
-    default String map(Genre Value){
-        if (Value == null){
+    default String map(Genre value){
+        if (value == null){
             return null;
         }
-        return Value.getGenre(); // Exemplo para Genre
+        return value.getGenre(); // Exemplo para Genre
     }
 
-    default String map(GenreEntity Value){
-        if (Value == null){
+    default String map(GenreEntity value){
+        if (value == null){
             return null;
         }
-        return Value.getGenre(); // Exemplo para Genre
+        return value.getGenre(); // Exemplo para Genre
     }
 
     default String map(Photo photo) {

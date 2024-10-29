@@ -1,5 +1,6 @@
 package pt.psoft.g1.psoftg1.readermanagement.repositories.mongodb;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Profile("mongodb")
 public interface ReaderRepositoryMongoDB extends MongoRepository<ReaderDetailsMongoDB, String> {
 
     @Query("{ 'readerNumber.readerNumber': ?0 }")
