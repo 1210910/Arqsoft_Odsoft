@@ -2,6 +2,7 @@ package pt.psoft.g1.psoftg1.shared.model.mongodb;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import pt.psoft.g1.psoftg1.shared.model.StringUtilsCustom;
@@ -11,6 +12,7 @@ public class NameMongoDB {
 
     @Field("name")  // Optional: Map to a specific field name in MongoDB
     @NotNull
+    @Getter
     @NotBlank
     private String name;
 

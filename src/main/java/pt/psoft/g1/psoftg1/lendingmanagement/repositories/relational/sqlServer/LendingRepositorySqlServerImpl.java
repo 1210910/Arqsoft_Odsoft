@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//@Profile("sqlServer")
-//@Qualifier("lendingSqlServerRepo")
+@Profile("sqlServer")
+@Qualifier("lendingSqlServerRepo")
 @Component
 public class LendingRepositorySqlServerImpl implements LendingRepository {
 
@@ -36,8 +36,6 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
     private final LendingEntityMapper lendingEntityMapper;
 
     private final BookRepositorySqlServer bookRepository;
-
-
 
     @PersistenceContext
     private final EntityManager em;

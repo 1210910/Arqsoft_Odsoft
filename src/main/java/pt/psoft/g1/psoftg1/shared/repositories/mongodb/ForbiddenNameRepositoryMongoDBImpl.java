@@ -1,5 +1,10 @@
 package pt.psoft.g1.psoftg1.shared.repositories.mongodb;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.shared.model.ForbiddenName;
 import pt.psoft.g1.psoftg1.shared.model.mongodb.ForbiddenNameMongoDB;
 import pt.psoft.g1.psoftg1.shared.repositories.ForbiddenNameRepository;
@@ -8,11 +13,16 @@ import pt.psoft.g1.psoftg1.shared.repositories.mappers.ForbiddenNameMapperMongoD
 import java.util.List;
 import java.util.Optional;
 
+@Profile("mongodb")
+@Qualifier("mongoDbRepo")
+@Component
 public class ForbiddenNameRepositoryMongoDBImpl implements ForbiddenNameRepository {
 
     private final ForbiddenNameRepositoryMongoDB forbiddenNameRepositoryMongoDB;
     private final ForbiddenNameMapperMongoDB forbiddenNameMapperMongoDB;
 
+    @Autowired
+    @Lazy
     public ForbiddenNameRepositoryMongoDBImpl(ForbiddenNameRepositoryMongoDB forbiddenNameRepositoryMongoDB, ForbiddenNameMapperMongoDB forbiddenNameMapperMongoDB) {
         this.forbiddenNameRepositoryMongoDB = forbiddenNameRepositoryMongoDB;
         this.forbiddenNameMapperMongoDB = forbiddenNameMapperMongoDB;

@@ -27,7 +27,6 @@ public class Book extends EntityWithPhoto {
     @Getter
     private Title title;
 
-    @Getter
     private Genre genre;
 
     @Getter
@@ -107,6 +106,11 @@ public class Book extends EntityWithPhoto {
         if(photoURI != null)
             setPhotoInternal(photoURI);
 
+    }
+
+    // Get genre
+    public Genre getGenre(){
+        return this.genre;
     }
 
     public String getIsbn(){

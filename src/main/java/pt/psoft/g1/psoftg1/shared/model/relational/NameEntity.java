@@ -11,12 +11,12 @@ import pt.psoft.g1.psoftg1.shared.model.StringUtilsCustom;
 @Getter
 @Embeddable
 @PropertySource({"classpath:config/library.properties"})
-public class Name {
+public class NameEntity {
     @NotNull
     @NotBlank
     @Column(name="NAME", length = 150)
     String name;
-    public Name(String name){
+    public NameEntity(String name){
         setName(name);
     }
 
@@ -41,7 +41,7 @@ public class Name {
         return this.name;
     }
 
-    protected Name() {
+    protected NameEntity() {
         // for ORM only
     }
 }

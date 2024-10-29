@@ -9,10 +9,12 @@ import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 import pt.psoft.g1.psoftg1.shared.model.Name;
+import pt.psoft.g1.psoftg1.shared.model.relational.EntityWithPhotoEntity;
+import pt.psoft.g1.psoftg1.shared.model.relational.NameEntity;
 
 @Entity
 @Table(name = "Author")
-public class AuthorEntity extends EntityWithPhoto {
+public class AuthorEntity extends EntityWithPhotoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AUTHOR_NUMBER")
@@ -23,13 +25,13 @@ public class AuthorEntity extends EntityWithPhoto {
     private long version;
 
     @Embedded
-    private Name name;
+    private NameEntity name;
 
     @Embedded
     private Bio bio;
 
     public void setName(String name) {
-        this.name = new Name(name);
+        this.name = new NameEntity(name);
     }
 
     public void setBio(String bio) {

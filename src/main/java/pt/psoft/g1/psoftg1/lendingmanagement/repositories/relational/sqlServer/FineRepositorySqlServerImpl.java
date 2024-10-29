@@ -15,8 +15,8 @@ import pt.psoft.g1.psoftg1.lendingmanagement.repositories.mappers.FineEntityMapp
 
 import java.util.Optional;
 
-//@Profile("sqlServer")
-//@Qualifier("fineSqlServerRepo")
+@Profile("sqlServer")
+@Qualifier("fineSqlServerRepo")
 @Component
 public class FineRepositorySqlServerImpl  implements FineRepository {
 

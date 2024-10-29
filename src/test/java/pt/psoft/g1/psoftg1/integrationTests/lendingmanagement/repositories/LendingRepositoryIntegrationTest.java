@@ -99,7 +99,7 @@ public class LendingRepositoryIntegrationTest {
 
     @AfterEach
     public void tearDown(){
-        lendingRepository.delete(lending);
+        //lendingRepository.delete(lending);
         readerRepository.delete(readerDetails);
         userRepository.delete(reader);
         bookRepository.delete(book);
@@ -113,7 +113,7 @@ public class LendingRepositoryIntegrationTest {
         Lending savedLending = lendingRepository.save(newLending);
         assertThat(savedLending).isNotNull();
         assertThat(savedLending.getLendingNumber()).isEqualTo(newLending.getLendingNumber());
-        lendingRepository.delete(savedLending);
+        //lendingRepository.delete(savedLending);
     }
 
     @Test

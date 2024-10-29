@@ -12,6 +12,7 @@ import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.bookmanagement.model.relational.BookEntity;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
+import pt.psoft.g1.psoftg1.readermanagement.model.relational.ReaderDetailsEntity;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -43,8 +44,7 @@ public class LendingEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    private ReaderDetails readerDetails;
-
+    private ReaderDetailsEntity readerDetails;
 
     @NotNull
     @Column(nullable = false, updatable = false)
@@ -82,7 +82,7 @@ public class LendingEntity {
      */
 
     @Builder
-    public LendingEntity(BookEntity book, ReaderDetails readerDetails, LendingNumberEntity lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
+    public LendingEntity(BookEntity book, ReaderDetailsEntity readerDetails, LendingNumberEntity lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
         try {
             this.book = Objects.requireNonNull(book);
             this.readerDetails = Objects.requireNonNull(readerDetails);

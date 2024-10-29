@@ -10,13 +10,9 @@ import lombok.Setter;
 
 import java.nio.file.Path;
 
-@Entity
-public class Photo {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private long pk;
 
-    @NotNull
+public class Photo {
+
     @Setter
     @Getter
     private String photoFile;

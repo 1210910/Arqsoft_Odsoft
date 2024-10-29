@@ -24,7 +24,7 @@ public interface LendingRepositorySqlServer extends CrudRepository<LendingEntity
     @Query("SELECT l " +
             "FROM LendingEntity l " +
             "JOIN BookEntity b ON l.book.pk = b.pk " +
-            "JOIN ReaderDetails r ON l.readerDetails.pk = r.pk " +
+            "JOIN ReaderDetailsEntity r ON l.readerDetails.pk = r.pk " +
             "WHERE b.isbn.isbn = :isbn " +
             "AND r.readerNumber.readerNumber = :readerNumber ")
     List<LendingEntity> listByReaderNumberAndIsbn(String readerNumber, String isbn);
@@ -38,7 +38,7 @@ public interface LendingRepositorySqlServer extends CrudRepository<LendingEntity
 
     @Query("SELECT l " +
             "FROM LendingEntity l " +
-            "JOIN ReaderDetails r ON l.readerDetails.pk = r.pk " +
+            "JOIN ReaderDetailsEntity r ON l.readerDetails.pk = r.pk " +
             "WHERE r.readerNumber.readerNumber = :readerNumber " +
             "AND l.returnedDate IS NULL")
     List<LendingEntity> listOutstandingByReaderNumber(@Param("readerNumber") String readerNumber);

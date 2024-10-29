@@ -11,6 +11,7 @@ import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
+import pt.psoft.g1.psoftg1.shared.model.relational.EntityWithPhotoEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Objects;
 @Table(name = "Book", uniqueConstraints = {
         @UniqueConstraint(name = "uc_book_isbn", columnNames = {"ISBN"})
 })
-public class BookEntity extends EntityWithPhoto {
+public class BookEntity extends EntityWithPhotoEntity {
     @Getter
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

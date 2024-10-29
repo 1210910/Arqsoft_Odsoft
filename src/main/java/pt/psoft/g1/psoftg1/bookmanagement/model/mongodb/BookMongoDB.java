@@ -81,6 +81,7 @@ public class BookMongoDB extends EntityWithPhotoMongoDB {
             throw new IllegalArgumentException("Authors cannot be empty");
 
         setAuthors(authors);
+        setGenre(genre);
         setPhotoInternal(photoURI);
     }
 

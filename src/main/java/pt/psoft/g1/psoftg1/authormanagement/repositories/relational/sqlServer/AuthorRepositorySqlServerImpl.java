@@ -72,7 +72,6 @@ public class AuthorRepositorySqlServerImpl implements AuthorRepository {
     @Override
     public Author save(Author author) {
 
-
         return authorEntityMapper.toDomain( authorRepositorySqlServer.save(authorEntityMapper.toEntity(author)));
     }
 

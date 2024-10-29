@@ -15,7 +15,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @Table(name = "fine")
-public class FineEntity extends Fine {
+public class FineEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

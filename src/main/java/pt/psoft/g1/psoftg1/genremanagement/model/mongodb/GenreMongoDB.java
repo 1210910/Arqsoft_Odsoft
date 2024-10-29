@@ -15,9 +15,8 @@ public class GenreMongoDB {
     private String pk;
 
     @Field("genre")
-    @Setter
     @Getter
-    String genre;
+    private String genre;
 
     public GenreMongoDB(String genre){
         setGenre(genre);
@@ -28,13 +27,19 @@ public class GenreMongoDB {
     }
 
     private void setGenre(String genre) {
-        if(genre == null)
+        if(genre == null) {
+            System.out.println("Genre is null");
             throw new IllegalArgumentException("Genre cannot be null");
-        if(genre.isBlank())
+        }
+        if(genre.isBlank()) {
+            System.out.println("Genre is blank");
             throw new IllegalArgumentException("Genre cannot be blank");
+        }
         int GENRE_MAX_LENGTH = 100;
-        if(genre.length() > GENRE_MAX_LENGTH)
-            throw new IllegalArgumentException("Genre has a maximum of 4096 characters");
+        if(genre.length() > GENRE_MAX_LENGTH){
+            System.out.println("Genre is too long");
+            throw new IllegalArgumentException("Genre has a maximum of 100 characters");
+        }
         this.genre = genre;
     }
 

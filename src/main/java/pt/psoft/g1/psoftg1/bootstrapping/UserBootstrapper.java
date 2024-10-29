@@ -57,16 +57,17 @@ public class UserBootstrapper implements CommandLineRunner {
             queriesToExecute.add(query);
 
             Optional<ReaderDetails> readerDetails1= readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/1");
-            //Optional<Genre> g1 = genreRepository.findByString("Fantasia");
-            //Optional<Genre> g2 = genreRepository.findByString("Infantil");
-            //List<Genre> interestList = new ArrayList<>();
-            //if(g1.isPresent()) {
-            //    interestList.add(g1.get());
-            //}
+            System.out.println("GOT THIS ON READER DETAILS: " + readerDetails1.toString());
+            Optional<Genre> g1 = genreRepository.findByString("Fantasia");
+            Optional<Genre> g2 = genreRepository.findByString("Infantil");
+            List<Genre> interestList = new ArrayList<>();
+            if(g1.isPresent()) {
+                interestList.add(g1.get());
+            }
 
-            //if(g2.isPresent()) {
-                //interestList.add(g2.get());
-            //}
+            if(g2.isPresent()) {
+                interestList.add(g2.get());
+            }
 
 
 
@@ -80,7 +81,7 @@ public class UserBootstrapper implements CommandLineRunner {
                         true,
                         true,
                         "readerPhotoTest.jpg",
-                        null);
+                        interestList);
                 readerRepository.save(r1);
             }
         }

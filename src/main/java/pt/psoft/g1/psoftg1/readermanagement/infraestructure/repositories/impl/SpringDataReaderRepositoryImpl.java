@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.readermanagement.infraestructure.repositories.impl;
+/*package pt.psoft.g1.psoftg1.readermanagement.infraestructure.repositories.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -40,22 +40,22 @@ public interface SpringDataReaderRepositoryImpl extends ReaderRepository, Reader
     @Override
     @Query("SELECT r " +
             "FROM ReaderDetails r " +
-            "JOIN User u ON r.reader.id = u.id " +
+            "JOIN UserEntity u ON r.reader.id = u.id " +
             "WHERE u.username = :username")
     Optional<ReaderDetails> findByUsername(@Param("username") @NotNull String username);
 
     @Override
     @Query("SELECT r " +
             "FROM ReaderDetails r " +
-            "JOIN User u ON r.reader.id = u.id " +
+            "JOIN UserEntity u ON r.reader.id = u.id " +
             "WHERE u.id = :userId")
-    Optional<ReaderDetails> findByUserId(@Param("userId") @NotNull Long userId);
+    Optional<ReaderDetails> findByUserId(@Param("userId") @NotNull String userId);
 
 
     @Override
     @Query("SELECT COUNT (rd) " +
             "FROM ReaderDetails rd " +
-            "JOIN User u ON rd.reader.id = u.id " +
+            "JOIN UserEntity u ON rd.reader.id = u.id " +
             "WHERE YEAR(u.createdAt) = YEAR(CURRENT_DATE)")
     int getCountFromCurrentYear();
 
@@ -127,5 +127,5 @@ class ReaderDetailsRepoCustomImpl implements ReaderDetailsRepoCustom {
 
         return q.getResultList();
     }
-}
+} */
 

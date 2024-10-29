@@ -82,6 +82,7 @@ public class BookRepositoryMongoDBImpl implements BookRepository {
         System.out.println("I AM FINDING BOOKS BY ISBN MATE");
         Optional<BookMongoDB> bookMongoDBFound = bookRepositoryMongoDB.findByIsbn(isbn);
         if (bookMongoDBFound.isEmpty()) {
+            System.out.println("BOOK MONGO DB NOT FOUND");
             return Optional.empty();
         }
         System.out.println("BOOK MONGO DB FOUND: " + bookMongoDBFound.get().getTitle());

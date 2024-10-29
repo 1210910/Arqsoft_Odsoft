@@ -1,46 +1,44 @@
 package pt.psoft.g1.psoftg1.bookmanagement.repositories.mappers;
 
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Title;
 import pt.psoft.g1.psoftg1.bookmanagement.model.mongodb.BookMongoDB;
 import pt.psoft.g1.psoftg1.bookmanagement.model.mongodb.TitleMongoDB;
+import pt.psoft.g1.psoftg1.bookmanagement.model.relational.BookEntity;
+import pt.psoft.g1.psoftg1.bookmanagement.model.relational.TitleEntity;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.model.mongodb.GenreMongoDB;
+import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.shared.model.Photo;
 import pt.psoft.g1.psoftg1.shared.model.mongodb.PhotoMongoDB;
-
-import java.util.List;
+import pt.psoft.g1.psoftg1.shared.model.relational.PhotoEntity;
 
 @Mapper(componentModel = "spring")
 public interface BookMapperMongoDB {
 
-    BookMongoDB toMongoDB(Book book);
-
     @Mapping(target = "version", source = "bookMongoDB.version")
     Book toDomain(BookMongoDB bookMongoDB);
 
-    List<BookMongoDB> toMongoDBList(List<Book> books);
+    BookMongoDB toMongoDB(Book book);
 
-    List<Book> toDomainList(List<BookMongoDB> bookMongoDBs);
-
-    default String map(Genre value){
-
-        if (value == null){
+    default String map(Genre Value){
+        System.out.println("Genre: " + Value);
+        if (Value == null){
+            System.out.println("Genre is null");
             return null;
         }
-        return value.getGenre(); // Exemplo para Genre
+        System.out.println("Genre is not null: " + Value.getGenre());
+        return Value.getGenre(); // Exemplo para Genre
     }
 
-    default String map(GenreMongoDB value){
-        System.out.println("Entered GenreMongoDB");
-        if (value == null){
-            System.out.println("GenreMongoDB is null");
+    default String map(GenreMongoDB Value){
+        if (Value == null){
             return null;
         }
-        System.out.println("GenreMongoDB is not null");
-        return value.getGenre(); // Exemplo para Genre
+        return Value.getGenre(); // Exemplo para Genre
     }
 
     default String map(Photo photo) {
@@ -50,11 +48,11 @@ public interface BookMapperMongoDB {
         return photo.getPhotoFile();
     }
 
-    default String map(PhotoMongoDB photoEntity) {
-        if (photoEntity == null) {
+    default String map(PhotoMongoDB photoMongoDB) {
+        if (photoMongoDB == null) {
             return null;
         }
-        return photoEntity.getPhotoFile();
+        return photoMongoDB.getPhotoFile();
     }
 
     default String map(TitleMongoDB value) {

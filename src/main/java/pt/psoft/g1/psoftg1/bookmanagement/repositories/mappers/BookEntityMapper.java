@@ -7,7 +7,10 @@ import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Title;
 import pt.psoft.g1.psoftg1.bookmanagement.model.relational.BookEntity;
 import pt.psoft.g1.psoftg1.bookmanagement.model.relational.TitleEntity;
+import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
+import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.shared.model.Photo;
+import pt.psoft.g1.psoftg1.shared.model.relational.PhotoEntity;
 
 @Mapper(componentModel = "spring")
 public interface BookEntityMapper {
@@ -18,11 +21,32 @@ public interface BookEntityMapper {
 
     BookEntity toEntity(Book model);
 
-    default String map(Photo value) {
-        if (value == null) {
+    default String map(Genre Value){
+        if (Value == null){
             return null;
         }
-        return value.getPhotoFile(); // Exemplo para Photo
+        return Value.getGenre(); // Exemplo para Genre
+    }
+
+    default String map(GenreEntity Value){
+        if (Value == null){
+            return null;
+        }
+        return Value.getGenre(); // Exemplo para Genre
+    }
+
+    default String map(Photo photo) {
+        if (photo == null) {
+            return null;
+        }
+        return photo.getPhotoFile();
+    }
+
+    default String map(PhotoEntity photoEntity) {
+        if (photoEntity == null) {
+            return null;
+        }
+        return photoEntity.getPhotoFile();
     }
 
     default String map(TitleEntity value) {
