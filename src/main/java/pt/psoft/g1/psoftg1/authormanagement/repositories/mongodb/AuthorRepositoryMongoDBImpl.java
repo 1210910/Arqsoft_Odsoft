@@ -109,7 +109,36 @@ public class AuthorRepositoryMongoDBImpl implements AuthorRepository {
 
     @Override
     public Page<AuthorLendingView> findTopAuthorByLendings(Pageable pageableRules) {
-        return null;
+        // Fetch all authors with find all method
+        List<AuthorMongoDB> authors = authorRepositoryMongoDB.findAll();
+        System.out.println(authors);
+
+        // Fetch all lendings with find all method
+        List<LendingMongoDB> lendingsMongoDB = lendingRepositoryMongoDB.findAll();
+        System.out.println(lendingsMongoDB);
+
+        // Need to check lendings per author
+        Map<String, Long> authorLendingCounts = new HashMap<>(); // Map to store author lending counts
+
+        // Count lendings per author
+        for (LendingMongoDB lendingMongoDB : lendingsMongoDB) {
+            List<AuthorMongoDB> bookAuthors = lendingMongoDB.getBook().getAuthors();
+            System.out.println("Lista dos autores do livro " + bookAuthors);
+            for (AuthorMongoDB authorMongoDB : bookAuthors) {
+                String authorId = authorMongoDB.getAuthorNumber();
+                authorLendingCounts.put(authorId, authorLendingCounts.getOrDefault(authorId, 0L) + 1);
+            }
+        }
+
+        // Create AuthorLendingView list
+        List<AuthorLendingView> authorLendingViews = new ArrayList<>();
+        for (AuthorMongoDB author : authors) {
+            Long count = authorLendingCounts.get(author.getAuthorNumber());
+            if (count != null) {
+                authorLendingViews.add(new AuthorLendingView(author.getName(), count));
+            }
+        }
+        return new PageImpl<>(authorLendingViews, pageableRules, authorLendingViews.size());
     }
 
 
