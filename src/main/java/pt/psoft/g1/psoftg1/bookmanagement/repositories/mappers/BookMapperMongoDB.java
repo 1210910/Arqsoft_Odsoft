@@ -22,6 +22,7 @@ public interface BookMapperMongoDB {
     @Mapping(target = "version", source = "bookMongoDB.version")
     Book toDomain(BookMongoDB bookMongoDB);
 
+
     BookMongoDB toMongoDB(Book book);
 
     default String map(Genre Value){

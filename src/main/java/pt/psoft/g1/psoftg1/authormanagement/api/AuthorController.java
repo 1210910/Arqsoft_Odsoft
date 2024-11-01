@@ -145,6 +145,7 @@ public class AuthorController {
     @Operation(summary = "Know the Top 5 authors which have the most lent books")
     @GetMapping("/top5")
     public ListResponse<AuthorLendingView> getTop5() {
+        System.out.println("Entered on the top 5 authors");
         final var list = authorService.findTopAuthorByLendings();
 
         if(list.isEmpty())
@@ -190,6 +191,7 @@ public class AuthorController {
         var author = authorService.findByAuthorNumber(authorNumber)
                 .orElseThrow(() -> new NotFoundException("Author not found"));
         var coAuthors = authorService.findCoAuthorsByAuthorNumber(authorNumber);
+        System.out.println(coAuthors);
         List<CoAuthorView> coAuthorViews = new ArrayList<>();
         for (Author coAuthor : coAuthors ) {
             var books = authorService.findBooksByAuthorNumber(coAuthor.getAuthorNumber());

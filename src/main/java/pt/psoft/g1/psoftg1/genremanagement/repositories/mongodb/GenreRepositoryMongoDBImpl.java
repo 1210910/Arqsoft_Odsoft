@@ -1,5 +1,12 @@
 package pt.psoft.g1.psoftg1.genremanagement.repositories.mongodb;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Projections;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -28,11 +35,16 @@ public class GenreRepositoryMongoDBImpl implements GenreRepository {
 
     private final GenreMapperMongoDB genreMapperMongoDB;
 
+    private final MongoClient mongoClient;
+    private final MongoClient mongo;
+
     @Autowired
     @Lazy
-    public GenreRepositoryMongoDBImpl(GenreRepositoryMongoDB genreRepositoryMongoDB, GenreMapperMongoDB genreMapperMongoDB) {
+    public GenreRepositoryMongoDBImpl(GenreRepositoryMongoDB genreRepositoryMongoDB, GenreMapperMongoDB genreMapperMongoDB, MongoClient mongoClient, @Qualifier("mongo") MongoClient mongo) {
         this.genreRepositoryMongoDB = genreRepositoryMongoDB;
         this.genreMapperMongoDB = genreMapperMongoDB;
+        this.mongoClient = mongoClient;
+        this.mongo = mongo;
     }
 
     @Override
