@@ -160,7 +160,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<Book> findByAuthorName(String authorName) {
-		return bookRepository.findByAuthorName(authorName + "%");
+		return bookRepository.findByAuthorName(authorName);
 	}
 
 	public Book findByIsbn(String isbn) {

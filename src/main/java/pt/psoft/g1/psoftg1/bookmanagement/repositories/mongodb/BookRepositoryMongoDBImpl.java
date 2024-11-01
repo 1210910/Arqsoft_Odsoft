@@ -24,6 +24,7 @@ import pt.psoft.g1.psoftg1.genremanagement.model.mongodb.GenreMongoDB;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.mongodb.GenreRepositoryMongoDB;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,7 @@ public class BookRepositoryMongoDBImpl implements BookRepository {
     @Override
     public List<Book> findByTitle(String title) {
         System.out.println("I AM FINDING BOOKS BY TITLE MATE");
+
         return bookRepositoryMongoDB.findByTitle(title)
                 .stream()
                 .map(bookMapperMongoDB::toDomain)
@@ -71,10 +73,14 @@ public class BookRepositoryMongoDBImpl implements BookRepository {
 
     @Override
     public List<Book> findByAuthorName(String authorName) {
-        return bookRepositoryMongoDB.findByAuthorName(authorName)
-                .stream()
-                .map(bookMapperMongoDB::toDomain)
-                .toList();
+        System.out.println("inside repo " + authorName);
+        List<BookMongoDB> booksFound = bookRepositoryMongoDB.findByAuthorName(authorName);
+        List<Book> booksFoundDomain = new ArrayList<>();
+        for(BookMongoDB bookMongoDB : booksFound) {
+            System.out.println("List bookFound " + bookMongoDB.getTitle());
+            booksFoundDomain.add(bookMapperMongoDB.toDomain(bookMongoDB));
+        }
+        return booksFoundDomain;
     }
 
     @Override
@@ -100,6 +106,7 @@ public class BookRepositoryMongoDBImpl implements BookRepository {
 
     @Override
     public List<Book> findBooksByAuthorNumber(String authorNumber) {
+
         return bookRepositoryMongoDB.findBooksByAuthorNumber(authorNumber)
                 .stream()
                 .map(bookMapperMongoDB::toDomain)

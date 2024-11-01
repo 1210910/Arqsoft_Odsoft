@@ -23,7 +23,7 @@ public interface BookRepositoryMongoDB extends MongoRepository<BookMongoDB, Stri
     @Query("{ 'title.title': { $regex: ?0, $options: 'i' } }") // Case-insensitive regex search
     List<BookMongoDB> findByTitle(String title);
 
-    @Query(value = "{ 'authors.name': { $regex: ?0, $options: 'i' } }") // Case-insensitive regex search
+    @Query(value = "{ 'authors.name.name': { $regex: ?0, $options: 'i' } }") // Case-insensitive regex search
     List<BookMongoDB> findByAuthorName(String authorName);
 
     @Query(value = "{ 'authors.authorNumber': ?0 }")
