@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import pt.psoft.g1.psoftg1.bookmanagement.model.mongodb.BookMongoDB;
@@ -16,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Document(collection = "lendings")
+@EnableMongoAuditing
 public class LendingMongoDB {
 
     @Id
@@ -46,6 +49,7 @@ public class LendingMongoDB {
     private LocalDate returnedDate;
 
     @Field("version")
+    @Version
     private long version;
 
     @Field("commentary")

@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.Document;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.genremanagement.model.mongodb.GenreMongoDB;
@@ -15,6 +16,7 @@ import java.nio.file.InvalidPathException;
 import java.util.List;
 
 @Document(collection = "reader_details")
+@EnableMongoAuditing
 public class ReaderDetailsMongoDB extends EntityWithPhoto {
 
     @Id
@@ -47,6 +49,7 @@ public class ReaderDetailsMongoDB extends EntityWithPhoto {
 
     @Getter
     @Setter
+    @org.springframework.data.annotation.Version
     private Long version;
 
     @Getter

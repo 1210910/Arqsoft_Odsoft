@@ -3,6 +3,8 @@ package pt.psoft.g1.psoftg1.bookmanagement.model.mongodb;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import pt.psoft.g1.psoftg1.authormanagement.model.mongodb.AuthorMongoDB;
@@ -13,6 +15,7 @@ import pt.psoft.g1.psoftg1.shared.model.mongodb.EntityWithPhotoMongoDB;
 import java.util.List;
 
 @Document(collection = "books")
+@EnableMongoAuditing
 public class BookMongoDB extends EntityWithPhotoMongoDB {
 
     @Getter
@@ -22,6 +25,7 @@ public class BookMongoDB extends EntityWithPhotoMongoDB {
 
     @Getter
     @Setter
+    @Version
     @Field("version")
     private Long version;
 

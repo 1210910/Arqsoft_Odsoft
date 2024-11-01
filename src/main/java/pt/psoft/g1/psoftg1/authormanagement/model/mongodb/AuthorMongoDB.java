@@ -6,15 +6,16 @@ import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.mongodb.EntityWithPhotoMongoDB;
 import pt.psoft.g1.psoftg1.shared.model.mongodb.NameMongoDB;
 
-@Document(collection = "authors")  // Optional: specify the collection name
+@Document(collection = "authors")
+@EnableMongoAuditing// Optional: specify the collection name
 public class AuthorMongoDB extends EntityWithPhotoMongoDB {
 
     @Id
@@ -26,6 +27,7 @@ public class AuthorMongoDB extends EntityWithPhotoMongoDB {
 //    private Long authorNumber;
 
     @Version
+    @Getter
     private Long version;  // MongoDB versioning (optional, manual control)
 
     @Field("name")

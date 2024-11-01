@@ -29,6 +29,7 @@ public class UserMongoDB implements UserDetails {
     private String id;
 
     @Field("version")
+    @Version
     private Long version;
 
     @Field("createdAt")
