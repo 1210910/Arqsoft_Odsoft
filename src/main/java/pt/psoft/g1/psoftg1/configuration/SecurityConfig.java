@@ -61,7 +61,7 @@ import pt.psoft.g1.psoftg1.usermanagement.repositories.UserRepository;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @EnableConfigurationProperties
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig  {
 
     private final UserRepository userRepo;
 
@@ -86,6 +86,7 @@ public class SecurityConfig {
 
         return new ProviderManager(authenticationProvider);
     }
+
 
     @Bean
     public UserDetailsService userDetailsService() {

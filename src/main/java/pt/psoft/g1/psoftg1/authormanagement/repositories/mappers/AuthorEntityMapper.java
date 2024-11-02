@@ -16,7 +16,9 @@ import pt.psoft.g1.psoftg1.shared.model.relational.PhotoEntity;
 public interface AuthorEntityMapper {
 
     @Mapping(target = "authorNumber", source = "authorNumber")
+    @Mapping(target = "genId", source = "genId")
     Author toDomain(AuthorEntity authorEntity);
+
 
 
     AuthorEntity toEntity(Author author);

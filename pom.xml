@@ -128,10 +128,6 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>9.3.0</version>
 		</dependency>
-
-
-
-
 	</dependencies>
 
 
@@ -141,6 +137,53 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.9.11</version> <!-- Certifique-se de usar a versão mais recente -->
+				<configuration>
+					<targetClasses>
+						<!-- Especifique o pacote ou classes para mutação -->
+						<param>pt.psoft.g1.psoftg1.genremanagement</param>
+						<param>pt.psoft.g1.psoftg1.bookmanagement</param>
+						<param>pt.psoft.g1.psoftg1.authormanagement</param>
+						<param>pt.psoft.g1.psoftg1.usermanagement</param>
+						<param>pt.psoft.g1.psoftg1.genremanagement</param>
+						<param>pt.psoft.g1.psoftg1.lendingmanagement</param>
+						<param>pt.psoft.g1.psoftg1.readermanagement</param>
+						<param>pt.psoft.g1.psoftg1.shared</param>
+					</targetClasses>
+					<targetTests>
+						<!-- Especifique o pacote dos testes -->
+						<param>pt.psoft.g1.psoftg1.unitTests.*</param>
+					</targetTests>
+					<outputFormats>
+						<param>HTML</param>
+					</outputFormats>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.2</version> <!-- Escolha uma versão recente -->
+				<configuration>
+					<!-- Arquivo de configuração com as regras do Checkstyle -->
+					<configLocation>checkstyle.xml</configLocation>
+					<!-- Gerar um relatório de erros de estilo -->
+					<outputFile>target/checkstyle-result.xml</outputFile>
+					<!-- Tratar avisos como erros (opcional) -->
+					<failOnViolation>false</failOnViolation>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>validate</phase> <!-- Fase do ciclo de vida do Maven -->
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>

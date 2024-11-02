@@ -8,8 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGeneratorFactory;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -32,11 +35,14 @@ public class Lending {
 
     private LendingNumber lendingNumber;
 
+    private  String genId;
+
 
     private Book book;
 
 
     private ReaderDetails readerDetails;
+
 
 
     private LocalDate startDate;
@@ -58,6 +64,9 @@ public class Lending {
 
     @Getter
     private Integer daysOverdue;
+
+
+    private final IdGeneratorFactory idGeneratorFactory = new IdGeneratorFactory();
 
     /**
      * Constructs a new {@code Lending} object.
@@ -84,16 +93,24 @@ public class Lending {
         setDaysUntilReturn();
         setDaysOverdue();
     }
+
+    public void setGenId(String genId) {
+        if (this.genId == null) {
+            this.genId = idGeneratorFactory.getGenerator().generateId();
+        }else {
+            this.genId = genId;
+        }
+    }
     @Builder
-    public Lending(Book book, ReaderDetails readerDetails, LendingNumber lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
+    public Lending(Book book, ReaderDetails readerDetails, LendingNumber lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents, String genId) {
         try {
             this.book = Objects.requireNonNull(book);
-            System.out.println("Book ON THE @BUILDER OF LENDING:" + this.book.getTitle());
-            System.out.println("dawdadwawdawdawdawdawdawdadwad");
-            System.out.println("READER DETAILS: " + readerDetails.getReaderNumber());
+            //System.out.println("Book ON THE @BUILDER OF LENDING:" + this.book.getTitle());
+            //System.out.println("dawdadwawdawdawdawdawdawdadwad");
+            //System.out.println("READER DETAILS: " + readerDetails.getReaderNumber());
             this.readerDetails = Objects.requireNonNull(readerDetails);
-            System.out.println("READER DETAILS");
-            System.out.println("Reader:" + this.readerDetails.getReaderNumber());
+            //System.out.println("READER DETAILS");
+            //System.out.println("Reader:" + this.readerDetails.getReaderNumber());
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("Null objects passed to lending");
         }
@@ -102,11 +119,12 @@ public class Lending {
         this.limitDate = limitDate;
         this.returnedDate = returnedDate;
         this.fineValuePerDayInCents = fineValuePerDayInCents;
-        System.out.println("Start Date: " + this.startDate);
-        System.out.println("Limit Date: " + this.limitDate);
-        System.out.println("Returned Date: " + this.returnedDate);
+        //System.out.println("Start Date: " + this.startDate);
+        //System.out.println("Limit Date: " + this.limitDate);
+        //System.out.println("Returned Date: " + this.returnedDate);
         setDaysUntilReturn();
         setDaysOverdue();
+        setGenId(genId);
     }
 
     public void setReturned(final long desiredVersion, final String commentary) {
@@ -182,24 +200,25 @@ public class Lending {
 
         try {
             lending.book = Objects.requireNonNull(book);
-            System.out.println("Book: " + book.getTitle());
+            //System.out.println("Book: " + book.getTitle());
             lending.readerDetails = Objects.requireNonNull(readerDetails);
-            System.out.println("Reader: " + readerDetails.getReaderNumber());
+            //System.out.println("Reader: " + readerDetails.getReaderNumber());
         } catch (NullPointerException e) {
-            System.out.println("Null objects passed to lending");
+            //System.out.println("Null objects passed to lending");
             throw new IllegalArgumentException("Null objects passed to lending");
         }
-        System.out.println("Creating lending");
+        //System.out.println("Creating lending");
         lending.lendingNumber = new LendingNumber(year, seq);
-        System.out.println("Lending number: " + lending.lendingNumber);
+        //System.out.println("Lending number: " + lending.lendingNumber);
         lending.startDate = startDate;
-        System.out.println("Start date: " + startDate);
+        //System.out.println("Start date: " + startDate);
         lending.limitDate = startDate.plusDays(lendingDuration);
-        System.out.println("Limit date: " + lending.limitDate);
+        //System.out.println("Limit date: " + lending.limitDate);
         lending.fineValuePerDayInCents = fineValuePerDayInCents;
-        System.out.println("Fine value per day: " + fineValuePerDayInCents);
+        //System.out.println("Fine value per day: " + fineValuePerDayInCents);
         lending.returnedDate = returnedDate;
-        System.out.println("Returned date: " + returnedDate);
+        //System.out.println("Returned date: " + returnedDate);
+        lending.setGenId(null);
         return lending;
     }
 

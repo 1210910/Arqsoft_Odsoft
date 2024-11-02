@@ -27,6 +27,11 @@ public class LendingMongoDB {
     @Field("lending_number")
     private LendingNumberMongoDB lendingNumber;
 
+    @Field("genId")
+    @Getter
+    @Setter
+    private String genId;
+
     @Field("book")
     @Getter
     @Setter
@@ -75,7 +80,7 @@ public class LendingMongoDB {
      */
 
     @Builder
-    public LendingMongoDB(BookMongoDB book, ReaderDetailsMongoDB readerDetails, LendingNumberMongoDB lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents) {
+    public LendingMongoDB(BookMongoDB book, ReaderDetailsMongoDB readerDetails, LendingNumberMongoDB lendingNumber, LocalDate startDate, LocalDate limitDate, LocalDate returnedDate, int fineValuePerDayInCents, String genId) {
         try {
             this.book = Objects.requireNonNull(book);
             this.readerDetails = Objects.requireNonNull(readerDetails);
@@ -89,6 +94,7 @@ public class LendingMongoDB {
         this.fineValuePerDayInCents = fineValuePerDayInCents;
         setDaysUntilReturn();
         setDaysOverdue();
+        setGenId(genId);
     }
 
     public void setReturned(final long desiredVersion, final String commentary) {
@@ -154,8 +160,7 @@ public class LendingMongoDB {
     }
 
 
-
-
-
-
+    public String getBookId() {
+        return this.book.getBookId();
+    }
 }

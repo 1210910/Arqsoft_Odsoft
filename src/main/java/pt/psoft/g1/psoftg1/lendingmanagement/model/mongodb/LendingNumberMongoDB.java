@@ -10,6 +10,9 @@ public class LendingNumberMongoDB {
 
     private String lendingNumber;
 
+    protected LendingNumberMongoDB(){
+    }
+
     public LendingNumberMongoDB(int year, int sequential){
         if(year < 1970 || LocalDate.now().getYear() < year)
             throw new IllegalArgumentException("Invalid year component");

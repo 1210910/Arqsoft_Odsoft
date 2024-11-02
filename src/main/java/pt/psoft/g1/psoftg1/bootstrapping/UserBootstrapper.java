@@ -47,7 +47,7 @@ public class UserBootstrapper implements CommandLineRunner {
     private void createReaders() {
         //Reader1 - Manuel
         if (userRepository.findByUsername("manuel@gmail.com").isEmpty()) {
-            final Reader manuel = Reader.newReader("manuel@gmail.com", "Manuelino123!", "Manuel Sarapinto das Coives");
+            final Reader manuel = Reader.newReader("manuel@gmail.com", "Xuba438976", "Manuel Sarapinto das Coives");
             userRepository.save(manuel);
 
             //String dateFormat = LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
@@ -57,7 +57,7 @@ public class UserBootstrapper implements CommandLineRunner {
             queriesToExecute.add(query);
 
             Optional<ReaderDetails> readerDetails1= readerRepository.findByReaderNumber(LocalDate.now().getYear() + "/1");
-            System.out.println("GOT THIS ON READER DETAILS: " + readerDetails1.toString());
+            //System.out.println("GOT THIS ON READER DETAILS: " + readerDetails1.toString());
             Optional<Genre> g1 = genreRepository.findByString("Fantasia");
             Optional<Genre> g2 = genreRepository.findByString("Infantil");
             List<Genre> interestList = new ArrayList<>();
@@ -89,7 +89,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
         //Reader2 - João
         if (userRepository.findByUsername("joao@gmail.com").isEmpty()) {
-            final Reader joao = Reader.newReader("joao@gmail.com", "Joaoratao!123", "João Ratao");
+            final Reader joao = Reader.newReader("joao@gmail.com", "Hupo183353", "João Ratao");
             userRepository.save(joao);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 3, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, joao.getUsername());
@@ -116,7 +116,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
         //Reader3 - Pedro
         if (userRepository.findByUsername("pedro@gmail.com").isEmpty()) {
-            final Reader pedro = Reader.newReader("pedro@gmail.com", "Pedrodascenas!123", "Pedro Das Cenas");
+            final Reader pedro = Reader.newReader("pedro@gmail.com", "Fana504843", "Pedro Das Cenas");
             userRepository.save(pedro);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, pedro.getUsername());
@@ -140,7 +140,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
         //Reader4 - Catarina
         if (userRepository.findByUsername("catarina@gmail.com").isEmpty()) {
-            final Reader catarina = Reader.newReader("catarina@gmail.com", "Catarinamartins!123", "Catarina Martins");
+            final Reader catarina = Reader.newReader("catarina@gmail.com", "Goxu222565", "Catarina Martins");
             userRepository.save(catarina);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 3, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, catarina.getUsername());
@@ -164,7 +164,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
         //Reader5 - Marcelo
         if (userRepository.findByUsername("marcelo@gmail.com").isEmpty()) {
-            final Reader marcelo = Reader.newReader("marcelo@gmail.com", "Marcelosousa!123", "Marcelo Rebelo de Sousa");
+            final Reader marcelo = Reader.newReader("marcelo@gmail.com", "Qoqu617878", "Marcelo Rebelo de Sousa");
             userRepository.save(marcelo);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 1, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, marcelo.getUsername());
@@ -188,7 +188,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
         //Reader6 - Luís
         if (userRepository.findByUsername("luis@gmail.com").isEmpty()) {
-            final Reader luis = Reader.newReader("luis@gmail.com", "Luismontenegro!123", "Luís Montenegro");
+            final Reader luis = Reader.newReader("luis@gmail.com", "Xuka665916", "Luís Montenegro");
             userRepository.save(luis);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 3, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, luis.getUsername());
@@ -212,7 +212,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
         //Reader7 - António
         if (userRepository.findByUsername("antonio@gmail.com").isEmpty()) {
-            final Reader antonio = Reader.newReader("antonio@gmail.com", "Antoniocosta!123", "António Costa");
+            final Reader antonio = Reader.newReader("antonio@gmail.com", "Vucu659240", "António Costa");
             userRepository.save(antonio);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 6, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, antonio.getUsername());
@@ -236,7 +236,7 @@ public class UserBootstrapper implements CommandLineRunner {
 
         //Reader8 - André
         if (userRepository.findByUsername("andre@gmail.com").isEmpty()) {
-            final Reader andre = Reader.newReader("andre@gmail.com", "Andreventura!123", "André Ventura");
+            final Reader andre = Reader.newReader("andre@gmail.com", "Hupo118124", "André Ventura");
             userRepository.save(andre);
             String dateFormat = LocalDateTime.of(LocalDate.of(2024, 5, 20), LocalTime.now()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
             String query = String.format("UPDATE DEFAULT.T_USER SET CREATED_AT = '%s' WHERE USERNAME = '%s'", dateFormat, andre.getUsername());
@@ -262,7 +262,7 @@ public class UserBootstrapper implements CommandLineRunner {
     private void createLibrarian(){
         // Maria
         if (userRepository.findByUsername("maria@gmail.com").isEmpty()) {
-                final User maria = Librarian.newLibrarian("maria@gmail.com", "Mariaroberta!123", "Maria Roberta");
+                final User maria = Librarian.newLibrarian("maria@gmail.com", "Zabu370262", "Maria Roberta");
             userRepository.save(maria);
         }
     }

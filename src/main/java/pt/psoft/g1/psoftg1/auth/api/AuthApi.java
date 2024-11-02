@@ -82,19 +82,19 @@ public class AuthApi {
 			// if the authentication is successful, Spring will store the authenticated user
 			// in its "principal"
 			final User user =userService.findByUsername(authentication.getName()).orElseThrow();
-			System.out.println("tou aqui");
+
 			final Instant now = Instant.now();
 			final long expiry = 36000L; // 1 hours is usually too long for a token to be valid. adjust for production
 
 			final String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 					.collect(joining(" "));
-			System.out.println("tou aqui");
+
 			final JwtClaimsSet claims = JwtClaimsSet.builder().issuer("example.io").issuedAt(now)
 					.expiresAt(now.plusSeconds(expiry)).subject(format("%s,%s", user.getId(), user.getUsername()))
 					.claim("roles", scope).build();
-			System.out.println("tou aqui");
+
 			final String token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-			System.out.println("tou aqui");
+
 
 
 			return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(userViewMapper.toUserView(user));

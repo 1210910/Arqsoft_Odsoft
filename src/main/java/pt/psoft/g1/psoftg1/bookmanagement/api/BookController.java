@@ -221,6 +221,7 @@ public class BookController {
     @GetMapping("suggestions")
     public ListResponse<BookView> getBooksSuggestions(Authentication authentication) {
         User loggedUser = userService.getAuthenticatedUser(authentication);
+        System.out.println(loggedUser.getUsername());
         ReaderDetails readerDetails = readerService.findByUsername(loggedUser.getUsername())
                 .orElseThrow(() -> new NotFoundException(ReaderDetails.class, loggedUser.getUsername()));
 

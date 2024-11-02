@@ -23,6 +23,7 @@ import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsDTO;
 import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsPerMonthDTO;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.LendingEntity;
+import pt.psoft.g1.psoftg1.readermanagement.model.relational.ReaderDetailsEntity;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -219,4 +220,70 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
 
         return lendingsPerMonth;
     }
+
+    @Override
+    public List<String> getMostLentGenres(int maxGenres) {
+        //use entitymanager to create a query
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<LendingEntity> lendingRoot = cq.from(LendingEntity.class);
+        Join<LendingEntity, BookEntity> bookJoin = lendingRoot.join("book");
+        Join<BookEntity, GenreEntity> genreJoin = bookJoin.join("genre");
+
+        Expression<Long> lendingCount = cb.count(lendingRoot);
+
+        cq.multiselect(genreJoin.get("genre"), lendingCount);
+
+        cq.groupBy(genreJoin.get("genre"));
+
+        cq.orderBy(cb.desc(lendingCount));
+
+        TypedQuery<Tuple> query = entityManager.createQuery(cq);
+
+        query.setMaxResults(maxGenres);
+
+        List<Tuple> results = query.getResultList();
+
+        List<String> genres = new ArrayList<>();
+
+        for (Tuple result : results) {
+            genres.add(result.get(0, String.class));
+        }
+
+        return genres;
+    }
+
+    @Override
+    public String getMostLentGenreByReader(String readerNumber){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<LendingEntity> lendingRoot = cq.from(LendingEntity.class);
+        Join <LendingEntity, ReaderDetailsEntity> readerJoin = lendingRoot.join("readerDetails");
+        Join<LendingEntity, BookEntity> bookJoin = lendingRoot.join("book");
+        Join<BookEntity, GenreEntity> genreJoin = bookJoin.join("genre");
+
+        Expression<Long> lendingCount = cb.count(lendingRoot);
+
+        cq.multiselect(genreJoin.get("genre"), lendingCount);
+
+        cq.where(cb.equal(readerJoin.get("readerNumber").get("readerNumber"), readerNumber));
+
+        cq.groupBy(genreJoin.get("genre"));
+
+        cq.orderBy(cb.desc(lendingCount));
+
+        TypedQuery<Tuple> query = entityManager.createQuery(cq);
+
+        query.setMaxResults(1);
+
+        List<Tuple> results = query.getResultList();
+
+        if (results.isEmpty()) {
+            return null;
+        }
+
+        return results.get(0).get(0, String.class);
+    }
+
 }

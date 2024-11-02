@@ -51,7 +51,11 @@ public class ReaderRepositoryMongoDBImpl implements ReaderRepository {
 
     @Override
     public Optional<ReaderDetails> findByUsername(String username) {
-        return Optional.empty();
+        if (readerRepositoryMongoDB.findByUsername(username).isEmpty()) {
+            System.out.println("tou aqui");
+            return Optional.empty();
+        }
+        return readerRepositoryMongoDB.findByUsername(username).map(readerMapperMongoDB::toDomain);
     }
 
     @Override

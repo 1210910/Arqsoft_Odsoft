@@ -12,4 +12,6 @@ public interface GenreRepositoryMongoDB extends MongoRepository<GenreMongoDB, St
 
     @Query("{ 'genre': ?0 }")
     Optional<GenreMongoDB> findByGenre(String genreName);
+
+
 }

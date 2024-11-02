@@ -1,25 +1,36 @@
 package pt.psoft.g1.psoftg1.authormanagement.model;
 
-import jakarta.persistence.*;
-import lombok.Builder;
+import lombok.Generated;
 import lombok.Getter;
+
+import lombok.NoArgsConstructor;
 import org.hibernate.StaleObjectStateException;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 import pt.psoft.g1.psoftg1.shared.model.Name;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGenerator;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGeneratorFactory;
+
 
 public class Author extends EntityWithPhoto {
 
     @Getter
     private String authorNumber;
 
+    @Getter
+    private String genId;
+
     private long version;
 
     private Name name;
 
     private Bio bio;
+
+    private final IdGeneratorFactory idGeneratorFactory = new IdGeneratorFactory();
 
     public void setName(String name) {
         this.name = new Name(name);
@@ -37,15 +48,20 @@ public class Author extends EntityWithPhoto {
         return version;
     }
 
+    public void setGenId(String genId) {
+        if (this.genId == null) {
+            this.genId = idGeneratorFactory.getGenerator().generateId();
+        }else {
+            this.genId = genId;
+        }
+    }
 
-    public Author(String name, String bio, String photoURI) {
+
+    public Author(String name, String bio, String photoURI,String genId) {
         setName(name);
         setBio(bio);
         setPhotoInternal(photoURI);
-    }
-
-    protected Author() {
-        // got ORM only
+        setGenId(genId);
     }
 
 

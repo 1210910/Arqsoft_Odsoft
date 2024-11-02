@@ -1,6 +1,7 @@
 package pt.psoft.g1.psoftg1.bookmanagement.repositories.relational;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import pt.psoft.g1.psoftg1.bookmanagement.services.SearchBooksQuery;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.relational.GenreRepositorySqlServer;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.LendingEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class BookRepositorySqlServerImpl implements BookRepository {
     public List<Book> findByAuthorName(String authorName) {
         List<Book> book = new ArrayList<>();
         List<BookEntity> books=bookRepositorySqlServer.findByAuthorName(authorName);
-        System.out.println(book);
+        //System.out.println(book);
         for (BookEntity b: books) {
             book.add(bookEntityMapper.toModel(b));
         }
@@ -193,4 +195,55 @@ public class BookRepositorySqlServerImpl implements BookRepository {
 
         return books;
     }
+
+    @Override
+    public List<Book> findMostLentBooksByGenre(int maxBooks, String genre) {
+        // Criação do CriteriaBuilder e CriteriaQuery
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+
+        // Definição do Root para a entidade Lending
+        Root<LendingEntity> lendingRoot = cq.from(LendingEntity.class);
+
+        // Definição dos joins para acessar Book e Genre
+        Join<LendingEntity, BookEntity> bookJoin = lendingRoot.join("book");
+        Join<BookEntity, GenreEntity> genreJoin = bookJoin.join("genre");
+
+        // Filtragem pelo gênero especificado
+        cq.where(cb.equal(genreJoin.get("genre"), genre));
+
+        // Contagem de ocorrências de empréstimos por livro
+        Expression<Long> lendingCount = cb.count(lendingRoot);
+
+        // Seleciona o livro e sua contagem de empréstimos
+        cq.multiselect(bookJoin, lendingCount);
+
+        // Agrupa pela entidade Book para contar cada livro individualmente
+        cq.groupBy(bookJoin);
+
+        // Ordena pela contagem de empréstimos em ordem decrescente
+        cq.orderBy(cb.desc(lendingCount));
+
+        // Criação e execução da consulta
+        TypedQuery<Tuple> query = em.createQuery(cq);
+        query.setMaxResults(maxBooks);
+
+        // Processa os resultados e retorna uma lista de livros
+        List<Tuple> results = query.getResultList();
+        List<BookEntity> mostLentBooks = new ArrayList<>();
+
+        for (Tuple result : results) {
+            mostLentBooks.add(result.get(0, BookEntity.class));
+        }
+
+        List<Book> mostLentBooksModel = new ArrayList<>();
+
+        for (BookEntity bookEntity : mostLentBooks) {
+            mostLentBooksModel.add(bookEntityMapper.toModel(bookEntity));
+        }
+
+        return mostLentBooksModel;
+    }
+
+
 }

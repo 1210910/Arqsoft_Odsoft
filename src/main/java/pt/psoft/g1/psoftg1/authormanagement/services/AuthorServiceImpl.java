@@ -24,6 +24,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorMapper mapper;
     private final PhotoRepository photoRepository;
 
+
     //@Override
     //public Iterable<Author> findAll() {
     //    return authorRepository.findAll();

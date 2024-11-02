@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -22,11 +24,14 @@ import pt.psoft.g1.psoftg1.bookmanagement.model.mongodb.BookMongoDB;
 import pt.psoft.g1.psoftg1.authormanagement.model.mongodb.AuthorMongoDB;
 import pt.psoft.g1.psoftg1.genremanagement.model.mongodb.GenreMongoDB;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.mongodb.GenreRepositoryMongoDB;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.mongodb.LendingMongoDB;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Profile("mongodb")
 @Qualifier("mongoDbRepo")
@@ -195,5 +200,39 @@ public class BookRepositoryMongoDBImpl implements BookRepository {
     public void delete(Book book) {
         // Assuming you have a method to delete by ISBN or ID
         //bookRepositoryMongoDB.deleteByIsbn(book.getIsbn());
+    }
+
+    @Override
+    public List<Book> findMostLentBooksByGenre(int maxBooks, String genre) {
+        // 1. Buscar todos os empréstimos da coleção 'lendings'
+        List<LendingMongoDB> lendings = mongoTemplate.findAll(LendingMongoDB.class, "lendings");
+
+
+
+        // 2. Filtrar os empréstimos e contar os livros por gênero
+        Map<String, Long> lendingCountMap = lendings.stream()
+                .filter(lending -> {
+                    // Obter o livro correspondente ao empréstimo através do método getBook
+                    BookMongoDB book = lending.getBook(); // Método que retorna o livro associado
+                    return book != null && genre.equals(book.getGenre().getGenre());
+                })
+                .collect(Collectors.groupingBy(lending -> lending.getBook().getBookId(), Collectors.counting())); // Contar por bookId
+
+
+        // 3. Obter os IDs dos livros mais emprestados e limitar ao maxBooks
+        List<String> topBookIds = lendingCountMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(maxBooks)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+
+        // 4. Recuperar os detalhes dos livros mais emprestados
+        List<BookMongoDB> mostLentBooks = mongoTemplate.find(Query.query(Criteria.where("_id").in(topBookIds)), BookMongoDB.class, "books");
+
+        // 5. Mapear para objetos de domínio
+        return mostLentBooks.stream()
+                .map(bookMapperMongoDB::toDomain)
+                .collect(Collectors.toList());
     }
 }

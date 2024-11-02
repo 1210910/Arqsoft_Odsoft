@@ -13,6 +13,7 @@ import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.mongodb.EntityWithPhotoMongoDB;
 import pt.psoft.g1.psoftg1.shared.model.mongodb.NameMongoDB;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGeneratorFactory;
 
 @Document(collection = "authors")
 @EnableMongoAuditing// Optional: specify the collection name
@@ -22,6 +23,11 @@ public class AuthorMongoDB extends EntityWithPhotoMongoDB {
     @Getter
     @Setter
     private String authorNumber;
+
+    @Field("genId")
+    @Getter
+    @Setter
+    private String genId;
 
 //    @Field("authorNumber")
 //    private Long authorNumber;
@@ -36,11 +42,13 @@ public class AuthorMongoDB extends EntityWithPhotoMongoDB {
     @Field("bio")
     private BioMongoDB bio;
 
+
     // Constructor, getters, setters
-    public AuthorMongoDB(String name, String bio, String photoURI) {
+    public AuthorMongoDB(String name, String bio, String photoURI, String genId) {
         setName(name);
         setBio(bio);
         setPhotoInternal(photoURI);
+        setGenId(genId);
     }
 
     protected AuthorMongoDB() {

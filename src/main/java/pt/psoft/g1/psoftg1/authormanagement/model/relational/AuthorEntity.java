@@ -3,6 +3,7 @@ package pt.psoft.g1.psoftg1.authormanagement.model.relational;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import pt.psoft.g1.psoftg1.authormanagement.model.Bio;
 import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
@@ -24,6 +25,9 @@ public class AuthorEntity extends EntityWithPhotoEntity {
     @Version
     private long version;
 
+    @Getter
+    @Setter
+    private String genId;
     @Embedded
     private NameEntity name;
 
@@ -46,11 +50,14 @@ public class AuthorEntity extends EntityWithPhotoEntity {
         return authorNumber;
     }
 
+
+
     @Builder
-    public AuthorEntity(String name, String bio, String photoURI) {
+    public AuthorEntity(String name, String bio, String photoURI, String genId) {
         setName(name);
         setBio(bio);
         setPhotoInternal(photoURI);
+        setGenId(genId);
     }
 
     protected AuthorEntity() {

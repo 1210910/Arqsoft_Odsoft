@@ -63,7 +63,7 @@ public class ReaderRepositorySqlServerImpl implements ReaderRepository {
             return Optional.empty();
         }else {
             ReaderDetailsEntity readerDetailsEntity = readerRepostorySqlServer.findByReaderNumber(readerNumber).get();
-            System.out.println(readerDetailsEntity.getReader());
+            //System.out.println(readerDetailsEntity.getReader());
             return Optional.of(readerEntityMapper.toModel(readerDetailsEntity));
         }
     }

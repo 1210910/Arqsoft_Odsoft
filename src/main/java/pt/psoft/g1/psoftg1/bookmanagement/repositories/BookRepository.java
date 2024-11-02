@@ -28,6 +28,8 @@ public interface BookRepository {
 
     List<Book> searchBooks(pt.psoft.g1.psoftg1.shared.services.Page page, SearchBooksQuery query);
 
+    List<Book> findMostLentBooksByGenre(int maxBooks, String genre);
+
     Book save(Book book);
     void delete(Book book);
 }

@@ -25,11 +25,7 @@ public interface ReaderRepositoryMongoDB extends MongoRepository<ReaderDetailsMo
     @Query("{ 'reader.id': ?0 }")
     Optional<ReaderDetailsMongoDB> findByUserId(String userId);
 
-    @Aggregation(pipeline = {
-            "{ '$lookup': { 'from': 'user', 'localField': 'reader.id', 'foreignField': '_id', 'as': 'user' }}",
-            "{ '$match': { 'user.username': ?0 }}",
-            "{ '$unwind': '$user' }"
-    })
+    @Query("{ 'reader.username': ?0 }")
     Optional<ReaderDetailsMongoDB> findByUsername(String username);
 
     @Aggregation(pipeline = {

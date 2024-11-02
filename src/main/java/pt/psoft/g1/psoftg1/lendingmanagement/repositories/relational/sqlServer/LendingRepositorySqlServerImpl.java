@@ -180,9 +180,6 @@ public class LendingRepositorySqlServerImpl implements LendingRepository {
     @Override
     public Lending save(Lending lending) {
 
-
-
-
         LendingEntity entity = lendingEntityMapper.modelToSqlServer(lending);
 
 
