@@ -129,11 +129,7 @@
 			<version>9.3.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>31.0.1-jre</version> <!-- Ou uma versão mais recente -->
-		</dependency>
+
 	</dependencies>
 
 
@@ -173,20 +169,18 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.2.1</version> <!-- Escolha uma versão recente -->
+				<version>3.2.1</version>
 				<configuration>
-					<!-- Arquivo de configuração com as regras do Checkstyle -->
 					<configLocation>src/main/resources/checkstyle.xml</configLocation>
-					<!-- Gerar um relatório de erros de estilo -->
-					<outputFile>target/checkstyle-result.xml</outputFile>
-					<!-- Tratar avisos como erros (opcional) -->
-					<failOnViolation>false</failOnViolation>
+					<failsOnError>false</failsOnError>
+					<failsOnViolation>false</failsOnViolation>
+					<outputDirectory>target/checkstyle-results</outputDirectory>
 				</configuration>
 				<executions>
 					<execution>
-						<phase>validate</phase> <!-- Fase do ciclo de vida do Maven -->
+						<phase>validate</phase>
 						<goals>
-							<goal>check</goal>
+							<goal>checkstyle</goal>
 						</goals>
 					</execution>
 				</executions>

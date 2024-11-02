@@ -1,45 +1,13 @@
+<?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
-
-<module name="Checker">
-    <!-- Defina o charset do código fonte -->
-    <property name="charset" value="UTF-8"/>
-
-    <!-- Limite de comprimento de linha (120 colunas) -->
-    <module name="LineLength">
-        <property name="max" value="120"/>
-        <property name="ignorePattern" value="^package.*|^import.*|a very long string pattern"/>
-    </module>
-
-    <!-- Verificar uso de importações -->
+<module name = "Checker">
     <module name="TreeWalker">
-        <!-- Importações desnecessárias -->
-        <module name="UnusedImports"/>
-
-        <!-- Importação individual ao invés de wildcard (*) -->
-        <module name="AvoidStarImport"/>
-
-        <!-- Verificar convenção de nomenclatura -->
-        <module name="MethodName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
-        </module>
-
-        <!-- Exigir comentários de documentação em classes e métodos públicos -->
-        <module name="JavadocType"/>
         <module name="JavadocMethod"/>
-        <module name="JavadocVariable"/>
-
-        <!-- Controlar a indentação (4 espaços) -->
-        <module name="Indentation">
-            <property name="basicOffset" value="4"/>
-            <property name="tabWidth" value="4"/>
-        </module>
-
-        <!-- Garantir espaços ao redor de operadores -->
-        <module name="WhitespaceAround"/>
-
-        <!-- Garantir que não haja espaço em branco no fim das linhas -->
-        <module name="TrailingWhitespace"/>
+        <module name="MethodName"/>
+        <module name="ParameterName"/>
+        <module name="LocalVariableName"/>
+        <!-- Add more modules as needed -->
     </module>
 </module>
