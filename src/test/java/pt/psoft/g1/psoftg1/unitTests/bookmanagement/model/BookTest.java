@@ -78,9 +78,23 @@ class BookTest {
         // Arrange
         authors.add(mockAuthor);
         authors.add(mockAuthor2);
+        Mockito.when(mockAuthor.getName()).thenReturn("John Doe");
+        Mockito.when(mockAuthor2.getName()).thenReturn("Jane Doe");
+        Mockito.when(mockGenre.getGenre()).thenReturn("Fantasia");
 
         // Act
-        assertDoesNotThrow(() -> new Book(validIsbn, validTitle, null, mockGenre, authors, null));
+        Book book = new Book(validIsbn, validTitle, null, mockGenre, authors, null);
+
+        // Assert
+        assertNotNull(book);
+        assertEquals(validIsbn, book.getIsbn());
+        assertEquals(validTitle, book.getTitle().getTitle());
+        assertEquals(mockGenre, book.getGenre());
+        assertEquals(authors, book.getAuthors());
+        assertEquals(book.getAuthors().get(0).getName(), "John Doe");
+        assertEquals(book.getAuthors().get(1).getName(), "Jane Doe");
+        assertEquals(book.getGenre().getGenre(), "Fantasia");
+
     }
 
 }
