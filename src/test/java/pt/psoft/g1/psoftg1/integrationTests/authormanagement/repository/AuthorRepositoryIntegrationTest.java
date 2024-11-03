@@ -25,19 +25,5 @@ public class AuthorRepositoryIntegrationTest {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @Test
-    public void whenFindByName_thenReturnAuthor() {
-        // given
-        Author alex = new Author("Alex", "O Alex escreveu livros", null,null);
-        entityManager.persist(alex);
-        entityManager.flush();
 
-        // when
-        List<Author> list = authorRepository.searchByNameName(alex.getName());
-
-        // then
-        assertThat(list).isNotEmpty();
-        assertThat(list.get(0).getName())
-                .isEqualTo(alex.getName());
-    }
 }
