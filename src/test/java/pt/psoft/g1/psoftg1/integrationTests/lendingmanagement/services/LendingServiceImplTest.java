@@ -15,7 +15,6 @@ import pt.psoft.g1.psoftg1.exceptions.LendingForbiddenException;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relationalDataModel.LendingEntity;
 import pt.psoft.g1.psoftg1.lendingmanagement.repositories.LendingRepository;
 import pt.psoft.g1.psoftg1.lendingmanagement.services.CreateLendingRequest;
 import pt.psoft.g1.psoftg1.lendingmanagement.services.LendingService;
@@ -61,7 +60,7 @@ class LendingServiceImplTest {
     void setUp() {
         author = new Author("Manuel Antonio Pina",
                 "Manuel António Pina foi um jornalista e escritor português, premiado em 2011 com o Prémio Camões",
-                null);
+                null,null);
         authorRepository.save(author);
 
         genre = new Genre("Género");
@@ -104,7 +103,7 @@ class LendingServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        lendingRepository.delete(lending);
+        //lendingRepository.delete(lending);
         readerRepository.delete(readerDetails);
         userRepository.delete(reader);
         bookRepository.delete(book);
@@ -137,7 +136,7 @@ class LendingServiceImplTest {
         // 4th lending
         assertThrows(LendingForbiddenException.class, () -> lendingService.create(request));
 
-        lendingRepository.delete(lending3);
+       // lendingRepository.delete(lending3);
         lendingRepository.save(Lending.newBootstrappingLending(book,
                 readerDetails,
                 2024,
@@ -155,7 +154,7 @@ class LendingServiceImplTest {
     @Test
     void testSetReturned() {
         int year = 2024, seq = 888;
-        var notReturnedLending = lendingRepository.save(LendingEntity.newBootstrappingLending(book,
+        var notReturnedLending = lendingRepository.save(Lending.newBootstrappingLending(book,
                 readerDetails,
                 year,
                 seq,

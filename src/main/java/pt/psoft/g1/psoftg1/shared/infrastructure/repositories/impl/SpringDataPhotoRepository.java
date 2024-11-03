@@ -21,7 +21,7 @@ public interface SpringDataPhotoRepository extends PhotoRepository, CrudReposito
     @Modifying
     @Transactional
     @Query("DELETE " +
-            "FROM Photo p " +
+            "FROM PhotoEntity p " +
             "WHERE p.photoFile = :photoFile")
     void deleteByPhotoFile(String photoFile);
 }

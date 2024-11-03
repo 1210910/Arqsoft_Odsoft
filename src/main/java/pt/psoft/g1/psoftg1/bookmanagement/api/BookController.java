@@ -73,6 +73,7 @@ public class BookController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        System.out.println(book.getIsbn());
         //final var savedBook = bookService.save(book);
         final var newBookUri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .pathSegment(book.getIsbn())
@@ -90,6 +91,8 @@ public class BookController {
         final var book = bookService.findByIsbn(isbn);
 
         BookView bookView = bookViewMapper.toBookView(book);
+
+        System.out.println(book.getVersion());
 
         return ResponseEntity.ok()
                 .eTag(Long.toString(book.getVersion()))
@@ -189,6 +192,8 @@ public class BookController {
         if (authorName != null)
             booksByAuthorName = bookService.findByAuthorName(authorName);
 
+        System.out.println(booksByAuthorName);
+
         Set<Book> bookSet = new HashSet<>();
         if (booksByTitle!= null)
             bookSet.addAll(booksByTitle);
@@ -217,6 +222,7 @@ public class BookController {
     @GetMapping("suggestions")
     public ListResponse<BookView> getBooksSuggestions(Authentication authentication) {
         User loggedUser = userService.getAuthenticatedUser(authentication);
+        System.out.println(loggedUser.getUsername());
         ReaderDetails readerDetails = readerService.findByUsername(loggedUser.getUsername())
                 .orElseThrow(() -> new NotFoundException(ReaderDetails.class, loggedUser.getUsername()));
 

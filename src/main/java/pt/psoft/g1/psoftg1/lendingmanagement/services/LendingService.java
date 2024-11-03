@@ -27,4 +27,6 @@ public interface LendingService {
     List<Lending> searchLendings(Page page, SearchLendingQuery request);
 
 
+
+
 }

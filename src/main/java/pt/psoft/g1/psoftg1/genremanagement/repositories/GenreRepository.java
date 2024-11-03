@@ -20,5 +20,9 @@ public interface GenreRepository {
     List<GenreLendingsDTO> getAverageLendingsInMonth(LocalDate month, pt.psoft.g1.psoftg1.shared.services.Page page);
     List<GenreLendingsPerMonthDTO> getLendingsPerMonthLastYearByGenre();
     List<GenreLendingsPerMonthDTO> getLendingsAverageDurationPerMonth(LocalDate startDate, LocalDate endDate);
+
+    List<String> getMostLentGenres(int maxGenres);
+
+    String getMostLentGenreByReader(String readerNumber);
     void delete(Genre genre);
 }

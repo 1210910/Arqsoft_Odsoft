@@ -36,7 +36,10 @@ public class LendingServiceImpl implements LendingService{
 
     @Override
     public Optional<Lending> findByLendingNumber(String lendingNumber){
-        return lendingRepository.findByLendingNumber(lendingNumber);
+        //System.out.println(lendingRepository.findByLendingNumber(lendingNumber).get().getClass());
+        Optional<Lending> lending = lendingRepository.findByLendingNumber(lendingNumber);
+        System.out.println(lending);
+        return lending;
     }
 
     @Override
@@ -66,6 +69,7 @@ public class LendingServiceImpl implements LendingService{
                 throw new LendingForbiddenException("Reader has book(s) past their due date");
             }
             count++;
+            System.out.println(count);
             //Business rule: cannot create a lending if user already has 3 outstanding books to return.
             if (count >= 3) {
                 throw new LendingForbiddenException("Reader has three books outstanding already");
@@ -150,6 +154,8 @@ public class LendingServiceImpl implements LendingService{
                 endDate);
 
     }
+
+
 
 
 

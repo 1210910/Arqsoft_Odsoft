@@ -1,14 +1,26 @@
 package pt.psoft.g1.psoftg1.unitTests.lendingmanagement.model;
 
+import org.hibernate.StaleObjectStateException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.event.annotation.BeforeTestExecution;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
+import pt.psoft.g1.psoftg1.bookmanagement.model.Title;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
+import pt.psoft.g1.psoftg1.lendingmanagement.model.LendingNumber;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
+import pt.psoft.g1.psoftg1.shared.model.Name;
+import pt.psoft.g1.psoftg1.shared.services.generator.ApplicationContextProvider;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGenerator;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGeneratorFactory;
 import pt.psoft.g1.psoftg1.usermanagement.model.Reader;
 
 import java.time.LocalDate;
@@ -16,120 +28,203 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@SpringBootTest
 @PropertySource({"classpath:config/library.properties"})
 class LendingTest {
+
+
     private static final ArrayList<Author> authors = new ArrayList<>();
-    private static Book book;
-    private static ReaderDetails readerDetails;
+    private static Book bookdouble;
+    private static Reader readerDouble;
+    private static Genre genreDouble;
+    private static ReaderDetails readerDetailsDouble;
     @Value("${lendingDurationInDays}")
     private int lendingDurationInDays;
     @Value("${fineValuePerDayInCents}")
     private int fineValuePerDayInCents;
 
     @BeforeAll
-    public static void setup(){
-        Author author = new Author("Manuel Antonio Pina",
-                "Manuel António Pina foi um jornalista e escritor português, premiado em 2011 com o Prémio Camões",
-                null);
+    public static void setup() {
+        Author author = mock(Author.class);
+        when(author.getName()).thenReturn("Manuel Antonio Pina");
         authors.add(author);
-        book = new Book("9782826012092",
-                "O Inspetor Max",
-                "conhecido pastor-alemão que trabalha para a Judiciária, vai ser fundamental para resolver um importante caso de uma rede de malfeitores que quer colocar uma bomba num megaconcerto de uma ilustre cantora",
-                new Genre("Romance"),
-                authors,
-                null);
-        readerDetails = new ReaderDetails(1,
-                Reader.newReader("manuel@gmail.com", "Manuelino123!", "Manuel Sarapinto das Coives"),
-                "2000-01-01",
-                "919191919",
-                true,
-                true,
-                true,
-                null,
-                null);
+
+        genreDouble = mock(Genre.class);
+        when(genreDouble.getGenre()).thenReturn("Romance");
+
+        bookdouble = mock(Book.class);
+        when(bookdouble.getTitle()).thenReturn(mock(Title.class));
+        when(bookdouble.getTitle().toString()).thenReturn("O Inspetor Max");
+
+        readerDouble = mock(Reader.class);
+        when(readerDouble.getUsername()).thenReturn("manuel@gmail.com");
+
+        readerDetailsDouble = mock(ReaderDetails.class);
+        when(readerDetailsDouble.getReader()).thenReturn(readerDouble);
     }
 
     @Test
-    void ensureBookNotNull(){
-        assertThrows(IllegalArgumentException.class, () -> new Lending(null, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents));
+    void ensureBookNotNull() {
+        assertThrows(IllegalArgumentException.class, () -> new Lending(null, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents));
     }
 
     @Test
-    void ensureReaderNotNull(){
-        assertThrows(IllegalArgumentException.class, () -> new Lending(book, null, 1, lendingDurationInDays, fineValuePerDayInCents));
+    void ensureReaderNotNull() {
+        assertThrows(IllegalArgumentException.class, () -> new Lending(bookdouble, null, 1, lendingDurationInDays, fineValuePerDayInCents));
     }
 
     @Test
-    void ensureValidReaderNumber(){
-        assertThrows(IllegalArgumentException.class, () -> new Lending(book, readerDetails, -1, lendingDurationInDays, fineValuePerDayInCents));
+    void ensureValidReaderNumber() {
+        assertThrows(IllegalArgumentException.class, () -> new Lending(bookdouble, readerDetailsDouble, -1, lendingDurationInDays, fineValuePerDayInCents));
     }
 
     @Test
-    void testSetReturned(){
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
-        lending.setReturned(0,null);
+    void ensureReaderNotNullInBuilder() {
+        assertThrows(IllegalArgumentException.class, () -> new Lending(bookdouble, null, mock(LendingNumber.class), LocalDate.now(), LocalDate.now(), null ,fineValuePerDayInCents,null));
+    }
+
+    @Test
+    void ensureReaderNotNullInBootstrap() {
+        assertThrows(IllegalArgumentException.class, () -> Lending.newBootstrappingLending(bookdouble, null, 2021, 1, LocalDate.now(), null, lendingDurationInDays, fineValuePerDayInCents));
+    }
+
+
+    @Test
+    void testSetReturned() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        lending.setReturned(0, null);
         assertEquals(LocalDate.now(), lending.getReturnedDate());
     }
 
     @Test
-    void testGetDaysDelayed(){
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+    void testBootstrapLending() {
+        Lending lending = Lending.newBootstrappingLending(bookdouble, readerDetailsDouble, 2021, 1, LocalDate.now(), null, lendingDurationInDays, fineValuePerDayInCents);
+        assertEquals(LocalDate.now(), lending.getStartDate());
+        assertEquals(LocalDate.now().plusDays(lendingDurationInDays), lending.getLimitDate());
+    }
+
+    @Test
+    void testLendingBuilder(){
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, mock(LendingNumber.class), LocalDate.now(), LocalDate.now(), null ,fineValuePerDayInCents,null);
+        assertNotNull(lending);
+        assertEquals(bookdouble, lending.getBook());
+        assertEquals(readerDetailsDouble, lending.getReaderDetails());
+        assertEquals(fineValuePerDayInCents, lending.getFineValuePerDayInCents());
+    }
+
+
+    @Test
+    void testSetGenId() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        lending.setGenId("1");
+        assertEquals("1", lending.getGenId());
+    }
+
+    @Test
+    void testSetBook() {
+        Book book = mock(Book.class);
+        when(book.getTitle()).thenReturn(mock(Title.class));
+        when(book.getTitle().toString()).thenReturn("O Inspetor Max");
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        lending.setBook(book);
+        assertEquals(book, lending.getBook());
+        assertEquals("O Inspetor Max", lending.getTitle());
+    }
+
+    @Test
+    void testSetReturnedWhenAlreadyReturnedThrowsException() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        lending.setReturned(0, null);
+        assertThrows(IllegalArgumentException.class, () -> lending.setReturned(1, "Another return attempt"));
+    }
+
+    @Test
+    void testSetReturnedWithStaleVersionThrowsException() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        assertThrows(StaleObjectStateException.class, () -> lending.setReturned(999, null));
+    }
+
+    @Test
+    void testGetDaysDelayed() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertEquals(0, lending.getDaysDelayed());
     }
 
     @Test
-    void testGetDaysUntilReturn(){
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+    void testGetFineValueInCentsBeforeDueDate() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        assertEquals(Optional.empty(), lending.getFineValueInCents());
+    }
+
+    @Test
+    void testGetFineValueInCentsAfterDueDate() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        lending.setReturned(0, null);
+        lending.getDaysUntilReturn();
+        assertFalse(lending.getFineValueInCents().isPresent());
+    }
+
+    @Test
+    void testGetDaysUntilReturn() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertEquals(Optional.of(lendingDurationInDays), lending.getDaysUntilReturn());
     }
 
     @Test
-    void testGetDaysOverDue(){
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+    void testGetDaysOverDueBeforeReturn() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertEquals(Optional.empty(), lending.getDaysOverdue());
     }
 
     @Test
     void testGetTitle() {
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertEquals("O Inspetor Max", lending.getTitle());
     }
 
     @Test
     void testGetLendingNumber() {
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertEquals(LocalDate.now().getYear() + "/1", lending.getLendingNumber());
     }
 
     @Test
     void testGetBook() {
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
-        assertEquals(book, lending.getBook());
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        assertEquals(bookdouble, lending.getBook());
     }
 
     @Test
     void testGetReaderDetails() {
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
-        assertEquals(readerDetails, lending.getReaderDetails());
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        assertEquals(readerDetailsDouble, lending.getReaderDetails());
     }
 
     @Test
     void testGetStartDate() {
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertEquals(LocalDate.now(), lending.getStartDate());
     }
 
     @Test
     void testGetLimitDate() {
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertEquals(LocalDate.now().plusDays(lendingDurationInDays), lending.getLimitDate());
     }
 
     @Test
-    void testGetReturnedDate() {
-        Lending lending = new Lending(book, readerDetails, 1, lendingDurationInDays, fineValuePerDayInCents);
+    void testGetReturnedDateBeforeReturn() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
         assertNull(lending.getReturnedDate());
+    }
+
+    @Test
+    void testGetReturnedDateAfterReturn() {
+        Lending lending = new Lending(bookdouble, readerDetailsDouble, 1, lendingDurationInDays, fineValuePerDayInCents);
+        lending.setReturned(0, "Returned with commentary");
+        assertEquals(LocalDate.now(), lending.getReturnedDate());
     }
 
 }

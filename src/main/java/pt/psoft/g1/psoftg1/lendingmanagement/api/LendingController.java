@@ -49,17 +49,29 @@ public class LendingController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<LendingView> create(@Valid @RequestBody final CreateLendingRequest resource) {
+        try {
 
-        final var lending = lendingService.create(resource);
 
-        final var newlendingUri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .pathSegment(lending.getLendingNumber())
-                .build().toUri();
+            final var lending = lendingService.create(resource);
 
-        return ResponseEntity.created(newlendingUri)
-                .contentType(MediaType.parseMediaType("application/hal+json"))
-                .eTag(Long.toString(lending.getVersion()))
-                .body(lendingViewMapper.toLendingView(lending));
+
+
+            final var newLendingUri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                    .pathSegment(lending.getLendingNumber())
+                    .build().toUri();
+
+            return ResponseEntity.created(newLendingUri)
+                    .contentType(MediaType.parseMediaType("application/hal+json"))
+                    .eTag(Long.toString(lending.getVersion()))
+                    .body(lendingViewMapper.toLendingView(lending));
+        } catch (Exception ex) {
+
+
+            // Return 400 Bad Request with the exception message
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(null);  // Optionally, return a custom error body
+        }
     }
 
     @Operation(summary = "Gets a specific Lending")
@@ -149,7 +161,8 @@ public class LendingController {
     public ListResponse<LendingView> getOverdueLendings(@Valid @RequestBody Page page) {
         final List<Lending> overdueLendings = lendingService.getOverdue(page);
         if(overdueLendings.isEmpty())
-            throw new NotFoundException("No lendings to show");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "No lendinds to show.");
         return new ListResponse<>(lendingViewMapper.toLendingView(overdueLendings));
     }
 
@@ -159,6 +172,8 @@ public class LendingController {
         final var readerList = lendingService.searchLendings(request.getPage(), request.getQuery());
         return new ListResponse<>(lendingViewMapper.toLendingView(readerList));
     }
+
+
 
 /*    @Operation(summary = "Get list monthly average lendings per reader")
     @GetMapping(value = "/averageMonthlyPerReader")

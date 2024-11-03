@@ -1,32 +1,43 @@
 package pt.psoft.g1.psoftg1.authormanagement.model;
 
-import jakarta.persistence.*;
+import lombok.Generated;
 import lombok.Getter;
+
+import lombok.NoArgsConstructor;
 import org.hibernate.StaleObjectStateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.authormanagement.services.UpdateAuthorRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 import pt.psoft.g1.psoftg1.shared.model.Name;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGenerator;
+import pt.psoft.g1.psoftg1.shared.services.generator.IdGeneratorFactory;
 
-@Entity
+
 public class Author extends EntityWithPhoto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "AUTHOR_NUMBER")
-    @Getter
-    private Long authorNumber;
 
-    @Version
+    @Getter
+    private String authorNumber;
+
+    @Getter
+    private String genId;
+
     private long version;
 
-    @Embedded
     private Name name;
 
-    @Embedded
     private Bio bio;
+
+    private final IdGeneratorFactory idGeneratorFactory = new IdGeneratorFactory();
 
     public void setName(String name) {
         this.name = new Name(name);
+    }
+
+    public void setAuthorNumber(String authorNumber) {
+        this.authorNumber = authorNumber;
     }
 
     public void setBio(String bio) {
@@ -37,18 +48,20 @@ public class Author extends EntityWithPhoto {
         return version;
     }
 
-    public Long getId() {
-        return authorNumber;
+    public void setGenId(String genId) {
+        if (this.genId == null) {
+            this.genId = idGeneratorFactory.getGenerator().generateId();
+        }else {
+            this.genId = genId;
+        }
     }
 
-    public Author(String name, String bio, String photoURI) {
+
+    public Author(String name, String bio, String photoURI,String genId) {
         setName(name);
         setBio(bio);
         setPhotoInternal(photoURI);
-    }
-
-    protected Author() {
-        // got ORM only
+        setGenId(genId);
     }
 
 
@@ -76,6 +89,14 @@ public class Author extends EntityWithPhoto {
 
     public String getBio() {
         return this.bio.toString();
+    }
+
+    public String getPhotoURI() {
+        if (super.getPhoto() == null) {
+            return "";
+        }else {
+            return super.getPhoto().getPhotoFile();
+        }
     }
 }
 

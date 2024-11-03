@@ -24,13 +24,14 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorMapper mapper;
     private final PhotoRepository photoRepository;
 
-    @Override
-    public Iterable<Author> findAll() {
-        return authorRepository.findAll();
-    }
+
+    //@Override
+    //public Iterable<Author> findAll() {
+    //    return authorRepository.findAll();
+    //}
 
     @Override
-    public Optional<Author> findByAuthorNumber(final Long authorNumber) {
+    public Optional<Author> findByAuthorNumber(final String authorNumber) {
         return authorRepository.findByAuthorNumber(authorNumber);
     }
 
@@ -64,7 +65,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author partialUpdate(final Long authorNumber, final UpdateAuthorRequest request, final long desiredVersion) {
+    public Author partialUpdate(final String authorNumber, final UpdateAuthorRequest request, final long desiredVersion) {
         // first let's check if the object exists so we don't create a new object with
         // save
         final var author = findByAuthorNumber(authorNumber)
@@ -98,21 +99,22 @@ public class AuthorServiceImpl implements AuthorService {
     }
     @Override
     public List<AuthorLendingView> findTopAuthorByLendings() {
+        System.out.println("Entered on the service for the top 5 authors by lendings");
         Pageable pageableRules = PageRequest.of(0,5);
         return authorRepository.findTopAuthorByLendings(pageableRules).getContent();
     }
 
     @Override
-    public List<Book> findBooksByAuthorNumber(Long authorNumber){
+    public List<Book> findBooksByAuthorNumber(String authorNumber){
         return bookRepository.findBooksByAuthorNumber(authorNumber);
     }
 
     @Override
-    public List<Author> findCoAuthorsByAuthorNumber(Long authorNumber) {
+    public List<Author> findCoAuthorsByAuthorNumber(String authorNumber) {
         return authorRepository.findCoAuthorsByAuthorNumber(authorNumber);
     }
     @Override
-    public Optional<Author> removeAuthorPhoto(Long authorNumber, long desiredVersion) {
+    public Optional<Author> removeAuthorPhoto(String authorNumber, long desiredVersion) {
         Author author = authorRepository.findByAuthorNumber(authorNumber)
                 .orElseThrow(() -> new NotFoundException("Cannot find reader"));
 

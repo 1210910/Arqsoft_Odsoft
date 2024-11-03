@@ -1,11 +1,13 @@
 package pt.psoft.g1.psoftg1.unitTests.authormanagement.model;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import pt.psoft.g1.psoftg1.authormanagement.model.Bio;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest
 public class BioTest {
 
     @Test

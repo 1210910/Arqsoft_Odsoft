@@ -8,9 +8,13 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
+import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
+
 import pt.psoft.g1.psoftg1.bookmanagement.model.*;
 import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
+import pt.psoft.g1.psoftg1.bookmanagement.services.recomendationAlgs.RecomendationAlgorithm;
+import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.AuthorRepository;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
@@ -36,6 +40,7 @@ public class BookServiceImpl implements BookService {
 	private final AuthorRepository authorRepository;
 	private final PhotoRepository photoRepository;
 	private final ReaderRepository readerRepository;
+	private final RecomendationAlgorithm recomendationAlgorithm;
 
 	@Value("${suggestionsLimitPerGenre}")
 	private long suggestionsLimitPerGenre;
@@ -51,7 +56,7 @@ public class BookServiceImpl implements BookService {
 		List<Author> authors = new ArrayList<>();
 		for (Long authorNumber : authorNumbers) {
 
-			Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber);
+			Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber.toString());
 			if(temp.isEmpty()) {
 				continue;
 			}
@@ -81,9 +86,9 @@ public class BookServiceImpl implements BookService {
 
         var book = findByIsbn(request.getIsbn());
         if(request.getAuthors()!= null) {
-            List<Long> authorNumbers = request.getAuthors();
+            List<String> authorNumbers = request.getAuthors();
             List<Author> authors = new ArrayList<>();
-            for (Long authorNumber : authorNumbers) {
+            for (String authorNumber : authorNumbers) {
                 Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber);
                 if (temp.isEmpty()) {
                     continue;
@@ -92,7 +97,7 @@ public class BookServiceImpl implements BookService {
                 authors.add(author);
             }
 
-            request.setAuthorObjList(authors);
+            //request.setAuthorObjList(authors);
         }
 
 		MultipartFile photo = request.getPhoto();
@@ -157,7 +162,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<Book> findByAuthorName(String authorName) {
-		return bookRepository.findByAuthorName(authorName + "%");
+		return bookRepository.findByAuthorName(authorName);
 	}
 
 	public Book findByIsbn(String isbn) {
@@ -168,31 +173,34 @@ public class BookServiceImpl implements BookService {
 	public List<Book> getBooksSuggestionsForReader(String readerNumber) {
 		List<Book> books = new ArrayList<>();
 
-		ReaderDetails readerDetails = readerRepository.findByReaderNumber(readerNumber)
-				.orElseThrow(() -> new NotFoundException("Reader not found with provided login"));
-		List<Genre> interestList = readerDetails.getInterestList();
+		//ReaderDetails readerDetails = readerRepository.findByReaderNumber(readerNumber)
+		//		.orElseThrow(() -> new NotFoundException("Reader not found with provided login"));
+	   	//
+		//List<Genre> interestList = readerDetails.getInterestList();
+		//
+		//if(interestList.isEmpty()) {
+		//	throw new NotFoundException("Reader has no interests");
+		//}
+		//
+		//for(Genre genre : interestList) {
+		//	List<Book> tempBooks = bookRepository.findByGenre(genre.toString());
+		//	if(tempBooks.isEmpty()) {
+		//		continue;
+		//	}
+		//
+		//	long genreBookCount = 0;
+		//
+        //    for (Book loopBook : tempBooks) {
+        //        if (genreBookCount >= suggestionsLimitPerGenre) {
+        //            break;
+        //        }
+		//
+        //        books.add(loopBook);
+		//		genreBookCount++;
+        //    }
+		//}
 
-		if(interestList.isEmpty()) {
-			throw new NotFoundException("Reader has no interests");
-		}
-
-		for(Genre genre : interestList) {
-			List<Book> tempBooks = bookRepository.findByGenre(genre.toString());
-			if(tempBooks.isEmpty()) {
-				continue;
-			}
-
-			long genreBookCount = 0;
-
-            for (Book loopBook : tempBooks) {
-                if (genreBookCount >= suggestionsLimitPerGenre) {
-                    break;
-                }
-
-                books.add(loopBook);
-				genreBookCount++;
-            }
-		}
+		books = recomendationAlgorithm.recommend(readerNumber);
 
 		return books;
 	}

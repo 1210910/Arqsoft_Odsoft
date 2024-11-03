@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import pt.psoft.g1.psoftg1.auth.services.AuthService;
 import pt.psoft.g1.psoftg1.usermanagement.api.UserView;
 import pt.psoft.g1.psoftg1.usermanagement.api.UserViewMapper;
 import pt.psoft.g1.psoftg1.usermanagement.model.User;
@@ -51,6 +52,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+
 /**
  * Based on https://github.com/Yoh0xFF/java-spring-security-example
  *
@@ -60,6 +62,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping(path = "api/public")
 public class AuthApi {
+
+	private final AuthService authenticationService;
 
 	private final AuthenticationManager authenticationManager;
 
@@ -72,12 +76,12 @@ public class AuthApi {
 	@PostMapping("login")
 	public ResponseEntity<UserView> login(@RequestBody @Valid final AuthRequest request) {
 		try {
-			final Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+
+			final Authentication authentication = authenticationService.authenticate(request);
 
 			// if the authentication is successful, Spring will store the authenticated user
 			// in its "principal"
-			final User user = (User) authentication.getPrincipal();
+			final User user =userService.findByUsername(authentication.getName()).orElseThrow();
 
 			final Instant now = Instant.now();
 			final long expiry = 36000L; // 1 hours is usually too long for a token to be valid. adjust for production
@@ -90,6 +94,8 @@ public class AuthApi {
 					.claim("roles", scope).build();
 
 			final String token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+
 
 			return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(userViewMapper.toUserView(user));
 		} catch (final BadCredentialsException ex) {

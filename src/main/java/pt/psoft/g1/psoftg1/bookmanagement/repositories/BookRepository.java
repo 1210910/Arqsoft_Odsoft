@@ -1,5 +1,6 @@
 package pt.psoft.g1.psoftg1.bookmanagement.repositories;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -23,9 +24,11 @@ public interface BookRepository {
     List<Book> findByAuthorName(@Param("authorName") String authorName);
     Optional<Book> findByIsbn(@Param("isbn") String isbn);
     Page<BookCountDTO> findTop5BooksLent(@Param("oneYearAgo") LocalDate oneYearAgo, Pageable pageable);
-    List<Book> findBooksByAuthorNumber(Long authorNumber);
+    List<Book> findBooksByAuthorNumber(String authorNumber);
 
     List<Book> searchBooks(pt.psoft.g1.psoftg1.shared.services.Page page, SearchBooksQuery query);
+
+    List<Book> findMostLentBooksByGenre(int maxBooks, String genre);
 
     Book save(Book book);
     void delete(Book book);
