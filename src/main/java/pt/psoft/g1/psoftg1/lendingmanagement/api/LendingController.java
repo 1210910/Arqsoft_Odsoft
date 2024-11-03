@@ -50,7 +50,11 @@ public class LendingController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<LendingView> create(@Valid @RequestBody final CreateLendingRequest resource) {
         try {
+
+
             final var lending = lendingService.create(resource);
+
+
 
             final var newLendingUri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                     .pathSegment(lending.getLendingNumber())
@@ -157,7 +161,8 @@ public class LendingController {
     public ListResponse<LendingView> getOverdueLendings(@Valid @RequestBody Page page) {
         final List<Lending> overdueLendings = lendingService.getOverdue(page);
         if(overdueLendings.isEmpty())
-            throw new NotFoundException("No lendings to show");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "No lendinds to show.");
         return new ListResponse<>(lendingViewMapper.toLendingView(overdueLendings));
     }
 

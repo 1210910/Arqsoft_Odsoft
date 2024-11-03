@@ -60,7 +60,7 @@ class LendingServiceImplTest {
     void setUp() {
         author = new Author("Manuel Antonio Pina",
                 "Manuel António Pina foi um jornalista e escritor português, premiado em 2011 com o Prémio Camões",
-                null);
+                null,null);
         authorRepository.save(author);
 
         genre = new Genre("Género");

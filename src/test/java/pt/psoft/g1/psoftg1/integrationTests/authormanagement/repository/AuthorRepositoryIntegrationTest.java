@@ -28,7 +28,7 @@ public class AuthorRepositoryIntegrationTest {
     @Test
     public void whenFindByName_thenReturnAuthor() {
         // given
-        Author alex = new Author("Alex", "O Alex escreveu livros", null);
+        Author alex = new Author("Alex", "O Alex escreveu livros", null,null);
         entityManager.persist(alex);
         entityManager.flush();
 

@@ -46,6 +46,7 @@ class GenreTest {
     void ensureGenreIsSet() {
         final var genre = new Genre("Some genre");
         assertEquals("Some genre", genre.toString());
+        assertEquals("Some genre", genre.getGenre());
     }
 
 }

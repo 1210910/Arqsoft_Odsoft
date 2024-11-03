@@ -56,13 +56,13 @@ public class BookServiceImpl implements BookService {
 		List<Author> authors = new ArrayList<>();
 		for (Long authorNumber : authorNumbers) {
 
-			//Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber);
-			//if(temp.isEmpty()) {
-			//	continue;
-			//}
-			//
-			//Author author = temp.get();
-			//authors.add(author);
+			Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber.toString());
+			if(temp.isEmpty()) {
+				continue;
+			}
+
+			Author author = temp.get();
+			authors.add(author);
 		}
 
 		MultipartFile photo = request.getPhoto();

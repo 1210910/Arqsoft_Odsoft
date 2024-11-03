@@ -47,6 +47,8 @@ public class ReaderServiceImpl implements ReaderService {
         }
 
         List<String> stringInterestList = request.getInterestList();
+        Optional<Genre> optGenre = genreRepo.findByString("Fiction");
+        System.out.println(optGenre);
         List<Genre> interestList = this.getGenreListFromStringList(stringInterestList);
         /*if(stringInterestList != null && !stringInterestList.isEmpty()) {
             request.setInterestList(this.getGenreListFromStringList(stringInterestList));
@@ -150,7 +152,7 @@ public class ReaderServiceImpl implements ReaderService {
         return page.getContent();
     }
 
-    private List<Genre> getGenreListFromStringList(List<String> interestList) {
+    public List<Genre> getGenreListFromStringList(List<String> interestList) {
         if(interestList == null) {
             return null;
         }
@@ -161,7 +163,10 @@ public class ReaderServiceImpl implements ReaderService {
 
         List<Genre> genreList = new ArrayList<>();
         for(String interest : interestList) {
+            System.out.println(interest);
+
             Optional<Genre> optGenre = genreRepo.findByString(interest);
+            System.out.println(optGenre);
             if(optGenre.isEmpty()) {
                 throw new NotFoundException("Could not find genre with name " + interest);
             }

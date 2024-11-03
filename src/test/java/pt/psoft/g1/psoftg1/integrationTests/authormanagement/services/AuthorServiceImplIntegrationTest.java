@@ -32,7 +32,7 @@ public class AuthorServiceImplIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        Author alex = new Author("Alex", "O Alex escreveu livros", null);
+        Author alex = new Author("Alex", "O Alex escreveu livros", null,null);
         List<Author> list = new ArrayList<>();
         list.add(alex);
 

@@ -57,6 +57,7 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
     @Override
     public Optional<Genre> findByString(String genreName) {
         if (genreRepositorySqlServer.findByString(genreName).isEmpty()) {
+
             return Optional.empty();
         }else return Optional.of(genreEntityMapper.toModel(genreRepositorySqlServer.findByString(genreName).get()));
     }

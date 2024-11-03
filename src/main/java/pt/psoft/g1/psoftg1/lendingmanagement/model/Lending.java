@@ -40,9 +40,7 @@ public class Lending {
 
     private Book book;
 
-
     private ReaderDetails readerDetails;
-
 
 
     private LocalDate startDate;
@@ -92,6 +90,7 @@ public class Lending {
         this.fineValuePerDayInCents = fineValuePerDayInCents;
         setDaysUntilReturn();
         setDaysOverdue();
+        setGenId(null);
     }
 
     public void setGenId(String genId) {

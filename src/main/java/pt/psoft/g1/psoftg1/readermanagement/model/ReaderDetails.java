@@ -39,6 +39,7 @@ public class ReaderDetails extends EntityWithPhoto {
     private boolean thirdPartySharingConsent;
 
     @Getter
+    @Setter
     private Long version;
 
     @Getter
@@ -65,6 +66,7 @@ public class ReaderDetails extends EntityWithPhoto {
         setMarketingConsent(marketing);
         setThirdPartySharingConsent(thirdParty);
         setInterestList(interestList);
+        setVersion(0L);
     }
 
     private void setPhoneNumber(PhoneNumber number) {

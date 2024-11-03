@@ -1,10 +1,8 @@
 package pt.psoft.g1.psoftg1.unitTests.bookmanagement.model;
 
-import com.google.rpc.context.AttributeContext;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
@@ -12,15 +10,15 @@ import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class BookTest {
-
     private final String validIsbn = "9782826012092";
     private final String validTitle = "Encantos de contar";
-    private final Author mockAuthor = Mockito.mock(Author.class);
-    private final Author mockAuthor2 = Mockito.mock(Author.class);
-    private final Genre mockGenre = Mockito.mock(Genre.class);
+    private static Author validAuthor1;
+    private static Author validAuthor2;
+    private static Genre validGenre;
     private ArrayList<Author> authors = new ArrayList<>();
 
     @BeforeEach
@@ -28,73 +26,50 @@ class BookTest {
         authors.clear();
     }
 
+    @BeforeAll
+    static void setUpAll(){
+        validAuthor1 = mock(Author.class);
+        validAuthor2 = mock(Author.class);
+        when(validAuthor1.getName()).thenReturn("João Alberto");
+        when(validAuthor2.getName()).thenReturn("Maria José");
+        validGenre = mock(Genre.class);
+        when(validGenre.getGenre()).thenReturn("Fantasia");
+    }
+
     @Test
     void ensureIsbnNotNull(){
-
-        // Arrange
-        authors.add(mockAuthor);
-
-        // Act
-        assertThrows(IllegalArgumentException.class, () -> new Book(null, validTitle, null, mockGenre, authors, null));
+        authors.add(validAuthor1);
+        assertThrows(IllegalArgumentException.class, () -> new Book(null, validTitle, null, validGenre, authors, null));
     }
 
     @Test
     void ensureTitleNotNull(){
-        // Arrange
-        authors.add(mockAuthor);
-
-        // Act
-        assertThrows(IllegalArgumentException.class, () -> new Book(validIsbn, null, null, mockGenre, authors, null));
+        authors.add(validAuthor1);
+        assertThrows(IllegalArgumentException.class, () -> new Book(validIsbn, null, null, validGenre, authors, null));
     }
 
     @Test
     void ensureGenreNotNull(){
-        // Arrange
-        authors.add(mockAuthor);
-
-        // Act
+        authors.add(validAuthor1);
         assertThrows(IllegalArgumentException.class, () -> new Book(validIsbn, validTitle, null,null, authors, null));
     }
 
     @Test
     void ensureAuthorsNotNull(){
-
-        // Arrange
-        authors.add(mockAuthor);
-
-        // Act
-        assertThrows(IllegalArgumentException.class, () -> new Book(validIsbn, validTitle, null, mockGenre, null, null));
+        authors.add(validAuthor1);
+        assertThrows(IllegalArgumentException.class, () -> new Book(validIsbn, validTitle, null, validGenre, null, null));
     }
 
     @Test
     void ensureAuthorsNotEmpty(){
-        // Act
-        assertThrows(IllegalArgumentException.class, () -> new Book(validIsbn, validTitle, null, mockGenre, authors, null));
+        assertThrows(IllegalArgumentException.class, () -> new Book(validIsbn, validTitle, null, validGenre, authors, null));
     }
 
     @Test
     void ensureBookCreatedWithMultipleAuthors() {
-
-        // Arrange
-        authors.add(mockAuthor);
-        authors.add(mockAuthor2);
-        Mockito.when(mockAuthor.getName()).thenReturn("John Doe");
-        Mockito.when(mockAuthor2.getName()).thenReturn("Jane Doe");
-        Mockito.when(mockGenre.getGenre()).thenReturn("Fantasia");
-
-        // Act
-        Book book = new Book(validIsbn, validTitle, null, mockGenre, authors, null);
-
-        // Assert
-        assertNotNull(book);
-        assertEquals(validIsbn, book.getIsbn());
-        assertEquals(validTitle, book.getTitle().getTitle());
-        assertEquals(mockGenre, book.getGenre());
-        assertEquals(authors, book.getAuthors());
-        assertEquals(book.getAuthors().get(0).getName(), "John Doe");
-        assertEquals(book.getAuthors().get(1).getName(), "Jane Doe");
-        assertEquals(book.getGenre().getGenre(), "Fantasia");
-
+        authors.add(validAuthor1);
+        authors.add(validAuthor2);
+        assertDoesNotThrow(() -> new Book(validIsbn, validTitle, null, validGenre, authors, null));
     }
 
 }

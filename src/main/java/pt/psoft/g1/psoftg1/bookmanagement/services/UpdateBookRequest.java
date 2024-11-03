@@ -36,10 +36,13 @@ public class UpdateBookRequest {
     @Setter
     private Genre genreObj;
 
+    @Setter
     private String genre;
 
+    @Setter
     private List<String> authors;
 
+    @Setter
     private List<Author> authorObjList;
 
     public UpdateBookRequest(String isbn, String title, String genre, @NonNull List<String> authors, String description) {
