@@ -8,8 +8,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-//@Configuration
-//@Profile("sqlserver")
+@Configuration
+@Profile("sqlserver1")
 public class SqlServerDriver {
 
     @Value("${spring.data.SqlServer.url}")
