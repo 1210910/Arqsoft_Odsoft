@@ -103,6 +103,7 @@
             <scope>test</scope>
         </dependency>
 
+
 		<!-- Web client -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -144,22 +145,10 @@
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
-				<version>1.9.11</version> <!-- Certifique-se de usar a versão mais recente -->
+				<version>1.13.0</version>
 				<configuration>
-					<targetClasses>
-						<!-- Especifique o pacote ou classes para mutação -->
-						<param>pt.psoft.g1.psoftg1.genremanagement</param>
-						<param>pt.psoft.g1.psoftg1.bookmanagement</param>
-						<param>pt.psoft.g1.psoftg1.authormanagement</param>
-						<param>pt.psoft.g1.psoftg1.usermanagement</param>
-						<param>pt.psoft.g1.psoftg1.genremanagement</param>
-						<param>pt.psoft.g1.psoftg1.lendingmanagement</param>
-						<param>pt.psoft.g1.psoftg1.readermanagement</param>
-						<param>pt.psoft.g1.psoftg1.shared</param>
-					</targetClasses>
 					<targetTests>
-						<!-- Especifique o pacote dos testes -->
-						<param>pt.psoft.g1.psoftg1.unitTests.*</param>
+						<param>test-classes.pt.psoft.g1.psoftg1.unitTests.**</param>
 					</targetTests>
 					<outputFormats>
 						<param>HTML</param>
@@ -174,7 +163,6 @@
 				<configuration>
 					<configLocation>src/main/resources/checkstyle.xml</configLocation>
 					<failsOnError>false</failsOnError>
-					<failsOnViolation>false</failsOnViolation>
 					<outputDirectory>target/checkstyle-results</outputDirectory>
 				</configuration>
 				<executions>

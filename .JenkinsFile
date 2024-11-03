@@ -34,7 +34,7 @@ pipeline {
                 script {
                     echo 'Cleaning workspace...'
                     if (isUnix()) {
-                        sh "${env.MAVEN_HOME}/mvn clean"
+                        sh "${env.MAVEN_HOME}mvn clean"
                     } else {
                         bat "${env.MAVEN_HOME}mvn clean"
                     }
@@ -47,7 +47,7 @@ pipeline {
                 script {
                     echo 'Validating code...'
                     if (isUnix()) {
-                        sh "${env.MAVEN_HOME}/mvn validate"
+                        sh "${env.MAVEN_HOME}mvn validate"
                     } else {
                         bat "${env.MAVEN_HOME}mvn validate"
                     }
@@ -60,7 +60,7 @@ pipeline {
                 script {
                     echo 'Building the project...'
                     if (isUnix()) {
-                        sh "${env.MAVEN_HOME}/mvn compile"
+                        sh "${env.MAVEN_HOME}mvn compile"
                     } else {
                         bat "${env.MAVEN_HOME}mvn compile"
                     }
@@ -75,7 +75,7 @@ pipeline {
                         script {
                             echo 'Running Unit Tests...'
                             if (isUnix()) {
-                                //sh "${env.MAVEN_HOME}/mvn test -Dtest=pt.psoft.g1.psoftg1.unitTests.** -f pom.xml"
+                                //sh "${env.MAVEN_HOME}mvn test -Dtest=pt.psoft.g1.psoftg1.unitTests.** -f pom.xml"
                             } else {
                                 //bat "${env.MAVEN_HOME}mvn test -Dtest=pt.psoft.g1.psoftg1.unitTests.** -f pom.xml"
                             }
@@ -89,10 +89,10 @@ pipeline {
                             echo 'Running Mutation Tests...'
                             if (isUnix()) {
                             // Comando para executar testes de mutação no Unix
-                            //sh "${env.MAVEN_HOME}/mvn org.pitest:pitest-maven:mutationCoverage -DgroupId=pt.psoft.g1.psoftg1.unitTests.** -DoutputFormats=CSV -f pom.xml"
+                            //sh "${env.MAVEN_HOME}mvn org.pitest:pitest-maven:mutationCoverage -DgroupId=pt.psoft.g1.psoftg1.unitTests.** -DoutputFormats=CSV -f pom.xml"
                             } else {
                             // Comando para executar testes de mutação no Windows
-                            //bat "${env.MAVEN_HOME}\\mvn org.pitest:pitest-maven:mutationCoverage -DgroupId=pt.psoft.g1.psoftg1.unitTests.** -DoutputFormats=CSV -f pom.xml"
+                            bat "${env.MAVEN_HOME}mvn org.pitest:pitest-maven:mutationCoverage -DgroupId=pt.psoft.g1.psoftg1.unitTests.** -DoutputFormats=CSV -f pom.xml"
                             }
                         }
                     }
@@ -103,7 +103,7 @@ pipeline {
                         script {
                             echo 'Running Integration Tests...'
                             if (isUnix()) {
-                                //sh "${env.MAVEN_HOME}/mvn verify -Dtest.include='pt.psoft.g1.psoftg1.integrationTests.**' -f pom.xml"
+                                //sh "${env.MAVEN_HOME}mvn verify -Dtest.include='pt.psoft.g1.psoftg1.integrationTests.**' -f pom.xml"
                             } else {
                                 //bat "${env.MAVEN_HOME}mvn verify -Dtest.include='pt.psoft.g1.psoftg1.integrationTests.**'  -f pom.xml"
                             }
@@ -118,7 +118,7 @@ pipeline {
                 script {
                     echo 'Building the final package...'
                     if (isUnix()) {
-                        sh "${env.MAVEN_HOME}/mvn install -DskipTests"
+                        sh "${env.MAVEN_HOME}mvn install -DskipTests"
                     } else {
                         bat "${env.MAVEN_HOME}mvn install -Dmaven.test.skip=true"
                     }

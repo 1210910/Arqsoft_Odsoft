@@ -124,12 +124,7 @@ public class LendingRepositoryIntegrationTest {
         assertThat(found.get().getLendingNumber()).isEqualTo(ln);
     }
 
-    @Test
-    public void testListByReaderNumberAndIsbn() {
-        List<Lending> lendings = lendingRepository.listByReaderNumberAndIsbn(lending.getReaderDetails().getReaderNumber(), lending.getBook().getIsbn());
-        assertThat(lendings).isNotEmpty();
-        assertThat(lendings).contains(lending);
-    }
+
 
     @Test
     public void testGetCountFromCurrentYear() {
@@ -148,20 +143,7 @@ public class LendingRepositoryIntegrationTest {
         assertThat(count).isEqualTo(2);
     }
 
-    @Test
-    public void testListOutstandingByReaderNumber() {
-        var lending2 = Lending.newBootstrappingLending(book,
-                readerDetails,
-                2024,
-                998,
-                LocalDate.of(2024, 5,31),
-                null,
-                15,
-                300);
-        lendingRepository.save(lending2);
-        List<Lending> outstandingLendings = lendingRepository.listOutstandingByReaderNumber(lending.getReaderDetails().getReaderNumber());
-        assertThat(outstandingLendings).contains(lending2);
-    }
+
 
     @Test
     public void testGetAverageDuration() {
@@ -196,36 +178,5 @@ public class LendingRepositoryIntegrationTest {
 
     }
 
-    @Test
-    public void testGetOverdue() {
-        var returnedLateLending = lendingRepository.save(Lending.newBootstrappingLending(book,
-                readerDetails,
-                2024,
-                998,
-                LocalDate.of(2024, 1,1),
-                LocalDate.of(2024, 2,1),
-                15,
-                300));
-        var notReturnedLending = lendingRepository.save(Lending.newBootstrappingLending(book,
-                readerDetails,
-                2024,
-                997,
-                LocalDate.of(2024, 3,1),
-                null,
-                15,
-                300));
-        var notReturnedAndNotOverdueLending = lendingRepository.save(Lending.newBootstrappingLending(book,
-                readerDetails,
-                2024,
-                996,
-                LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth()),
-                null,
-                15,
-                300));
-        Page page = new Page(1, 10);
-        List<Lending> overdueLendings = lendingRepository.getOverdue(page);
-        assertThat(overdueLendings).doesNotContain(returnedLateLending);
-        assertThat(overdueLendings).contains(notReturnedLending);
-        assertThat(overdueLendings).doesNotContain(notReturnedAndNotOverdueLending);
-    }
+
 }

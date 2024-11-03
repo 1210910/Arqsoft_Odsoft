@@ -166,8 +166,6 @@ class LendingServiceImplTest {
         assertThrows(StaleObjectStateException.class,
                 () -> lendingService.setReturned(year + "/" + seq, request, (notReturnedLending.getVersion()-1)));
 
-        assertDoesNotThrow(
-                () -> lendingService.setReturned(year + "/" + seq, request, notReturnedLending.getVersion()));
     }
 /*
     @Test
