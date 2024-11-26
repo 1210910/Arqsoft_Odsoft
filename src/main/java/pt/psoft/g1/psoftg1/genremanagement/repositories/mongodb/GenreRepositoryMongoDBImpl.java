@@ -29,7 +29,7 @@ import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsDTO;
 import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsPerMonthDTO;
 
 import org.bson.Document;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.mongodb.LendingMongoDB;
+
 
 import java.time.LocalDate;
 import java.util.*;
@@ -111,6 +111,7 @@ public class GenreRepositoryMongoDBImpl implements GenreRepository {
 
     @Override
     public List<String> getMostLentGenres(int maxGenres) {
+        /*
         // 1. Buscar todos os empréstimos da coleção 'lendings'
         List<LendingMongoDB> lendings = mongoTemplate.findAll(LendingMongoDB.class, "lendings");
 
@@ -129,12 +130,13 @@ public class GenreRepositoryMongoDBImpl implements GenreRepository {
                 .limit(maxGenres)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
-
-        return topGenres;
+        */
+        return null;
     }
 
     @Override
     public String getMostLentGenreByReader(String readerNumber) {
+        /*
         // Step 1: Retrieve all lendings
         List<LendingMongoDB> allLendings = mongoTemplate.findAll(LendingMongoDB.class, "lendings");
 
@@ -153,5 +155,9 @@ public class GenreRepositoryMongoDBImpl implements GenreRepository {
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey) // Get the genre name
                 .orElse(null); // Return null if no genres found
+
+         */
+
+        return null;
     }
 }

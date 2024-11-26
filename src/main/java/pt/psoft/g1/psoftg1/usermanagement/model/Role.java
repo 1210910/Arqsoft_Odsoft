@@ -20,10 +20,9 @@
  */
 package pt.psoft.g1.psoftg1.usermanagement.model;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
 

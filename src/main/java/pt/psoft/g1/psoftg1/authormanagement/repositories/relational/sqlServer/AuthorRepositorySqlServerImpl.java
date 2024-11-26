@@ -4,12 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import pt.psoft.g1.psoftg1.authormanagement.api.AuthorLendingView;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
-import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.AuthorRepository;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.mappers.AuthorEntityMapper;
 
@@ -75,11 +71,6 @@ public class AuthorRepositorySqlServerImpl implements AuthorRepository {
         return authorEntityMapper.toDomain( authorRepositorySqlServer.save(authorEntityMapper.toEntity(author)));
     }
 
-    @Override
-    public Page<AuthorLendingView> findTopAuthorByLendings(Pageable pageableRules) {
-        System.out.println(authorRepositorySqlServer.findTopAuthorByLendings(pageableRules));
-        return authorRepositorySqlServer.findTopAuthorByLendings(pageableRules);
-    }
 
     @Override
     public void delete(Author author) {

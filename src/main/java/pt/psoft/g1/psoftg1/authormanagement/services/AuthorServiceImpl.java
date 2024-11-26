@@ -1,12 +1,11 @@
 package pt.psoft.g1.psoftg1.authormanagement.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pt.psoft.g1.psoftg1.authormanagement.api.AuthorLendingView;
+import pt.psoft.g1.psoftg1.authormanagement.api.AuthorViewAMQP;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
+import pt.psoft.g1.psoftg1.authormanagement.publisher.AuthorEventPublisher;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.AuthorRepository;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
@@ -23,6 +22,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final BookRepository bookRepository;
     private final AuthorMapper mapper;
     private final PhotoRepository photoRepository;
+    private final AuthorEventPublisher authorEventPublisher;
 
 
     //@Override
@@ -65,6 +65,23 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public Author create(AuthorViewAMQP authorViewAMQP) {
+
+
+
+        final Author author = mapper.create(authorViewAMQP);
+
+
+        Author savedAuthor= authorRepository.save(author);
+
+        if (savedAuthor != null) {
+            authorEventPublisher.sendAuthorCreated(savedAuthor);
+        }
+
+        return savedAuthor;
+    }
+
+    @Override
     public Author partialUpdate(final String authorNumber, final UpdateAuthorRequest request, final long desiredVersion) {
         // first let's check if the object exists so we don't create a new object with
         // save
@@ -90,18 +107,12 @@ public class AuthorServiceImpl implements AuthorService {
         }
         // since we got the object from the database we can check the version in memory
         // and apply the patch
-        author.applyPatch(desiredVersion, request);
+        author.applyPatch(desiredVersion, request.getName(), request.getBio(), request.getPhotoURI());
 
         // in the meantime some other user might have changed this object on the
         // database, so concurrency control will still be applied when we try to save
         // this updated object
         return authorRepository.save(author);
-    }
-    @Override
-    public List<AuthorLendingView> findTopAuthorByLendings() {
-        System.out.println("Entered on the service for the top 5 authors by lendings");
-        Pageable pageableRules = PageRequest.of(0,5);
-        return authorRepository.findTopAuthorByLendings(pageableRules).getContent();
     }
 
     @Override
@@ -122,6 +133,22 @@ public class AuthorServiceImpl implements AuthorService {
         author.removePhoto(desiredVersion);
         Optional<Author> updatedAuthor = Optional.of(authorRepository.save(author));
         photoRepository.deleteByPhotoFile(photoFile);
+        return updatedAuthor;
+    }
+
+    @Override
+    public Author update(AuthorViewAMQP authorViewAMQP) {
+        Author author = authorRepository.findByAuthorNumber(authorViewAMQP.getAuthorNumber())
+                .orElseThrow(() -> new NotFoundException("Cannot find author"));
+
+        author.applyPatch(Long.parseLong(authorViewAMQP.getVersion()), authorViewAMQP.getName(), authorViewAMQP.getBio(), authorViewAMQP.getPhotoURI());
+
+        Author updatedAuthor = authorRepository.save(author);
+
+        if (updatedAuthor != null) {
+            authorEventPublisher.sendAuthorUpdated(updatedAuthor,updatedAuthor.getVersion());
+        }
+
         return updatedAuthor;
     }
 

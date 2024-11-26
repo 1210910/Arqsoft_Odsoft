@@ -65,15 +65,15 @@ public class Author extends EntityWithPhoto {
     }
 
 
-    public void applyPatch(final long desiredVersion, final UpdateAuthorRequest request) {
+    public void applyPatch(final long desiredVersion, final String name, final String bio, final String photoURI) {
         if (this.version != desiredVersion)
             throw new StaleObjectStateException("Object was already modified by another user", this.authorNumber);
-        if (request.getName() != null)
-            setName(request.getName());
-        if (request.getBio() != null)
-            setBio(request.getBio());
-        if(request.getPhotoURI() != null)
-            setPhotoInternal(request.getPhotoURI());
+        if (name != null)
+            setName(name);
+        if (bio != null)
+            setBio(bio);
+        if(photoURI != null)
+            setPhotoInternal(photoURI);
     }
 
     public void removePhoto(long desiredVersion) {

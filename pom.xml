@@ -39,6 +39,19 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Spring Boot Starter para RabbitMQ -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+		<!-- Spring Boot Starter para JSON (opcional, para trabalhar com JSON nos eventos) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-json</artifactId>
+		</dependency>
+
+
 		<!-- database drivers -->
 		<dependency>
 			<groupId>com.h2database</groupId>

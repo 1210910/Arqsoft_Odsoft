@@ -6,6 +6,7 @@ import lombok.Getter;
 
 
 import lombok.Setter;
+import org.hibernate.StaleObjectStateException;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 
 import pt.psoft.g1.psoftg1.bookmanagement.services.UpdateBookRequest;
@@ -15,10 +16,13 @@ import pt.psoft.g1.psoftg1.shared.model.EntityWithPhoto;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 
 public class Book extends EntityWithPhoto {
+
+    private Long pk;
+
     @Setter
     @Getter
     private Long version;
@@ -79,31 +83,33 @@ public class Book extends EntityWithPhoto {
         setPhotoInternal(null);
     }
 
-    public void applyPatch(final Long desiredVersion, UpdateBookRequest request) {
+    public void applyPatch(final Long desiredVersion,
+                           final String title,
+                           final String description,
+                           final String photoURI,
+                           final Genre genre,
+                           final List<Author> authors ) {
 
+        if (!Objects.equals(this.version, desiredVersion))
+            throw new StaleObjectStateException("Object was already modified by another user", this.pk);
 
-        String title = request.getTitle();
-        String description = request.getDescription();
-        Genre genre = request.getGenreObj();
-        List<Author> authors = request.getAuthorObjList();
-        String photoURI = request.getPhotoURI();
-        if(title != null) {
+        if (title != null) {
             setTitle(title);
         }
 
-        if(description != null) {
+        if (description != null) {
             setDescription(description);
         }
 
-        if(genre != null) {
+        if (genre != null) {
             setGenre(genre);
         }
 
-        if(authors != null) {
+        if (authors != null) {
             setAuthors(authors);
         }
 
-        if(photoURI != null)
+        if (photoURI != null)
             setPhotoInternal(photoURI);
 
     }

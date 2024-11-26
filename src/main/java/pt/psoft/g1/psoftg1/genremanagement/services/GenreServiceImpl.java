@@ -6,7 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pt.psoft.g1.psoftg1.bookmanagement.services.GenreBookCountDTO;
 import pt.psoft.g1.psoftg1.exceptions.NotFoundException;
+import pt.psoft.g1.psoftg1.genremanagement.api.GenreViewAMQP;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
+import pt.psoft.g1.psoftg1.genremanagement.publishers.GenreEventPublisher;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.shared.services.Page;
 
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
+    private final GenreEventPublisher genreEventPublisher;
 
 
     public Optional<Genre> findByString(String name) {
@@ -29,6 +32,21 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Iterable<Genre> findAll() {
         return genreRepository.findAll();
+    }
+
+    @Override
+    public Genre create(GenreViewAMQP genreViewAMQP) {
+
+
+
+        Genre genre = new Genre(genreViewAMQP.getGenre());
+        Genre SavedGenre = genreRepository.save(genre);
+        if (SavedGenre != null) {
+            genreEventPublisher.sendGenreCreated(SavedGenre);
+        }
+
+        return SavedGenre;
+
     }
 
     @Override
@@ -79,4 +97,6 @@ public class GenreServiceImpl implements GenreService {
 
         return list;
     }
+
+
 }

@@ -24,7 +24,7 @@ import pt.psoft.g1.psoftg1.bookmanagement.services.SearchBooksQuery;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.relational.GenreRepositorySqlServer;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.LendingEntity;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class BookRepositorySqlServerImpl implements BookRepository {
 
     @Override
     public Page<BookCountDTO> findTop5BooksLent(LocalDate oneYearAgo, Pageable pageable) {
-        return bookRepositorySqlServer.findTop5BooksLent(oneYearAgo, pageable);
+        return null;
     }
 
 
@@ -198,6 +198,7 @@ public class BookRepositorySqlServerImpl implements BookRepository {
 
     @Override
     public List<Book> findMostLentBooksByGenre(int maxBooks, String genre) {
+        /*
         // Criação do CriteriaBuilder e CriteriaQuery
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
@@ -243,6 +244,9 @@ public class BookRepositorySqlServerImpl implements BookRepository {
         }
 
         return mostLentBooksModel;
+
+         */
+        return null;
     }
 
 

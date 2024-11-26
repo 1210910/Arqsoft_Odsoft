@@ -21,15 +21,11 @@ import pt.psoft.g1.psoftg1.bookmanagement.services.SearchBooksQuery;
 import pt.psoft.g1.psoftg1.bookmanagement.services.UpdateBookRequest;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.exceptions.NotFoundException;
-import pt.psoft.g1.psoftg1.lendingmanagement.services.LendingService;
-import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
-import pt.psoft.g1.psoftg1.readermanagement.services.ReaderService;
 import pt.psoft.g1.psoftg1.shared.api.ListResponse;
 import pt.psoft.g1.psoftg1.shared.services.ConcurrencyService;
 import pt.psoft.g1.psoftg1.shared.services.FileStorageService;
 import pt.psoft.g1.psoftg1.shared.services.SearchRequest;
-import pt.psoft.g1.psoftg1.usermanagement.model.User;
-import pt.psoft.g1.psoftg1.usermanagement.services.UserService;
+
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -43,11 +39,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
-    private final LendingService lendingService;
     private final ConcurrencyService concurrencyService;
     private final FileStorageService fileStorageService;
-    private final UserService userService;
-    private final ReaderService readerService;
+
+
 
     private final BookViewMapper bookViewMapper;
 
@@ -221,12 +216,12 @@ public class BookController {
     @Operation(summary = "Gets some books suggestions based on the reader's interests")
     @GetMapping("suggestions")
     public ListResponse<BookView> getBooksSuggestions(Authentication authentication) {
-        User loggedUser = userService.getAuthenticatedUser(authentication);
-        System.out.println(loggedUser.getUsername());
-        ReaderDetails readerDetails = readerService.findByUsername(loggedUser.getUsername())
-                .orElseThrow(() -> new NotFoundException(ReaderDetails.class, loggedUser.getUsername()));
 
-        return new ListResponse<>(bookViewMapper.toBookView(bookService.getBooksSuggestionsForReader(readerDetails.getReaderNumber())));
+        // ReaderDetails readerDetails = readerService.findByUsername(loggedUser.getUsername())
+        //        .orElseThrow(() -> new NotFoundException(ReaderDetails.class, loggedUser.getUsername()));
+
+       // return new ListResponse<>(bookViewMapper.toBookView(bookService.getBooksSuggestionsForReader(readerDetails.getReaderNumber())));
+        return null;
     }
 
     @Operation(summary = "Get average lendings duration")
@@ -234,7 +229,7 @@ public class BookController {
     public @ResponseBody ResponseEntity<BookAverageLendingDurationView>getAvgLendingDurationByIsbn(
             @PathVariable("isbn") final String isbn) {
         final var book = bookService.findByIsbn(isbn);
-        Double avgDuration = lendingService.getAvgLendingDurationByIsbn(isbn);
+        Double avgDuration =0.0; //lendingService.getAvgLendingDurationByIsbn(isbn);
 
         return ResponseEntity.ok().body(bookViewMapper.toBookAverageLendingDurationView(book, avgDuration));
     }

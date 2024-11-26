@@ -24,7 +24,7 @@ import pt.psoft.g1.psoftg1.bookmanagement.model.mongodb.BookMongoDB;
 import pt.psoft.g1.psoftg1.authormanagement.model.mongodb.AuthorMongoDB;
 import pt.psoft.g1.psoftg1.genremanagement.model.mongodb.GenreMongoDB;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.mongodb.GenreRepositoryMongoDB;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.mongodb.LendingMongoDB;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -204,6 +204,7 @@ public class BookRepositoryMongoDBImpl implements BookRepository {
 
     @Override
     public List<Book> findMostLentBooksByGenre(int maxBooks, String genre) {
+        /*
         // 1. Buscar todos os empréstimos da coleção 'lendings'
         List<LendingMongoDB> lendings = mongoTemplate.findAll(LendingMongoDB.class, "lendings");
 
@@ -234,5 +235,8 @@ public class BookRepositoryMongoDBImpl implements BookRepository {
         return mostLentBooks.stream()
                 .map(bookMapperMongoDB::toDomain)
                 .collect(Collectors.toList());
+
+         */
+        return null;
     }
 }

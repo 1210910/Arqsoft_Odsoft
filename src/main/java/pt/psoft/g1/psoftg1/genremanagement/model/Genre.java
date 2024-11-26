@@ -14,6 +14,10 @@ public class Genre {
     @Getter
     String genre;
 
+    @Getter
+    private long version;
+
+
     protected Genre(){}
 
     public Genre(String genre) {

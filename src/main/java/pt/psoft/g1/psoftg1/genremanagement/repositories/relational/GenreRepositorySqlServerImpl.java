@@ -21,9 +21,7 @@ import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.mappers.GenreEntityMapper;
 import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsDTO;
 import pt.psoft.g1.psoftg1.genremanagement.services.GenreLendingsPerMonthDTO;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.Lending;
-import pt.psoft.g1.psoftg1.lendingmanagement.model.relational.LendingEntity;
-import pt.psoft.g1.psoftg1.readermanagement.model.relational.ReaderDetailsEntity;
+
 
 import java.time.LocalDate;
 import java.util.*;
@@ -81,6 +79,7 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
 
     @Override
     public List<GenreLendingsPerMonthDTO> getLendingsPerMonthLastYearByGenre(){
+        /*
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<LendingEntity> lendingRoot = cq.from(LendingEntity.class);
@@ -125,11 +124,15 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
         }
 
         return getGenreLendingsPerMonthDtos(groupedResults);
+        */
+
+         return null;
     }
 
 
     @Override
     public List<GenreLendingsDTO> getAverageLendingsInMonth(LocalDate month, pt.psoft.g1.psoftg1.shared.services.Page page){
+        /*
         int days = month.lengthOfMonth();
         LocalDate firstOfMonth = LocalDate.of(month.getYear(), month.getMonth(), 1);
         LocalDate lastOfMonth = LocalDate.of(month.getYear(), month.getMonth(), days);
@@ -159,10 +162,14 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
         q.setMaxResults(page.getLimit());
 
         return q.getResultList();
+
+         */
+        return null;
     }
 
     @Override
     public List<GenreLendingsPerMonthDTO> getLendingsAverageDurationPerMonth(LocalDate startDate, LocalDate endDate){
+        /*
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
 
@@ -205,6 +212,9 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
         }
 
         return getGenreLendingsPerMonthDtos(groupedResults);
+
+         */
+        return null;
     }
 
     @NotNull
@@ -224,6 +234,7 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
 
     @Override
     public List<String> getMostLentGenres(int maxGenres) {
+        /*
         //use entitymanager to create a query
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -253,10 +264,14 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
         }
 
         return genres;
+
+         */
+        return null;
     }
 
     @Override
     public String getMostLentGenreByReader(String readerNumber){
+        /*
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<LendingEntity> lendingRoot = cq.from(LendingEntity.class);
@@ -285,6 +300,9 @@ public class GenreRepositorySqlServerImpl implements GenreRepository {
         }
 
         return results.get(0).get(0, String.class);
+
+         */
+        return null;
     }
 
 }

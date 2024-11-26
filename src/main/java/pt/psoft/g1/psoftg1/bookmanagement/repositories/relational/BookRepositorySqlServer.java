@@ -20,13 +20,13 @@ public interface BookRepositorySqlServer extends CrudRepository<BookEntity, Long
     Optional<BookEntity> findByIsbn(@Param("isbn") String isbn);
 
 
-    @Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO(b, COUNT(l)) " +
-            "FROM BookEntity b " +
-            "JOIN LendingEntity l ON l.book = b " +
-            "WHERE l.startDate > :oneYearAgo " +
-            "GROUP BY b " +
-            "ORDER BY COUNT(l) DESC")
-    Page<BookCountDTO> findTop5BooksLent(@Param("oneYearAgo") LocalDate oneYearAgo, Pageable pageable);
+    //@Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO(b, COUNT(l)) " +
+    //        "FROM BookEntity b " +
+    //        "JOIN LendingEntity l ON l.book = b " +
+    //        "WHERE l.startDate > :oneYearAgo " +
+    //        "GROUP BY b " +
+    //        "ORDER BY COUNT(l) DESC")
+    //Page<BookCountDTO> findTop5BooksLent(@Param("oneYearAgo") LocalDate oneYearAgo, Pageable pageable);
 
 
     @Query("SELECT b " +

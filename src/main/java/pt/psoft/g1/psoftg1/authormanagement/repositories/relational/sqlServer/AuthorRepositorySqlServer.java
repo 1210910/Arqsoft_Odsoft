@@ -1,11 +1,7 @@
 package pt.psoft.g1.psoftg1.authormanagement.repositories.relational.sqlServer;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import pt.psoft.g1.psoftg1.authormanagement.api.AuthorLendingView;
-import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
 
 import java.util.List;
@@ -17,13 +13,13 @@ public interface AuthorRepositorySqlServer extends CrudRepository<AuthorEntity, 
     Optional<AuthorEntity> findByAuthorNumber(String authorNumber);
 
 
-    @Query("SELECT new pt.psoft.g1.psoftg1.authormanagement.api.AuthorLendingView(a.name.name, COUNT(l.pk)) " +
-            "FROM BookEntity b " +
-            "JOIN b.authors a " +
-            "JOIN LendingEntity l ON l.book.pk = b.pk " +
-            "GROUP BY a.name " +
-            "ORDER BY COUNT(l) DESC")
-    Page<AuthorLendingView> findTopAuthorByLendings(Pageable pageable);
+    //@Query("SELECT new pt.psoft.g1.psoftg1.authormanagement.api.AuthorLendingView(a.name.name, COUNT(l.pk)) " +
+    //        "FROM BookEntity b " +
+    //        "JOIN b.authors a " +
+    //        "JOIN LendingEntity l ON l.book.pk = b.pk " +
+    //        "GROUP BY a.name " +
+    //        "ORDER BY COUNT(l) DESC")
+    //Page<AuthorLendingView> findTopAuthorByLendings(Pageable pageable);
 
     @Query("SELECT DISTINCT coAuthor FROM BookEntity b " +
             "JOIN b.authors coAuthor " +
