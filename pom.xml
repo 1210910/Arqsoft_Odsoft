@@ -146,9 +146,30 @@
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
 				<version>1.13.0</version>
+				<dependencies>
+					<!-- PIT JUnit 5 Plugin -->
+					<dependency>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-junit5-plugin</artifactId>
+						<version>1.1.0</version> <!-- Latest version as of this writing -->
+					</dependency>
+				</dependencies>
 				<configuration>
+					<targetClasses>
+						<param>pt.psoft.g1.psoftg1.authormanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.bookmanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.genremanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.lendingmanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.readermanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.shared.model.**</param>
+					</targetClasses>
 					<targetTests>
-						<param>test-classes.pt.psoft.g1.psoftg1.unitTests.**</param>
+						<param>pt.psoft.g1.psoftg1.unitTests.bookmanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.unitTests.authormanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.unitTests.genremanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.unitTests.lendingmanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.unitTests.readermanagement.model.**</param>
+						<param>pt.psoft.g1.psoftg1.unitTests.shared.model.**</param>
 					</targetTests>
 					<outputFormats>
 						<param>HTML</param>
