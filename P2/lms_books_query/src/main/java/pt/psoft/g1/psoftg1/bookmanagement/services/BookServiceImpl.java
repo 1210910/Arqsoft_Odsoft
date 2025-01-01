@@ -1,0 +1,343 @@
+package pt.psoft.g1.psoftg1.bookmanagement.services;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import pt.psoft.g1.psoftg1.authormanagement.model.Author;
+import pt.psoft.g1.psoftg1.authormanagement.publisher.AuthorEventPublisher;
+import pt.psoft.g1.psoftg1.authormanagement.repositories.AuthorRepository;
+import pt.psoft.g1.psoftg1.bookmanagement.api.BookViewAMQP;
+import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
+import pt.psoft.g1.psoftg1.bookmanagement.publishers.BookEventPublisher;
+import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
+import pt.psoft.g1.psoftg1.exceptions.ConflictException;
+import pt.psoft.g1.psoftg1.exceptions.NotFoundException;
+import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
+import pt.psoft.g1.psoftg1.genremanagement.publishers.GenreEventPublisher;
+import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
+import pt.psoft.g1.psoftg1.shared.repositories.PhotoRepository;
+import pt.psoft.g1.psoftg1.shared.services.Page;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@PropertySource({"classpath:config/library.properties"})
+public class BookServiceImpl implements BookService {
+
+	private final BookRepository bookRepository;
+	private final GenreRepository genreRepository;
+	private final AuthorRepository authorRepository;
+	private final PhotoRepository photoRepository;
+	@Value("${suggestionsLimitPerGenre}")
+	private long suggestionsLimitPerGenre;
+	private final BookEventPublisher bookEventsPublisher;
+	private final GenreEventPublisher genreEventPublisher;
+	private final AuthorEventPublisher authorEventPublisher;
+
+	@Override
+	public Book create(CreateBookRequest request, String isbn) {
+
+		final String title = request.getTitle();
+		final String description = request.getDescription();
+		final String photoURI = request.getPhotoURI();
+		final String genre = request.getGenre();
+		final List<String> authorIds = request.getAuthors();
+
+		Book savedBook = create(isbn, title, description, photoURI, genre, authorIds);
+
+		if(savedBook!=null) {
+			bookEventsPublisher.sendBookCreated(savedBook);
+		}
+
+		return savedBook;
+	}
+
+	@Override
+	public Book create(BookViewAMQP bookViewAMQP) {
+
+		final String isbn = bookViewAMQP.getIsbn();
+		final String description = bookViewAMQP.getDescription();
+		final String title = bookViewAMQP.getTitle();
+		final String photoURI = null;
+		final String genre = bookViewAMQP.getGenre();
+		final List<String> authorIds = bookViewAMQP.getAuthorIds();
+
+		System.out.println("Inside AMQP method, this is the genre: " + genre);
+
+		return create(isbn, title, description, photoURI, genre, authorIds);
+	}
+
+	@Override
+	public Book create(CreateFullProcessRequest request, String isbn) {
+		// Creating the genre for the new book
+		System.out.println("Creating book with full process");
+		System.out.println("Creating the Genre first");
+		Genre genreCreated = createGenre(request.getGenre());
+		System.out.println("Genre created");
+		System.out.println("Genre with the following properties: " + genreCreated.getGenre());
+		// Creating the author now
+		System.out.println("Creating the author now");
+		Author authorCreated = createAuthor(request.getName(), request.getBio(), request.getAuthorPhotoURI());
+		System.out.println("Author created");
+		System.out.println("Author with the following properties: " + authorCreated.getAuthorNumber() + " " +
+				authorCreated.getName() + " " + authorCreated.getBio());
+
+		// Creating the book now
+		System.out.println("Creating the book now");
+		Book bookCreated = create(isbn, request.getTitle(), request.getDescription(), request.getBookPhotoURI(),
+				genreCreated.getGenre(), List.of(authorCreated.getAuthorNumber()));
+
+		if(bookCreated != null) {
+			bookEventsPublisher.sendBookCreated(bookCreated);
+		}
+
+		return bookCreated;
+	}
+
+	private Genre createGenre(String genreName){
+
+		if(genreRepository.findByString(genreName).isPresent()){
+			throw new ConflictException("Genre with name " + genreName + " already exists");
+		}
+
+		Genre genre = new Genre(genreName);
+
+		Genre savedGenre = genreRepository.save(genre);
+		if (savedGenre != null) {
+			genreEventPublisher.sendGenreCreated(savedGenre);
+		}
+		return savedGenre;
+	}
+
+	private Author createAuthor(String name, String bio, String photoURI){
+
+		Author author = new Author(name, bio, photoURI, null);
+
+		Author savedAuthor = authorRepository.save(author);
+		if (savedAuthor != null) {
+			authorEventPublisher.sendAuthorCreated(savedAuthor);
+		}
+		return savedAuthor;
+	}
+
+	private Book create( String isbn,
+						 String title,
+						 String description,
+						 String photoURI,
+						 String genreName,
+						 List<String> authorIds) {
+
+		if (bookRepository.findByIsbn(isbn).isPresent()) {
+			throw new ConflictException("Book with ISBN " + isbn + " already exists");
+		}
+
+		List<Author> authors = getAuthors(authorIds);
+
+		final Genre genre = genreRepository.findByString(genreName)
+				.orElseThrow(() -> new NotFoundException("Genre not found"));
+
+		Book newBook = new Book(isbn, title, description, genre, authors, photoURI);
+
+		Book savedBook = bookRepository.save(newBook);
+
+		return savedBook;
+	}
+
+	private List<Author> getAuthors(List<String> authorNumbers) {
+
+		List<Author> authors = new ArrayList<>();
+		for (String authorNumber : authorNumbers) {
+
+			Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber);
+			if (temp.isEmpty()) {
+				continue;
+			}
+
+			Author author = temp.get();
+			authors.add(author);
+		}
+
+		return authors;
+	}
+
+
+	@Override
+	public Book update(UpdateBookRequest request, String currentVersion) {
+
+		var book = findByIsbn(request.getIsbn());
+
+		List<String> authorsId = request.getAuthors();
+
+		MultipartFile photo = request.getPhoto();
+		String photoURI = request.getPhotoURI();
+		if (photo == null && photoURI != null || photo != null && photoURI == null) {
+			photoURI = null;
+		}
+
+		String genreId = request.getGenre();
+		String title = request.getTitle();
+		String description = request.getDescription();
+
+		Book updatedBook = update( book, currentVersion, title, description, photoURI, genreId, authorsId);
+		if( updatedBook!=null ) {
+			bookEventsPublisher.sendBookUpdated(updatedBook, Long.parseLong(currentVersion));
+		}
+
+		return updatedBook;
+	}
+
+	@Override
+	public Book update(BookViewAMQP bookViewAMQP) {
+
+		final String version = bookViewAMQP.getVersion();
+		final String isbn = bookViewAMQP.getIsbn();
+		final String description = bookViewAMQP.getDescription();
+		final String title = bookViewAMQP.getTitle();
+		final String photoURI = null;
+		final String genre = bookViewAMQP.getGenre();
+		final List<String> authorIds = bookViewAMQP.getAuthorIds();
+
+		var book = findByIsbn(isbn);
+
+		Book bookUpdated = update(book, version, title, description, photoURI, genre, authorIds);
+
+		return bookUpdated;
+	}
+
+	private Book update( Book book,
+						 String currentVersion,
+						 String title,
+						 String description,
+						 String photoURI,
+						 String genreId,
+						 List<String> authorsId) {
+
+		Genre genreObj = null;
+		if (genreId != null) {
+			Optional<Genre> genre = genreRepository.findByString(genreId);
+			if (genre.isEmpty()) {
+				throw new NotFoundException("Genre not found");
+			}
+			genreObj = genre.get();
+		}
+
+		List<Author> authors = new ArrayList<>();
+		if (authorsId != null) {
+			for (String authorNumber : authorsId) {
+				Optional<Author> temp = authorRepository.findByAuthorNumber(authorNumber);
+				if (temp.isEmpty()) {
+					continue;
+				}
+				Author author = temp.get();
+				authors.add(author);
+			}
+		}
+		else
+			authors = null;
+
+		book.applyPatch(Long.parseLong(currentVersion), title, description, photoURI, genreObj, authors);
+
+		return bookRepository.save(book);
+	}
+	@Override
+	public Book save(Book book) {
+		return this.bookRepository.save(book);
+	}
+
+	@Override
+	public List<BookCountDTO> findTop5BooksLent(){
+		LocalDate oneYearAgo = LocalDate.now().minusYears(1);
+		Pageable pageableRules = PageRequest.of(0,5);
+		return this.bookRepository.findTop5BooksLent(oneYearAgo, pageableRules).getContent();
+	}
+
+	@Override
+	public Book removeBookPhoto(String isbn, long desiredVersion) {
+		Book book = this.findByIsbn(isbn);
+		String photoFile;
+		try {
+			photoFile = book.getPhoto().getPhotoFile();
+		}catch (NullPointerException e){
+			throw new NotFoundException("Book did not have a photo assigned to it.");
+		}
+
+		book.removePhoto(desiredVersion);
+		var updatedBook = bookRepository.save(book);
+		photoRepository.deleteByPhotoFile(photoFile);
+		return updatedBook;
+	}
+
+	@Override
+	public List<Book> findByGenre(String genre) {
+		return this.bookRepository.findByGenre(genre);
+	}
+
+	public List<Book> findByTitle(String title) {
+		return bookRepository.findByTitle(title);
+	}
+
+	@Override
+	public List<Book> findByAuthorName(String authorName) {
+		return bookRepository.findByAuthorName(authorName);
+	}
+
+	public Book findByIsbn(String isbn) {
+		return this.bookRepository.findByIsbn(isbn)
+				.orElseThrow(() -> new NotFoundException(Book.class, isbn));
+	}
+
+	public List<Book> getBooksSuggestionsForReader(String readerNumber) {
+		List<Book> books = new ArrayList<>();
+
+		//ReaderDetails readerDetails = readerRepository.findByReaderNumber(readerNumber)
+		//		.orElseThrow(() -> new NotFoundException("Reader not found with provided login"));
+	   	//
+		//List<Genre> interestList = readerDetails.getInterestList();
+		//
+		//if(interestList.isEmpty()) {
+		//	throw new NotFoundException("Reader has no interests");
+		//}
+		//
+		//for(Genre genre : interestList) {
+		//	List<Book> tempBooks = bookRepository.findByGenre(genre.toString());
+		//	if(tempBooks.isEmpty()) {
+		//		continue;
+		//	}
+		//
+		//	long genreBookCount = 0;
+		//
+        //    for (Book loopBook : tempBooks) {
+        //        if (genreBookCount >= suggestionsLimitPerGenre) {
+        //            break;
+        //        }
+		//
+        //        books.add(loopBook);
+		//		genreBookCount++;
+        //    }
+		//}
+
+		//books = recomendationAlgorithm.recommend(readerNumber);
+		//
+		//return books;
+		return null;
+	}
+
+	@Override
+	public List<Book> searchBooks(Page page, SearchBooksQuery query) {
+		if (page == null) {
+			page = new Page(1, 10);
+		}
+		if (query == null) {
+			query = new SearchBooksQuery("", "", "");
+		}
+		return bookRepository.searchBooks(page, query);
+	}
+}

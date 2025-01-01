@@ -1,0 +1,177 @@
+pipeline {
+    agent any
+
+    environment {
+        JENKINS_NODE_COOKIE = 'dontKillMe'
+        REPO_URL = 'https://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@github.com/1210910/Arqsoft_Odsoft.git'
+    }
+
+    stages {
+        stage('Set Maven Home') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        // Configuration for Unix/Linux/MacOS
+                        env.MAVEN_HOME = '/usr/share/maven/bin/'
+                    } else {
+                        // Configuration for Windows
+                        env.MAVEN_HOME = '"C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.3.1\\plugins\\maven\\lib\\maven3\\bin\\"'
+                    }
+                    echo "MAVEN_HOME is set to: ${env.MAVEN_HOME}" // Debugging line
+                }
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code...'
+                git branch: 'production', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                script {
+                    echo 'Cleaning workspace...'
+                    if (isUnix()) {
+                        sh "${env.MAVEN_HOME}mvn clean"
+                    } else {
+                        bat "${env.MAVEN_HOME}mvn clean"
+                    }
+                }
+            }
+        }
+
+        stage('Validate') {
+            steps {
+                script {
+                    echo 'Validating code...'
+                    if (isUnix()) {
+                        sh "${env.MAVEN_HOME}mvn validate"
+                    } else {
+                        bat "${env.MAVEN_HOME}mvn validate"
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    echo 'Building the project...'
+                    if (isUnix()) {
+                        sh "${env.MAVEN_HOME}mvn compile"
+                    } else {
+                        bat "${env.MAVEN_HOME}mvn compile"
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            stages {
+                stage('Unit Testing') {
+                    steps {
+                        script {
+                            echo 'Running Unit Tests...'
+                            if (isUnix()) {
+                                //sh "${env.MAVEN_HOME}mvn test -Dtest=pt.psoft.g1.psoftg1.unitTests.** -f pom.xml"
+                            } else {
+                                //bat "${env.MAVEN_HOME}mvn test -Dtest=pt.psoft.g1.psoftg1.unitTests.** -f pom.xml"
+                            }
+                        }
+                    }
+                }
+
+                stage('Mutation Testing') {
+                    steps {
+                        script {
+                            echo 'Running Mutation Tests...'
+                            if (isUnix()) {
+                            // Comando para executar testes de mutação no Unix
+                            //sh "${env.MAVEN_HOME}mvn org.pitest:pitest-maven:mutationCoverage -DgroupId=pt.psoft.g1.psoftg1.unitTests.** -DoutputFormats=CSV -f pom.xml"
+                            } else {
+                            // Comando para executar testes de mutação no Windows
+                            //bat "${env.MAVEN_HOME}mvn org.pitest:pitest-maven:mutationCoverage -DgroupId=pt.psoft.g1.psoftg1.unitTests.** -DoutputFormats=CSV -f pom.xml"
+                            }
+                        }
+                    }
+                }
+
+                stage('Integration Testing') {
+                    steps {
+                        script {
+                            echo 'Running Integration Tests...'
+                            if (isUnix()) {
+                                //sh "${env.MAVEN_HOME}mvn verify -Dtest.include='pt.psoft.g1.psoftg1.integrationTests.**' -f pom.xml"
+                            } else {
+                                //bat "${env.MAVEN_HOME}mvn verify -Dtest.include='pt.psoft.g1.psoftg1.integrationTests.**'  -f pom.xml"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Install') {
+            steps {
+                script {
+                    echo 'Building the final package...'
+                    if (isUnix()) {
+                        sh "${env.MAVEN_HOME}mvn install -DskipTests"
+                    } else {
+                        bat "${env.MAVEN_HOME}mvn install -Dmaven.test.skip=true"
+                    }
+                }
+            }
+        }
+
+        /*
+        stage('Deploy') {
+            steps {
+                script {
+
+                    echo 'Stopping existing application...'
+                    if (isUnix()) {
+                        sh 'pkill -f "psoft-g1-0.0.1-SNAPSHOT.jar" || true'
+                    } else {
+                       def exitCode = bat(script: '''
+                        for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8081') do taskkill /PID %%a /F
+                    ''', returnStatus: true)
+
+                    // Verifica o código de saída
+                    if (exitCode == 0) {
+                        echo "Processo encerrado com sucesso."
+                    } else {
+                        echo "Nenhum processo encontrado ou erro ao tentar matar o processo. Código de saída: ${exitCode}"
+                    }
+                    }
+
+                    echo 'Starting new application...'
+                    if (isUnix()) {
+                        sh 'nohup java -jar target/psoft-g1-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.profiles.active=firebase,sqlServer,bootstrap,recomendationAlgorithm1,hash > app.log 2>&1 &'
+                    } else {
+                        bat 'start /B java -jar target/psoft-g1-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.profiles.active=firebase,sqlServer,bootstrap,recomendationAlgorithm1,hash > app.log 2>&1'
+                    }
+                }
+            }
+        }
+        */
+
+    }
+
+    post {
+        always {
+            script{
+            echo 'Cleaning up the workspace...'
+
+            }
+        }
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
