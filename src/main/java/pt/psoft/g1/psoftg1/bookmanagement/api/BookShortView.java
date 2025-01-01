@@ -11,6 +11,7 @@ public class BookShortView {
     @NotNull
     private String title;
 
+
     @NotNull
     private String isbn;
 
