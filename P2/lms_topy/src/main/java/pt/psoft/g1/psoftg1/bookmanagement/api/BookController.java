@@ -52,7 +52,7 @@ public class BookController {
     private final BookViewMapper bookViewMapper;
 
     @Operation(summary = "Gets the top 5 books lent")
-    @GetMapping("top5")
+    @GetMapping("/top5")
     public ListResponse<BookCountView> getTop5BooksLent() {
         return new ListResponse<>(bookViewMapper.toBookCountView(bookService.findTop5BooksLent()));
     }
