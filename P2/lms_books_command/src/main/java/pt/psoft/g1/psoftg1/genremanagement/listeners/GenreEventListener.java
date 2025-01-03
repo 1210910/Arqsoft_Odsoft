@@ -18,7 +18,7 @@ public class GenreEventListener {
     private final GenreService genreService;
 
     @RabbitListener(queues = "#{genreCreatedQueue.name}")
-    public void receiveBookCreated(Message msg) {
+    public void receiveGenreCreated(Message msg) {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -41,7 +41,7 @@ public class GenreEventListener {
 
 
     @RabbitListener(queues = "#{genreDeletedQueue.name}")
-    public void receiveBookDeleted(String in) {
+    public void receiveGenreDeleted(String in) {
         System.out.println(" [x] Received Genre Deleted '" + in + "'");
     }
 }
