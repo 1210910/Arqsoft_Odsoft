@@ -23,7 +23,7 @@ public class RabbitMQConfig {
     // Definindo uma exchange
     @Bean
     public DirectExchange directExchange() {
-        return new DirectExchange("LMS.books");
+        return new DirectExchange("LMS.direct");
     }
 
     // Definindo filas para eventos de livros, autores e gÃªneros
@@ -35,7 +35,7 @@ public class RabbitMQConfig {
         }
 
         @Bean
-        public Queue autoDeleteQueue_Book_Created() {
+        public Queue bookCreatedQueue() {
             return new AnonymousQueue();
         }
 
@@ -146,7 +146,7 @@ public class RabbitMQConfig {
 
         @Bean
         public Binding bookCreatedBinding(DirectExchange direct,
-                                          @Qualifier("autoDeleteQueue_Book_Created") Queue autoDeleteQueue_Book_Created) {
+                                          @Qualifier("bookCreatedQueue") Queue autoDeleteQueue_Book_Created) {
             return BindingBuilder.bind(autoDeleteQueue_Book_Created)
                     .to(direct)
                     .with(BookEvents.BOOK_CREATED);
