@@ -4,6 +4,7 @@ import lombok.Generated;
 import lombok.Getter;
 
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +25,7 @@ public class Author extends EntityWithPhoto {
     @Getter
     private String genId;
 
+    @Setter
     private long version;
 
     private Name name;
@@ -49,7 +51,7 @@ public class Author extends EntityWithPhoto {
     }
 
     public void setGenId(String genId) {
-        if (this.genId == null) {
+        if (genId == null) {
             this.genId = idGeneratorFactory.getGenerator().generateId();
         }else {
             this.genId = genId;
