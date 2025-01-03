@@ -16,7 +16,7 @@ public class BookEventListener {
 
     private final BookService bookService;
 
-    @RabbitListener(queues = "#{autoDeleteQueue_Book_Created.name}")
+    @RabbitListener(queues = "#{bookCreatedQueue.name}")
     public void receiveBookCreated(Message msg) {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
