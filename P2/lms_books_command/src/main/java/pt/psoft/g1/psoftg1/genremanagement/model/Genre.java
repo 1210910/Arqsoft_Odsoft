@@ -3,6 +3,7 @@ package pt.psoft.g1.psoftg1.genremanagement.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 
 public class Genre {
@@ -14,7 +15,7 @@ public class Genre {
     @Getter
     String genre;
 
-    @Getter
+    @Setter
     private long version;
 
 
@@ -32,6 +33,10 @@ public class Genre {
         if(genre.length() > GENRE_MAX_LENGTH)
             throw new IllegalArgumentException("Genre has a maximum of 4096 characters");
         this.genre = genre;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     public String toString() {
