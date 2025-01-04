@@ -35,16 +35,10 @@ services:
       #      - "5432:5432"  # Default Postgres port for the first replica
       #      - "5433:5432"  # Postgres port for the second replica
       #      - "5434:5432"  # Postgres port for the third replica
-      - "5438-5440:5432"
+      - "5432-5440:5432"
     networks:
       - lms_network
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres && psql -U postgres -d ${POSTGRES_DB} -c '\\dt'" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+
 
   rabbitmq:
     image: rabbitmq:3-management

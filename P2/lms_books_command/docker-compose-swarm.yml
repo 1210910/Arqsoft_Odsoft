@@ -35,7 +35,6 @@ services:
 #      - "5433:5432"  # Postgres port for the second replica
 #      - "5434:5432"  # Postgres port for the third replica
       - "5438-5440:5432"
-
     networks:
       - lms_network
 
