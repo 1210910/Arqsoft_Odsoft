@@ -160,7 +160,7 @@ public class ReaderServiceImpl implements ReaderService {
         readerDetails.applyPatch(desiredVersion, request, photoURI, interestList);
 
         userRepo.save(readerDetails.getReader());
-        ReaderDetails saved = readerRepo.update(readerDetails);
+        ReaderDetails saved = readerRepo.save(readerDetails);
         if (saved != null) {
             readerEventPublisher.sendReaderUpdated(saved,saved.getVersion());
         }

@@ -104,9 +104,10 @@ public class Lending {
     }
 
     public void setGenId(String genId) {
-        if (this.genId == null) {
+        if (genId == null) {
             this.genId = idGeneratorFactory.getGenerator().generateId();
         }else {
+
             this.genId = genId;
         }
     }
@@ -231,6 +232,7 @@ public class Lending {
         lending.returnedDate = returnedDate;
         //System.out.println("Returned date: " + returnedDate);
         lending.setGenId(null);
+        //System.out.println("GenId: " + lending.genId);
         lending.setReaderValid(true);
         lending.setBookValid(true);
         lending.setLendingStatus("VALIDATED");

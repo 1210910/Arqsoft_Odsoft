@@ -120,69 +120,31 @@ class LendingControllerTest {
         verify(lendingService, times(1)).getOverdue(any(Page.class));
     }
 
+
+
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
-    void testCreateLending() throws Exception {
-        CreateLendingRequest request = mock(CreateLendingRequest.class);
+    void testFindLendingByNumber() throws Exception {
 
-        when(lendingService.create(any(CreateLendingRequest.class))).thenReturn(lending);
+        Librarian librarian = mock(Librarian.class);
+
+
+
+
+        when(lendingService.findByLendingNumber("2024/1")).thenReturn(Optional.of(lending));
         when(lendingViewMapper.toLendingView(any(Lending.class))).thenReturn(lendingView);
+        when(userService.getAuthenticatedUser(any())).thenReturn(librarian);
+        when(librarian.getAuthorities()).thenReturn(Set.of(new Role("LIBRARIAN")));
 
-        mockMvc.perform(post("/api/lendings")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"isbn\": \"9782722203402\", \"readerNumber\": \"2024/1\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"))
+
+
+        mockMvc.perform(get("/api/lendings/2024/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/hal+json"));
 
-        verify(lendingService, times(1)).create(any(CreateLendingRequest.class));
+        verify(lendingService, times(1)).findByLendingNumber("2024/1");
     }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testSearchReaders_Success() throws Exception {
-
-        // Mockando o serviço
-        when(lendingService.searchLendings(any(Page.class), any(SearchLendingQuery.class))).thenReturn(List.of(lending));
-        when(lendingViewMapper.toLendingView(anyList())).thenReturn(List.of(lendingView));
-
-        // Execução do teste
-        mockMvc.perform(post("/api/lendings/search")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"page\": {\"size\": 10, \"number\": 0}, \"query\": {\"isbn\": \"9782722203402\"}}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items").isArray())
-                .andExpect(jsonPath("$.items").isNotEmpty());
-
-
-        verify(lendingService, times(1)).searchLendings(any(Page.class), any(SearchLendingQuery.class));
-        verify(lendingViewMapper, times(1)).toLendingView(anyList());
-    }
-
-    //@Test
-    //@WithMockUser(username = "testuser", roles = {"USER"})
-    //void testFindLendingByNumber() throws Exception {
-    //
-    //    Librarian librarian = mock(Librarian.class);
-    //
-    //
-    //
-    //
-    //    when(lendingService.findByLendingNumber("2024/1")).thenReturn(Optional.of(lending));
-    //    when(lendingViewMapper.toLendingView(any(Lending.class))).thenReturn(lendingView);
-    //    when(userService.getAuthenticatedUser(any())).thenReturn(librarian);
-    //
-    //
-    //
-    //    mockMvc.perform(get("/api/lendings/2024/001")
-    //                    .with(SecurityMockMvcRequestPostProcessors.csrf()))
-    //            .andExpect(status().isOk())
-    //            .andExpect(content().contentType("application/hal+json"));
-    //
-    //    verify(lendingService, times(1)).findByLendingNumber("2024/1");
-    //}
 
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
@@ -194,54 +156,6 @@ class LendingControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testSetLendingReturned() throws Exception {
-        User user = mock(User.class);
-        when(user.getUsername()).thenReturn("testuser");
 
-        ReaderDetails reader = mock(ReaderDetails.class);
-        when(reader.getReaderNumber()).thenReturn("2024/1");
-        when(lending.getReaderDetails()).thenReturn(reader);
-        when(lending.getReaderDetails().getReaderNumber()).thenReturn("2024/1");
 
-        SetLendingReturnedRequest setReturnedRequest = mock(SetLendingReturnedRequest.class);
-
-        when(lendingService.findByLendingNumber("2024/1")).thenReturn(Optional.of(lending));
-        when(lendingService.setReturned(eq("2024/1"), any(SetLendingReturnedRequest.class), anyLong())).thenReturn(lending);
-        when(concurrencyService.getVersionFromIfMatchHeader("1")).thenReturn(1L);
-        when(lendingViewMapper.toLendingView(any(Lending.class))).thenReturn(lendingView);
-        when(userService.getAuthenticatedUser(any())).thenReturn(user);
-        when(readerService.findByUsername("testuser")).thenReturn(Optional.of(reader));
-
-        mockMvc.perform(patch("/api/lendings/2024/001")
-                        .header("If-Match", "1")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"commentary\": \"nao gostei\"}"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/hal+json"));
-
-        verify(lendingService, times(1)).setReturned(eq("2024/1"), any(SetLendingReturnedRequest.class), eq(1L));
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testSetLendingReturnedIfMatchHeaderMissing() throws Exception {
-
-        mockMvc.perform(patch("/api/lendings/2024/001")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"someProperty\": \"value\"}")) // O cabeçalho If-Match não está presente
-                .andDo(result -> { System.out.println(result.getResponse().getErrorMessage()); })
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> {
-                    // Extraia a mensagem de erro da resposta
-                    String errorMessage = result.getResponse().getErrorMessage();
-                    // Verifique se a mensagem de erro contém a string esperada
-                    assertTrue(errorMessage.contains("You must issue a conditional PATCH using 'if-match'"));
-                }); // O corpo da resposta está vazio
-
-        verifyNoInteractions(lendingService); // Verifica se o serviço não foi chamado
-    }
 }

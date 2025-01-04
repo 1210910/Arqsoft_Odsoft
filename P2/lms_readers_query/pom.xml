@@ -111,6 +111,19 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- pact -->
+
+		<dependency>
+			<groupId>au.com.dius.pact.provider</groupId>
+			<artifactId>junit5</artifactId>
+			<version>4.6.15</version> <!-- Use the latest version -->
+		</dependency>
+
+		<dependency>
+			<groupId>au.com.dius.pact.consumer</groupId>
+			<artifactId>junit5</artifactId>
+			<version>4.6.15</version> <!-- Use the latest version -->
+		</dependency>
 
 		<!-- Web client -->
 		<dependency>
@@ -163,6 +176,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>au.com.dius.pact.provider</groupId>
+				<artifactId>maven</artifactId>
+				<version>4.1.11</version>
 			</plugin>
 
 			<plugin>

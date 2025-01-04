@@ -115,6 +115,7 @@ public class LendingController {
                 final Integer seq) {
 
         String ln = year + "/" + seq;
+        System.out.println("Finding Lending: " + ln);
         final var lending = lendingService.findByLendingNumber(ln)
                 .orElseThrow(() -> new NotFoundException(Lending.class, ln));
 

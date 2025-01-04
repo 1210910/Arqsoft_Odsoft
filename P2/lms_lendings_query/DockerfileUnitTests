@@ -1,0 +1,20 @@
+# Usa a imagem do Maven com JDK
+FROM maven:3.8.8-eclipse-temurin-21-alpine
+
+# Define o diretório de trabalho no contêiner
+WORKDIR /app
+
+# Copia o código do projeto para dentro do contêiner
+COPY . /app
+
+# Expondo a porta 8080 (se necessário)
+EXPOSE 8080
+
+# Rodar os testes
+CMD ["mvn", "test", "-Dtest=pt.psoft.g1.psoftg1.unitTests.**", "-f", "pom.xml"]
+
+# Para rodar Mutation Testing
+# RUN mvn org.pitest:pitest-maven:mutationCoverage -DtargetTests=pt.psoft.g1.psoftg1.unitTests.**
+
+# Para rodar os testes de integração
+# RUN mvn verify -Dtest.include='pt.psoft.g1.psoftg1.integrationTests.**' -f pom.xml

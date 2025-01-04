@@ -1,9 +1,9 @@
 services:
   lmsreaders:
-    image: lmsreaders:latest
+    image: lmsreaderscommand:latest
     environment:
       - SPRING_PROFILES_ACTIVE=sqlServer,bootstrap,recomendationAlgorithm2,hash
-      - spring.datasource.url=jdbc:postgresql://lmsreaders_postgres${TASK_SLOT}:${POSTGRES_PORT:-5432}/postgres
+      - spring.datasource.url=jdbc:postgresql://lmsreaderscommand_postgres${TASK_SLOT}:${POSTGRES_PORT:-5432}/postgres
       - spring.datasource.username=postgres
       - spring.datasource.password=password
       - spring.datasource.driver-class-name=org.postgresql.Driver
