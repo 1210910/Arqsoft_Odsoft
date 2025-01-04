@@ -120,42 +120,42 @@ class ReaderServiceImplTest {
 
 
 
-   // @Test
-   // void testUpdateReader_Success() {
-   //     String id = "readerId";
-   //     UpdateReaderRequest request = mock(UpdateReaderRequest.class);
-   //     List<String> interestList = new ArrayList<>();
-   //     interestList.add("Fiction");
-   //     when(request.getUsername()).thenReturn("testuser");
-   //     when(request.getFullName()).thenReturn("Test User");
-   //     when(request.getInterestList()).thenReturn(interestList);
-   //     when(request.getPhoto()).thenReturn(null);
-   //     String photoURI = null;
-   //
-   //     Genre mockGenre = mock(Genre.class);
-   //     when(mockGenre.getGenre()).thenReturn("Fiction");
-   //
-   //     ReaderServiceImpl ReaderServiceSpy = spy(readerService);
-   //
-   //     Reader mockReader = mock(Reader.class);
-   //     ReaderDetails mockReaderDetails = mock(ReaderDetails.class);
-   //
-   //
-   //     when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.empty());
-   //     when(forbiddenNameRepository.findByForbiddenNameIsContained(any())).thenReturn(Collections.emptyList());
-   //     when(readerRepo.findByUserId(id)).thenReturn(Optional.of(mockReaderDetails));
-   //     when(mockReaderDetails.getReader()).thenReturn(mockReader);
-   //     when(readerRepo.getCountFromCurrentYear()).thenReturn(0);
-   //     when(readerRepo.save(any(ReaderDetails.class))).thenReturn(mockReaderDetails);
-   //     Optional<Genre> optionalGenre = Optional.of(mockGenre);
-   //     System.out.println("Optional Genre: " + optionalGenre);
-   //     when(genreRepository.findByName("Fiction")).thenReturn(Optional.of(mockGenre));
-   //
-   //     ReaderDetails result = readerService.update(id, request, 1L, photoURI);
-   //
-   //     assertNotNull(result);
-   //     verify(readerRepo).save(mockReaderDetails);
-   // }
+    @Test
+    void testUpdateReader_Success() {
+        String id = "readerId";
+        UpdateReaderRequest request = mock(UpdateReaderRequest.class);
+        List<String> interestList = new ArrayList<>();
+        interestList.add("Fiction");
+        when(request.getUsername()).thenReturn("testuser");
+        when(request.getFullName()).thenReturn("Test User");
+        when(request.getInterestList()).thenReturn(interestList);
+        when(request.getPhoto()).thenReturn(null);
+        String photoURI = null;
+
+        Genre mockGenre = mock(Genre.class);
+        when(mockGenre.getGenre()).thenReturn("Fiction");
+
+        ReaderServiceImpl ReaderServiceSpy = spy(readerService);
+
+        Reader mockReader = mock(Reader.class);
+        ReaderDetails mockReaderDetails = mock(ReaderDetails.class);
+
+
+        when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        when(forbiddenNameRepository.findByForbiddenNameIsContained(any())).thenReturn(Collections.emptyList());
+        when(readerRepo.findByUserId(id)).thenReturn(Optional.of(mockReaderDetails));
+        when(mockReaderDetails.getReader()).thenReturn(mockReader);
+        when(readerRepo.getCountFromCurrentYear()).thenReturn(0);
+        when(readerRepo.save(any(ReaderDetails.class))).thenReturn(mockReaderDetails);
+        Optional<Genre> optionalGenre = Optional.of(mockGenre);
+        System.out.println("Optional Genre: " + optionalGenre);
+        when(genreRepository.findByName("Fiction")).thenReturn(Optional.of(mockGenre));
+
+        ReaderDetails result = readerService.update(id, request, 1L, photoURI);
+
+        assertNotNull(result);
+        verify(readerRepo).save(mockReaderDetails);
+    }
 
     @Test
     void testUpdateReader_NotFound() {

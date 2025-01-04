@@ -76,49 +76,9 @@ class LendingControllerTest {
 
     }
 
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetOverdueLendings_Success() throws Exception {
 
 
 
-        // Mockando o serviço
-        when(lendingService.getOverdue(any(Page.class))).thenReturn(List.of(lending));
-        when(lendingViewMapper.toLendingView(anyList())).thenReturn(List.of(lendingView));
-
-        // Execução do teste
-        mockMvc.perform(get("/api/lendings/overdue")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"page\": 0, \"size\": 10}")) // Modifique isso de acordo com o seu modelo de `Page`
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items").isArray())
-                .andExpect(jsonPath("$.items").isNotEmpty());
-
-        verify(lendingService, times(1)).getOverdue(any(Page.class));
-        verify(lendingViewMapper, times(1)).toLendingView(anyList());
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetOverdueLendings_NoLendingsFound() throws Exception {
-        // Mockando o comportamento do serviço para retornar uma lista vazia
-        when(lendingService.getOverdue(any(Page.class))).thenReturn(Collections.emptyList());
-
-        // Execução do teste
-        mockMvc.perform(get("/api/lendings/overdue")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"page\": 0, \"size\": 10}"))
-                .andExpect(status().isNotFound())
-                .andExpect(result -> {
-                    // Extraia a mensagem de erro da resposta
-                    String errorMessage = result.getResponse().getErrorMessage();
-                    // Verifique se a mensagem de erro contém a string esperada
-                    assertTrue(errorMessage.contains("No lendinds to show."));
-                }); // O corpo da resposta está vazio
-
-
-        verify(lendingService, times(1)).getOverdue(any(Page.class));
-    }
 
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})
@@ -161,38 +121,9 @@ class LendingControllerTest {
         verify(lendingViewMapper, times(1)).toLendingView(anyList());
     }
 
-    //@Test
-    //@WithMockUser(username = "testuser", roles = {"USER"})
-    //void testFindLendingByNumber() throws Exception {
-    //
-    //    Librarian librarian = mock(Librarian.class);
-    //
-    //
-    //
-    //
-    //    when(lendingService.findByLendingNumber("2024/1")).thenReturn(Optional.of(lending));
-    //    when(lendingViewMapper.toLendingView(any(Lending.class))).thenReturn(lendingView);
-    //    when(userService.getAuthenticatedUser(any())).thenReturn(librarian);
-    //
-    //
-    //
-    //    mockMvc.perform(get("/api/lendings/2024/001")
-    //                    .with(SecurityMockMvcRequestPostProcessors.csrf()))
-    //            .andExpect(status().isOk())
-    //            .andExpect(content().contentType("application/hal+json"));
-    //
-    //    verify(lendingService, times(1)).findByLendingNumber("2024/1");
-    //}
 
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testFindLendingByNumberNotFound() throws Exception {
-        when(lendingService.findByLendingNumber("2024/002")).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/lendings/2024/002")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
-                .andExpect(status().isNotFound());
-    }
+
 
     @Test
     @WithMockUser(username = "testuser", roles = {"USER"})

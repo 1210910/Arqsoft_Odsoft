@@ -71,6 +71,7 @@ public class LendingEventPublisher {
             ObjectMapper objectMapper = new ObjectMapper();
 
             LendingViewAMQP lendingViewAMQP = lendingViewAMQPMapper.toLendingViewAMQP(lending);
+            System.out.println(lendingViewAMQP);
             lendingViewAMQP.setVersion(currentVersion.toString());
 
             String jsonString = objectMapper.writeValueAsString(lendingViewAMQP);

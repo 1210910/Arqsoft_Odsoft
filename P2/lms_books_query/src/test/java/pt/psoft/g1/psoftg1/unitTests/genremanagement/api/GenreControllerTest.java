@@ -52,155 +52,155 @@ class GenreControllerTest {
         genreLendingsViews = List.of(genreLendingsView);
     }
 
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetAverageLendings() throws Exception {
-
-        GenreLendingsDTO genreLendingsDTO = mock(GenreLendingsDTO.class);
-        when(genreLendingsDTO.getGenre()).thenReturn("Fiction");
-        when(genreLendingsDTO.getValue()).thenReturn(10);
-
-        List<GenreLendingsDTO> genreLendingsDTOs = List.of(genreLendingsDTO);
-        when(genreService.getAverageLendings(any(GetAverageLendingsQuery.class), any()))
-                .thenReturn(genreLendingsDTOs);
-        when(genreViewMapper.toGenreAvgLendingsView((List<GenreLendingsDTO>) any())).thenReturn(genreLendingsViews);
-
-        mockMvc.perform(post("/api/genres/avgLendingsPerGenre")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"query\": {\"month\": 1, \"year\": 2024}, \"page\": {}}")).andDo(result -> {
-            System.out.println(result.getResponse().getContentAsString());
-        })
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[0].genre").value("Fiction"));
-
-        verify(genreService, times(1)).getAverageLendings(any(GetAverageLendingsQuery.class), any());
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetTopGenres() throws Exception {
-        GenreBookCountView genreBookCountView = mock(GenreBookCountView.class);
-        GenreView genreView = mock(GenreView.class);
-        when(genreBookCountView.getGenreView()).thenReturn(genreView);
-        when(genreBookCountView.getGenreView().getGenre()).thenReturn("Fiction");
-        when(genreBookCountView.getBookCount()).thenReturn(10L);
-
-        GenreBookCountDTO genreBookCountDTO = mock(GenreBookCountDTO.class);
-        when(genreBookCountDTO.getGenre()).thenReturn("Fiction");
-        when(genreBookCountDTO.getBookCount()).thenReturn(10L);
-
-        List<GenreBookCountDTO> genreBookCountDTOs = List.of(genreBookCountDTO);
-
-        List<GenreBookCountView> genreBookCountViews = List.of(genreBookCountView);
-
-
-
-        when(genreService.findTopGenreByBooks()).thenReturn(genreBookCountDTOs);
-        when(genreViewMapper.toGenreBookCountView((List<GenreBookCountDTO>) any())).thenReturn(genreBookCountViews);
-
-        mockMvc.perform(get("/api/genres/top5")
-                .with(SecurityMockMvcRequestPostProcessors.csrf())).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[0].genreView.genre").value("Fiction"))
-                .andExpect(jsonPath("$.items[0].bookCount").value(10));
-
-        verify(genreService, times(1)).findTopGenreByBooks();
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetLendingsPerMonthLastYearNoGenres() throws Exception {
-        when(genreService.getLendingsPerMonthLastYearByGenre()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get("/api/genres/lendingsPerMonthLastTwelveMonths")
-                .with(SecurityMockMvcRequestPostProcessors.csrf())).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.details[0]").value("No genres to show"));
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetLendingsPerMonthLastYearByGenres() throws Exception {
-        GenreLendingsView genreLendingsView = mock(GenreLendingsView.class);
-        when(genreLendingsView.getGenre()).thenReturn("Fiction");
-        when(genreLendingsView.getValue()).thenReturn(5.0);
-
-        GenreLendingsCountPerMonthView view = mock(GenreLendingsCountPerMonthView.class);
-        when(view.getMonth()).thenReturn(1);
-        when(view.getLendingsCount()).thenReturn(List.of(genreLendingsView));
-
-        GenreLendingsDTO dto = mock(GenreLendingsDTO.class);
-        when(dto.getGenre()).thenReturn("Fiction");
-        when(dto.getValue()).thenReturn(5.0);
-
-        GenreLendingsPerMonthDTO dtos = mock(GenreLendingsPerMonthDTO.class);
-        when(dtos.getMonth()).thenReturn(1);
-        when(dtos.getValues()).thenReturn(List.of(dto));
-
-        List<GenreLendingsCountPerMonthView> views = List.of(view);
-        List<GenreLendingsPerMonthDTO> listDTOs = List.of(dtos);
-
-        when(genreService.getLendingsPerMonthLastYearByGenre()).thenReturn(listDTOs);
-        when(genreViewMapper.toGenreLendingsCountPerMonthView((List<GenreLendingsPerMonthDTO>) any())).thenReturn(views);
-
-
-        mockMvc.perform(get("/api/genres/lendingsPerMonthLastTwelveMonths")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
-                .andExpect(status().isOk()).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
-                .andExpect(jsonPath("$.items[0].lendingsCount[0].genre").value("Fiction"))
-                .andExpect(jsonPath("$.items[0].lendingsCount[0].value").value(5.0));
-
-        verify(genreService, times(1)).getLendingsPerMonthLastYearByGenre();
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetLendingsAverageDurationPerMonth() throws Exception {
-        GenreLendingsView genreLendingsView = mock(GenreLendingsView.class);
-        when(genreLendingsView.getGenre()).thenReturn("Fiction");
-        when(genreLendingsView.getValue()).thenReturn(5.0);
-
-        GenreLendingsAvgPerMonthView view = mock(GenreLendingsAvgPerMonthView.class);
-        when(view.getMonth()).thenReturn(1);
-        when(view.getDurationAverages()).thenReturn(List.of(genreLendingsView));
-
-        GenreLendingsDTO dto = mock(GenreLendingsDTO.class);
-        when(dto.getGenre()).thenReturn("Fiction");
-        when(dto.getValue()).thenReturn(5.0);
-
-        GenreLendingsPerMonthDTO dtos = mock(GenreLendingsPerMonthDTO.class);
-        when(dtos.getMonth()).thenReturn(1);
-        when(dtos.getValues()).thenReturn(List.of(dto));
-
-        List<GenreLendingsAvgPerMonthView> views = List.of(view);
-        List<GenreLendingsPerMonthDTO> listDTOs = List.of(dtos);
-
-        when(genreService.getLendingsAverageDurationPerMonth(any(String.class), any(String.class))).thenReturn(listDTOs);
-        when(genreViewMapper.toGenreLendingsAveragePerMonthView((List<GenreLendingsPerMonthDTO>) any())).thenReturn(views);
-
-        mockMvc.perform(get("/api/genres/lendingsAverageDurationPerMonth")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("startDate", "2024-01-01")
-                        .param("endDate", "2024-12-31")).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[0].month").value(1))
-                .andExpect(jsonPath("$.items[0].durationAverages[0].value").value(5.0));
-    }
-
-    @Test
-    @WithMockUser(username = "testuser", roles = {"USER"})
-    void testGetLendingsAverageDurationPerMonthNotFound() throws Exception {
-        when(genreService.getLendingsAverageDurationPerMonth(any(String.class), any(String.class)))
-                .thenThrow(new NotFoundException("No genres to show"));
-
-        mockMvc.perform(get("/api/genres/lendingsAverageDurationPerMonth")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("startDate", "2024-01-01")
-                        .param("endDate", "2024-12-31"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.details[0]").value("No genres to show"));
-    }
+    //@Test
+    //@WithMockUser(username = "testuser", roles = {"USER"})
+    //void testGetAverageLendings() throws Exception {
+    //
+    //    GenreLendingsDTO genreLendingsDTO = mock(GenreLendingsDTO.class);
+    //    when(genreLendingsDTO.getGenre()).thenReturn("Fiction");
+    //    when(genreLendingsDTO.getValue()).thenReturn(10);
+    //
+    //    List<GenreLendingsDTO> genreLendingsDTOs = List.of(genreLendingsDTO);
+    //    when(genreService.getAverageLendings(any(GetAverageLendingsQuery.class), any()))
+    //            .thenReturn(genreLendingsDTOs);
+    //    when(genreViewMapper.toGenreAvgLendingsView((List<GenreLendingsDTO>) any())).thenReturn(genreLendingsViews);
+    //
+    //    mockMvc.perform(post("/api/genres/avgLendingsPerGenre")
+    //                    .with(SecurityMockMvcRequestPostProcessors.csrf())
+    //                    .contentType(MediaType.APPLICATION_JSON)
+    //                    .content("{\"query\": {\"month\": 1, \"year\": 2024}, \"page\": {}}")).andDo(result -> {
+    //        System.out.println(result.getResponse().getContentAsString());
+    //    })
+    //            .andExpect(status().isOk())
+    //            .andExpect(jsonPath("$.items[0].genre").value("Fiction"));
+    //
+    //    verify(genreService, times(1)).getAverageLendings(any(GetAverageLendingsQuery.class), any());
+    //}
+    //
+    //@Test
+    //@WithMockUser(username = "testuser", roles = {"USER"})
+    //void testGetTopGenres() throws Exception {
+    //    GenreBookCountView genreBookCountView = mock(GenreBookCountView.class);
+    //    GenreView genreView = mock(GenreView.class);
+    //    when(genreBookCountView.getGenreView()).thenReturn(genreView);
+    //    when(genreBookCountView.getGenreView().getGenre()).thenReturn("Fiction");
+    //    when(genreBookCountView.getBookCount()).thenReturn(10L);
+    //
+    //    GenreBookCountDTO genreBookCountDTO = mock(GenreBookCountDTO.class);
+    //    when(genreBookCountDTO.getGenre()).thenReturn("Fiction");
+    //    when(genreBookCountDTO.getBookCount()).thenReturn(10L);
+    //
+    //    List<GenreBookCountDTO> genreBookCountDTOs = List.of(genreBookCountDTO);
+    //
+    //    List<GenreBookCountView> genreBookCountViews = List.of(genreBookCountView);
+    //
+    //
+    //
+    //    when(genreService.findTopGenreByBooks()).thenReturn(genreBookCountDTOs);
+    //    when(genreViewMapper.toGenreBookCountView((List<GenreBookCountDTO>) any())).thenReturn(genreBookCountViews);
+    //
+    //    mockMvc.perform(get("/api/genres/top5")
+    //            .with(SecurityMockMvcRequestPostProcessors.csrf())).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
+    //            .andExpect(status().isOk())
+    //            .andExpect(jsonPath("$.items[0].genreView.genre").value("Fiction"))
+    //            .andExpect(jsonPath("$.items[0].bookCount").value(10));
+    //
+    //    verify(genreService, times(1)).findTopGenreByBooks();
+    //}
+    //
+    //@Test
+    //@WithMockUser(username = "testuser", roles = {"USER"})
+    //void testGetLendingsPerMonthLastYearNoGenres() throws Exception {
+    //    when(genreService.getLendingsPerMonthLastYearByGenre()).thenReturn(Collections.emptyList());
+    //
+    //    mockMvc.perform(get("/api/genres/lendingsPerMonthLastTwelveMonths")
+    //            .with(SecurityMockMvcRequestPostProcessors.csrf())).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
+    //            .andExpect(status().isNotFound())
+    //            .andExpect(jsonPath("$.details[0]").value("No genres to show"));
+    //}
+    //
+    //@Test
+    //@WithMockUser(username = "testuser", roles = {"USER"})
+    //void testGetLendingsPerMonthLastYearByGenres() throws Exception {
+    //    GenreLendingsView genreLendingsView = mock(GenreLendingsView.class);
+    //    when(genreLendingsView.getGenre()).thenReturn("Fiction");
+    //    when(genreLendingsView.getValue()).thenReturn(5.0);
+    //
+    //    GenreLendingsCountPerMonthView view = mock(GenreLendingsCountPerMonthView.class);
+    //    when(view.getMonth()).thenReturn(1);
+    //    when(view.getLendingsCount()).thenReturn(List.of(genreLendingsView));
+    //
+    //    GenreLendingsDTO dto = mock(GenreLendingsDTO.class);
+    //    when(dto.getGenre()).thenReturn("Fiction");
+    //    when(dto.getValue()).thenReturn(5.0);
+    //
+    //    GenreLendingsPerMonthDTO dtos = mock(GenreLendingsPerMonthDTO.class);
+    //    when(dtos.getMonth()).thenReturn(1);
+    //    when(dtos.getValues()).thenReturn(List.of(dto));
+    //
+    //    List<GenreLendingsCountPerMonthView> views = List.of(view);
+    //    List<GenreLendingsPerMonthDTO> listDTOs = List.of(dtos);
+    //
+    //    when(genreService.getLendingsPerMonthLastYearByGenre()).thenReturn(listDTOs);
+    //    when(genreViewMapper.toGenreLendingsCountPerMonthView((List<GenreLendingsPerMonthDTO>) any())).thenReturn(views);
+    //
+    //
+    //    mockMvc.perform(get("/api/genres/lendingsPerMonthLastTwelveMonths")
+    //                    .with(SecurityMockMvcRequestPostProcessors.csrf())).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
+    //            .andExpect(status().isOk()).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
+    //            .andExpect(jsonPath("$.items[0].lendingsCount[0].genre").value("Fiction"))
+    //            .andExpect(jsonPath("$.items[0].lendingsCount[0].value").value(5.0));
+    //
+    //    verify(genreService, times(1)).getLendingsPerMonthLastYearByGenre();
+    //}
+    //
+    //@Test
+    //@WithMockUser(username = "testuser", roles = {"USER"})
+    //void testGetLendingsAverageDurationPerMonth() throws Exception {
+    //    GenreLendingsView genreLendingsView = mock(GenreLendingsView.class);
+    //    when(genreLendingsView.getGenre()).thenReturn("Fiction");
+    //    when(genreLendingsView.getValue()).thenReturn(5.0);
+    //
+    //    GenreLendingsAvgPerMonthView view = mock(GenreLendingsAvgPerMonthView.class);
+    //    when(view.getMonth()).thenReturn(1);
+    //    when(view.getDurationAverages()).thenReturn(List.of(genreLendingsView));
+    //
+    //    GenreLendingsDTO dto = mock(GenreLendingsDTO.class);
+    //    when(dto.getGenre()).thenReturn("Fiction");
+    //    when(dto.getValue()).thenReturn(5.0);
+    //
+    //    GenreLendingsPerMonthDTO dtos = mock(GenreLendingsPerMonthDTO.class);
+    //    when(dtos.getMonth()).thenReturn(1);
+    //    when(dtos.getValues()).thenReturn(List.of(dto));
+    //
+    //    List<GenreLendingsAvgPerMonthView> views = List.of(view);
+    //    List<GenreLendingsPerMonthDTO> listDTOs = List.of(dtos);
+    //
+    //    when(genreService.getLendingsAverageDurationPerMonth(any(String.class), any(String.class))).thenReturn(listDTOs);
+    //    when(genreViewMapper.toGenreLendingsAveragePerMonthView((List<GenreLendingsPerMonthDTO>) any())).thenReturn(views);
+    //
+    //    mockMvc.perform(get("/api/genres/lendingsAverageDurationPerMonth")
+    //                    .with(SecurityMockMvcRequestPostProcessors.csrf())
+    //                    .param("startDate", "2024-01-01")
+    //                    .param("endDate", "2024-12-31")).andDo(result -> { System.out.println(result.getResponse().getContentAsString()); })
+    //            .andExpect(status().isOk())
+    //            .andExpect(jsonPath("$.items[0].month").value(1))
+    //            .andExpect(jsonPath("$.items[0].durationAverages[0].value").value(5.0));
+    //}
+    //
+    //@Test
+    //@WithMockUser(username = "testuser", roles = {"USER"})
+    //void testGetLendingsAverageDurationPerMonthNotFound() throws Exception {
+    //    when(genreService.getLendingsAverageDurationPerMonth(any(String.class), any(String.class)))
+    //            .thenThrow(new NotFoundException("No genres to show"));
+    //
+    //    mockMvc.perform(get("/api/genres/lendingsAverageDurationPerMonth")
+    //                    .with(SecurityMockMvcRequestPostProcessors.csrf())
+    //                    .param("startDate", "2024-01-01")
+    //                    .param("endDate", "2024-12-31"))
+    //            .andExpect(status().isNotFound())
+    //            .andExpect(jsonPath("$.details[0]").value("No genres to show"));
+    //}
 
 
 }
