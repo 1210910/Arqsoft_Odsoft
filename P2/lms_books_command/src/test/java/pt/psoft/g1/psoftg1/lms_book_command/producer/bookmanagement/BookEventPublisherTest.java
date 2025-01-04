@@ -79,10 +79,20 @@ public class BookEventPublisherTest {
     public MessageAndMetadata bookCreated() throws JsonProcessingException {
         LOGGER.info("Invoking bookCreated provider method");
 
-        Author author = new Author("Pedro Miguel", "O melhor da cidade da Maia", null, "2");
+        Author author = new Author(
+                "Pedro Miguel",
+                "O melhor da cidade da Maia",
+                null,
+                "2");
         author.setAuthorNumber("3");
         Genre genre = new Genre("Informação");
-        Book book = new Book("1439549719859", "Lewis Hamilton - GOAT of F1", "The biography of the absolute best of Formula 1", genre, List.of(author), "2");
+        Book book = new Book(
+                "1439549719859",
+                "Lewis Hamilton - GOAT of F1",
+                "The biography of the absolute best of Formula 1",
+                genre,
+                List.of(author),
+                "2");
         book.setVersion(1L);
         bookEventPublisher.sendBookCreated(book);
         System.out.println("Book created event sent");
@@ -104,16 +114,27 @@ public class BookEventPublisherTest {
     public MessageAndMetadata bookUpdated() throws JsonProcessingException {
         LOGGER.info("Invoking bookUpdated provider method");
 
-        Author author = new Author("Pedro Miguel", "O melhor da cidade da Maia", null, "2");
+        Author author = new Author(
+                "Pedro Miguel",
+                "O melhor da cidade da Maia",
+                null,
+                "2");
         author.setAuthorNumber("3");
         Genre genre = new Genre("Informação");
-        Book book = new Book("1439549719859", "Lewis Hamilton - GOAT of F1", "The biography of the absolute best of Formula 1", genre, List.of(author), "2");
+        Book book = new Book(
+                "1439549719859",
+                "Lewis Hamilton - GOAT of F1",
+                "The biography of the absolute best of Formula 1",
+                genre,
+                List.of(author),
+                "2");
         book.setVersion(1L);
         bookEventPublisher.sendBookUpdated(book, 1L);
 
         BookViewAMQP bookViewAMQP = new BookViewAMQP();
         bookViewAMQP.setTitle(book.getTitle().toString());
-        bookViewAMQP.setAuthorIds(book.getAuthors().stream().map(Author::getAuthorNumber).collect(Collectors.toList()));
+        bookViewAMQP.setAuthorIds(book.getAuthors().stream().map(Author::getAuthorNumber).
+                collect(Collectors.toList()));
         bookViewAMQP.setIsbn(book.getIsbn());
         bookViewAMQP.setDescription(book.getDescription());
         bookViewAMQP.setGenre(book.getGenre().toString());
