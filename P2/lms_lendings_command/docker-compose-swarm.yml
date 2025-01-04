@@ -21,6 +21,7 @@ services:
       - lms_network
     depends_on:
       - postgres
+      - rabbitmq
 
   postgres:
     image: postgres:latest
