@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.services;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.services;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;

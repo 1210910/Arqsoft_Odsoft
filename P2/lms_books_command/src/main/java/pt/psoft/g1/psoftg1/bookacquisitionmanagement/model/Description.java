@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.model;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.model;
 
 import jakarta.annotation.Nullable;
 import pt.psoft.g1.psoftg1.shared.model.StringUtilsCustom;

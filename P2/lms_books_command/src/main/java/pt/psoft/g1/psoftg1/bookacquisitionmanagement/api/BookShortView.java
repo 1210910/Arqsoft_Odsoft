@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.api;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.api;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

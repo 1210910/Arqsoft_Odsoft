@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.repositories.relational;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories.relational;
 /*
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

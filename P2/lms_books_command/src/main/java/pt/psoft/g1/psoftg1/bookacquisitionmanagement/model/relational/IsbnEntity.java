@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.model.relational;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

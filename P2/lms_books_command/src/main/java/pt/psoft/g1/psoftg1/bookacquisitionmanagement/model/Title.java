@@ -1,25 +1,19 @@
-package pt.psoft.g1.psoftg1.bookacquisition.model.relational;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+
 import lombok.Getter;
 
-@Embeddable
-public class TitleEntity {
-    @Transient
+
+public class Title {
+
     private final int TITLE_MAX_LENGTH = 128;
-    @NotBlank(message = "Title cannot be blank")
-    @Size(min = 1, max = TITLE_MAX_LENGTH)
-    @Column(name="TITLE", length = TITLE_MAX_LENGTH)
+
     @Getter
     String title;
 
-    protected TitleEntity() {}
+    protected Title() {}
 
-    public TitleEntity(String title) {
+    public Title(String title) {
         setTitle(title);
     }
 
