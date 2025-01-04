@@ -66,5 +66,4 @@ volumes:
 
 networks:
   lms_network:
-    external: true
     driver: overlay
