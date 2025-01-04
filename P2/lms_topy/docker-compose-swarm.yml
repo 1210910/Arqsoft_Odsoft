@@ -21,6 +21,7 @@ services:
       - lms_network
     depends_on:
       - postgres
+      - rabbitmq
 
   postgres:
     image: postgres:latest
@@ -43,6 +44,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    deploy:
+      replicas: 1
+    ports:
+      - "5672:5672"        #	RabbitMQ	main	port
+      - "15672:15672"        #	RabbitMQ	management	UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - lms_network
 
 volumes:
   uploaded_files_volume_3:  # Retain only the used volume
