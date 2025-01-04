@@ -1,28 +1,22 @@
-package pt.psoft.g1.psoftg1.bookacquisition.services;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.AuthorRepository;
-import pt.psoft.g1.psoftg1.bookacquisition.api.BookAcquisitionViewAMQP;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.api.BookAcquisitionViewAMQP;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
 //import pt.psoft.g1.psoftg1.bookacquisition.publishers.BookEventPublisher;
-import pt.psoft.g1.psoftg1.bookacquisition.publishers.BookAcquisitionEventPublisher;
-import pt.psoft.g1.psoftg1.bookacquisition.repositories.BookAcquisitionRepository;
-import pt.psoft.g1.psoftg1.bookmanagement.api.BookViewAMQP;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.publishers.BookAcquisitionEventPublisher;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories.BookAcquisitionRepository;
 import pt.psoft.g1.psoftg1.exceptions.ConflictException;
 import pt.psoft.g1.psoftg1.exceptions.NotFoundException;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.GenreRepository;
 import pt.psoft.g1.psoftg1.shared.repositories.PhotoRepository;
-import pt.psoft.g1.psoftg1.shared.services.Page;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +84,7 @@ public class BookAcquisitionServiceImpl implements BookAcquisitionService {
                         List<String> authorIds) {
 
 		if (bookAcquisitionRepository.findByIsbn(isbn).isPresent()) {
-			throw new ConflictException("Book Acquisition with ISBN " + isbn + " already exists");
+			throw new ConflictException("Book Acquisition with acqId " + isbn + " already exists");
 		}
 
 		List<Author> authors = getAuthors(authorIds);
@@ -98,9 +92,9 @@ public class BookAcquisitionServiceImpl implements BookAcquisitionService {
 		final Genre genre = genreRepository.findByString(String.valueOf(genreName))
 				.orElseThrow(() -> new NotFoundException("Genre not found"));
 
-		BookAcquisition newBook = new BookAcquisition(isbn, title, description, genre, authors, photoURI);
+		BookAcquisition newBookAcquisition = new BookAcquisition(isbn, title, description, genre, authors, photoURI);
 
-		return bookAcquisitionRepository.save(newBook);
+		return bookAcquisitionRepository.save(newBookAcquisition);
 	}
 
 	private List<Author> getAuthors(List<String> authorNumbers) {
@@ -203,6 +197,11 @@ public class BookAcquisitionServiceImpl implements BookAcquisitionService {
 	@Override
 	public BookAcquisition save(BookAcquisition bookAcquisition) {
 		return this.bookAcquisitionRepository.save(bookAcquisition);
+	}
+
+	@Override
+	public BookAcquisition update(BookAcquisitionViewAMQP bookViewAMQP) {
+		return null;
 	}
 
 //	@Override

@@ -1,12 +1,12 @@
-package pt.psoft.g1.psoftg1.bookacquisition.repositories.mappers;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories.mappers;
 
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
-import pt.psoft.g1.psoftg1.bookacquisition.model.Title;
-import pt.psoft.g1.psoftg1.bookacquisition.model.relational.BookAcquisitionEntity;
-import pt.psoft.g1.psoftg1.bookacquisition.model.relational.TitleEntity;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.Title;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.BookAcquisitionEntity;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.TitleEntity;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.shared.model.Photo;

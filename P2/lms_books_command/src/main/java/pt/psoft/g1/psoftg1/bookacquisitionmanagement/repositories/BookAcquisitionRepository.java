@@ -1,7 +1,7 @@
-package pt.psoft.g1.psoftg1.bookacquisition.repositories;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories;
 
 import org.springframework.data.repository.query.Param;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
 
 import java.util.Optional;
 

@@ -1,12 +1,12 @@
-package pt.psoft.g1.psoftg1.bookacquisition.listeners;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.listeners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-import pt.psoft.g1.psoftg1.bookacquisition.api.BookAcquisitionViewAMQP;
-import pt.psoft.g1.psoftg1.bookacquisition.services.BookAcquisitionService;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.api.BookAcquisitionViewAMQP;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.services.BookAcquisitionService;
 
 import java.nio.charset.StandardCharsets;
 
@@ -47,7 +47,7 @@ public class BookAcquisitionEventListener {
 
             System.out.println(" [x] Received Book Acquisition Updated by AMQP: " + msg + ".");
             try {
-//                bookAcquisitionService.update(bookAcquisitionViewAMQP);
+                bookAcquisitionService.update(bookAcquisitionViewAMQP);
                 System.out.println(" [x] Book Acquisition updated from AMQP: " + msg + ".");
             } catch (Exception e) {
                 System.out.println(" [x] Book Acquisition does not exists or wrong version. Nothing stored.");

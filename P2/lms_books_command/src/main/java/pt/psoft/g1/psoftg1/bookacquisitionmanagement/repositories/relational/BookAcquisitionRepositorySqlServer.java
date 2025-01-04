@@ -1,23 +1,16 @@
-package pt.psoft.g1.psoftg1.bookacquisition.repositories.relational;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories.relational;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
-import pt.psoft.g1.psoftg1.bookmanagement.model.relational.BookEntity;
-import pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
-public interface BookAcquisitionRepositorySqlServer extends CrudRepository<pt.psoft.g1.psoftg1.bookacquisition.model.relational.BookAcquisitionEntity, Long> {
+public interface BookAcquisitionRepositorySqlServer extends CrudRepository<pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.BookAcquisitionEntity, Long> {
     @Query("SELECT ba " +
             "FROM BookAcquisitionEntity ba " +
             "WHERE ba.isbn.isbn = :isbn")
-    Optional<pt.psoft.g1.psoftg1.bookacquisition.model.relational.BookAcquisitionEntity> findByIsbn(@Param("isbn") String isbn);
+    Optional<pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.BookAcquisitionEntity> findByIsbn(@Param("isbn") String isbn);
 
 
     //@Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO(b, COUNT(l)) " +

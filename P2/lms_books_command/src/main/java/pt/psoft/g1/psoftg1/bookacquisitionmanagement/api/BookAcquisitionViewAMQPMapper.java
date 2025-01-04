@@ -1,9 +1,9 @@
-package pt.psoft.g1.psoftg1.bookacquisition.api;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.api;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
 import pt.psoft.g1.psoftg1.shared.api.MapperInterface;
 
 import java.util.List;

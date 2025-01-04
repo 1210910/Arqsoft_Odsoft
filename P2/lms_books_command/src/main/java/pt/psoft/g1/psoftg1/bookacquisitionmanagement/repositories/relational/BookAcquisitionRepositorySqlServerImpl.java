@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.repositories.relational;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories.relational;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pt.psoft.g1.psoftg1.authormanagement.model.relational.AuthorEntity;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.relational.sqlServer.AuthorRepositorySqlServer;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
-import pt.psoft.g1.psoftg1.bookacquisition.model.relational.BookAcquisitionEntity;
-import pt.psoft.g1.psoftg1.bookacquisition.repositories.BookAcquisitionRepository;
-import pt.psoft.g1.psoftg1.bookacquisition.repositories.mappers.BookAcquisitionEntityMapper;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.BookAcquisitionEntity;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories.BookAcquisitionRepository;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.repositories.mappers.BookAcquisitionEntityMapper;
 import pt.psoft.g1.psoftg1.genremanagement.model.relational.GenreEntity;
 import pt.psoft.g1.psoftg1.genremanagement.repositories.relational.GenreRepositorySqlServer;
 

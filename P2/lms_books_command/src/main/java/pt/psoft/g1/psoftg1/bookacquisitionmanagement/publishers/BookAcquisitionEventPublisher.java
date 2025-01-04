@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.publishers;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.publishers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -6,14 +6,10 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pt.psoft.g1.psoftg1.bookacquisition.api.BookAcquisitionViewAMQP;
-import pt.psoft.g1.psoftg1.bookacquisition.api.BookAcquisitionViewAMQPMapper;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
-import pt.psoft.g1.psoftg1.bookmanagement.api.BookViewAMQP;
-import pt.psoft.g1.psoftg1.bookmanagement.api.BookViewAMQPMapper;
-import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.api.BookAcquisitionViewAMQP;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.api.BookAcquisitionViewAMQPMapper;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
 import pt.psoft.g1.psoftg1.shared.model.BookAcquisitionEvents;
-import pt.psoft.g1.psoftg1.shared.model.BookEvents;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +38,7 @@ public class BookAcquisitionEventPublisher {
         sendBookAcquisitionEvent(bookAcquisition, currentVersion, BookAcquisitionEvents.BOOK_ACQUISITION_DELETED);
     }
 
-    public void sendBookAcquisitionEvent(BookAcquisition bookAcquisition, Long currentVersion, String bookEventType) {
+    public void sendBookAcquisitionEvent(BookAcquisition bookAcquisition, Long currentVersion, String bookAcquisitionEventType) {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -52,7 +48,7 @@ public class BookAcquisitionEventPublisher {
 
             String jsonString = objectMapper.writeValueAsString(bookAcquisitionViewAMQP);
 
-            this.template.convertAndSend(direct.getName(), bookEventType, jsonString);
+            this.template.convertAndSend(direct.getName(), bookAcquisitionEventType, jsonString);
 
             System.out.println(" [x] Sent '" + jsonString + "'");
         }

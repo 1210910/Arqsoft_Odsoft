@@ -1,11 +1,8 @@
-package pt.psoft.g1.psoftg1.bookacquisition.services;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.services;
 
 
-import pt.psoft.g1.psoftg1.bookacquisition.api.BookAcquisitionViewAMQP;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
-import pt.psoft.g1.psoftg1.shared.services.Page;
-
-import java.util.List;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.api.BookAcquisitionViewAMQP;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
 
 /**
  *
@@ -16,7 +13,7 @@ public interface BookAcquisitionService {
     BookAcquisition save(BookAcquisition bookAcquisition);
 //    BookAcquisition findByIsbn(String isbn);
 //    BookAcquisition update(UpdateBookRequest request, String currentVersion);
-//    BookAcquisition update(BookAcquisitionViewAMQP bookViewAMQP);
+    BookAcquisition update(BookAcquisitionViewAMQP bookViewAMQP);
 //    List<BookAcquisition> findByGenre(String genre);
 //    List<BookAcquisition> findByTitle(String title);
 //    List<BookAcquisition> findByAuthorName(String authorName);

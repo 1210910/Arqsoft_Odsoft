@@ -1,11 +1,11 @@
-package pt.psoft.g1.psoftg1.bookacquisition.api;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.api;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
 import pt.psoft.g1.psoftg1.bookmanagement.api.BookView;
 import pt.psoft.g1.psoftg1.shared.api.MapperInterface;
 

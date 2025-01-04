@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.bookacquisition.api;
+package pt.psoft.g1.psoftg1.bookacquisitionmanagement.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pt.psoft.g1.psoftg1.bookacquisition.model.BookAcquisition;
-import pt.psoft.g1.psoftg1.bookacquisition.services.BookAcquisitionService;
-import pt.psoft.g1.psoftg1.bookacquisition.services.CreateBookAcquisitionRequest;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.services.BookAcquisitionService;
+import pt.psoft.g1.psoftg1.bookacquisitionmanagement.services.CreateBookAcquisitionRequest;
 import pt.psoft.g1.psoftg1.shared.services.ConcurrencyService;
 import pt.psoft.g1.psoftg1.shared.services.FileStorageService;
 
