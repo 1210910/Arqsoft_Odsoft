@@ -38,26 +38,26 @@ services:
     networks:
       - lms_network
 
-  #rabbitmq:
-  #  image:	rabbitmq:3-management
-  #  container_name: rabbitmq
-  #  restart: unless-stopped
-  #  deploy:
-  #    replicas: 1
-  #  ports:
-  #    - "5672:5672"		#	RabbitMQ	main	port
-  #    - "15672:15672"		#	RabbitMQ	management	UI
-  #  environment:
-  #    RABBITMQ_DEFAULT_USER:	guest
-  #    RABBITMQ_DEFAULT_PASS:	guest
-  #  networks:
-  #    - lms_network
+  rabbitmq:
+    image:	rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    deploy:
+      replicas: 1
+    ports:
+      - "5672:5672"		#	RabbitMQ	main	port
+      - "15672:15672"		#	RabbitMQ	management	UI
+    environment:
+      RABBITMQ_DEFAULT_USER:	guest
+      RABBITMQ_DEFAULT_PASS:	guest
+    networks:
+      - lms_network
 
 networks:
   lms_network:
     name: lms_network
     driver: overlay
-    external: true
+    
 
 volumes:
   uploaded_files_volume_1:
