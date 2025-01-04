@@ -1,0 +1,113 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+autonumber
+
+skinparam participant {
+    BackgroundColor 65D2FB
+    BorderColor Black
+    ArrowColor Black
+}
+
+skinparam actor {
+    BackgroundColor 65D2FB
+    BorderColor Black
+    ArrowColor Black
+}
+
+participant "Controller" as CTRL <<component>>
+participant "Service" as SER <<component>>
+participant "Repository" as REPO <<component>>
+participant "Listener" as L <<component>>
+participant "Publisher" as P <<component>>
+participant "Mapper" as MAP <<component>>
+participant "Persistence" as PER <<component>>
+participant "Domain Model" as BA <<component>>
+
+?o->> CTRL : POST /acquisitions/{acqID}
+activate CTRL
+CTRL -> SER : create new Book Acquisition
+activate SER
+SER -> REPO : checks if the book acquisition already exists
+activate REPO
+REPO -> PER : findByAcqID
+activate PER
+alt Book Acquisition already exists
+PER --> REPO : BookAcquisitionEntity
+REPO -> MAP : to Domain
+activate MAP
+MAP -> MAP : BookAcquisitionEntity to BookAcquisition
+MAP --> REPO : BookAcquisition
+deactivate MAP
+REPO --> SER : throws ConflictException
+SER --> CTRL : throws ConflictException
+?o<<-- CTRL : Response status code - 409 Conflict
+else Book Acquisition does not exist
+PER --> REPO : did not find any BookAcquisition with the given acqID
+deactivate PER
+REPO --> SER : did not find any BookAcquisition with the given acqID
+deactivate REPO
+end
+SER -> REPO : findByGenre to check if the genre exists
+activate REPO
+REPO -> PER : findByString
+activate PER
+alt Genre does not exist
+PER --> REPO : throws NotFoundException
+REPO --> SER : throws NotFoundException
+SER --> CTRL : throws NotFoundException
+?o<<-- CTRL : Response status code - 404 Not Found
+else Genre exists
+PER --> REPO : GenreEntity
+deactivate PER
+REPO -> MAP : to Domain
+activate MAP
+MAP -> MAP : GenreEntity to Genre
+MAP --> REPO : Genre
+deactivate MAP
+REPO --> SER : Genre
+deactivate REPO
+end
+SER -> BA : new BookAcquisition
+activate BA
+BA -> BA : Creates a new BookAcquisition
+BA --> SER : BookAcquisition
+deactivate BA
+SER -> REPO : save the new BookAcquisition
+activate REPO
+REPO -> MAP : to Entity
+activate MAP
+MAP -> MAP : BookAcquisition to BookAcquisitionEntity
+MAP --> REPO : BookAcquisitionEntity
+deactivate MAP
+REPO -> PER : save BookAcquisitionEntity
+activate PER
+PER -> PER : saves BookAcquisitionEntity
+PER --> REPO : BookAcquisition
+deactivate PER
+REPO --> SER : BookAcquisition
+deactivate REPO
+note right of P : This is a Publisher that publishes the BookAcquisitionCreatedEvent\nto the RabbitMQ Queue passing the responsibility to the Listener to create the\nBook Acquisition via Message Broker
+SER -> P : Publishes a BookAcquisitionCreated Event
+activate P
+P -> MAP : BookAcquisition to BookAcquisitionViewAMQP
+activate MAP
+MAP -> MAP : BookAcquisition to BookAcquisitionViewAMQP
+MAP --> P : BookAcquisitionViewAMQP
+deactivate MAP
+P -> P : Sends the BookAcquisitionCreated Event via RabbitMQ
+P --> SER : BookAcquisitionCreated Event
+deactivate P
+SER --> CTRL : BookAcquisition
+deactivate SER
+CTRL -> MAP : to BookAcquisition View
+activate MAP
+MAP -> MAP : BookAcquisition to BookAcquisitionView
+MAP --> CTRL : BookAcquisitionView
+deactivate MAP
+?o<<-- CTRL : Response status code - 201 Created
+deactivate CTRL
+
+@enduml

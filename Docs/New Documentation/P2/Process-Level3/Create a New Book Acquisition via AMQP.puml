@@ -1,0 +1,97 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+autonumber
+
+skinparam participant {
+    BackgroundColor 65D2FB
+    BorderColor Black
+    ArrowColor Black
+}
+
+skinparam actor {
+    BackgroundColor 65D2FB
+    BorderColor Black
+    ArrowColor Black
+}
+
+participant "Listener" as L <<component>>
+participant "Service" as SER <<component>>
+participant "Repository" as REPO <<component>>
+participant "Mapper" as MAP <<component>>
+participant "Persistence" as PER <<component>>
+participant "Domain Model" as BA <<component>>
+
+?o->> L : Receives a BookAcquisitionCreatedEvent\nMessage on the Queue
+activate L
+L -> L : Reads and parses the information from\nthe message into a BookAcquisitionViewAMQP object
+L -> SER : create new BookAcquisition
+activate SER
+SER -> REPO : checks if the book acquisition already exists
+activate REPO
+REPO -> PER : findByAcqID
+activate PER
+alt Book Acquisition already exists
+PER --> REPO : BookAcquisitionEntity
+REPO -> MAP : to Domain
+activate MAP
+MAP -> MAP : BookAcquisitionEntity to BookAcquisition
+MAP --> REPO : BookAcquisition
+deactivate MAP
+REPO --> SER : throws ConflictException
+SER --> L : trows ConflictException
+?o<<-- L : throws Exception and prints\n"Book Acquisition already exists. No need to store it"
+else Book Acquisition does not exist
+PER --> REPO : did not find any BookAcquisition with the given acqID
+deactivate PER
+REPO --> SER : did not find any BookAcquisition with the given acqID
+deactivate REPO
+end
+SER -> REPO : findByGenre to check if the genre exists
+activate REPO
+REPO -> PER : findByString
+activate PER
+alt Genre does not exist
+PER --> REPO : throws NotFoundException
+REPO --> SER : throws NotFoundException
+SER --> L : throws NotFoundException
+?o<<-- L : throws NotFoundException and prints \nthe Error related to the Genre not found
+else Genre exists
+PER --> REPO : GenreEntity
+deactivate PER
+REPO -> MAP : to Domain
+activate MAP
+MAP -> MAP : GenreEntity to Genre
+MAP --> REPO : Genre
+deactivate MAP
+REPO --> SER : Genre
+deactivate REPO
+end
+SER -> BA : new BookAcquisition
+activate BA
+BA -> BA : Creates a new BookAcquisition
+BA --> SER : BookAcquisition
+deactivate BA
+SER -> REPO : save the new BookAcquisition
+activate REPO
+REPO -> MAP : to Entity
+activate MAP
+MAP -> MAP : BookAcquisition to BookAcquisitionEntity
+MAP --> REPO : BookAcquisitionEntity
+deactivate MAP
+REPO -> PER : save BookAcquisitionEntity
+activate PER
+PER -> PER : saves BookAcquisitionEntity
+PER --> REPO : BookAcquisition
+deactivate PER
+REPO --> SER : BookAcquisition
+deactivate REPO
+SER --> L : BookAcquisition
+deactivate SER
+?o<<-- L : Response status code - \nSuccess message printed on the microservice logs
+deactivate L
+
+
+@enduml
