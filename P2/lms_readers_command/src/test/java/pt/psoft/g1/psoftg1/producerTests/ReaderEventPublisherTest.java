@@ -24,7 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
-import pt.psoft.g1.psoftg1.readermanagement.api.ReaderViewAMQP;
+import pt.psoft.g1.psoftg1.readermanagement.api.*;
 import pt.psoft.g1.psoftg1.readermanagement.api.SagaCreationResponse;
 import pt.psoft.g1.psoftg1.readermanagement.model.ReaderDetails;
 import pt.psoft.g1.psoftg1.readermanagement.publishers.ReaderEventPublisher;
