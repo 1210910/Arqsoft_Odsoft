@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public abstract class BookAcquisitionViewAMQPMapper extends MapperInterface {
 
-    @Mapping(target = "isbn", source = "isbn")
+    @Mapping(target = "acqID", source = "acqID")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "title", source = "title")
     @Mapping(target = "genre", source = "genre")

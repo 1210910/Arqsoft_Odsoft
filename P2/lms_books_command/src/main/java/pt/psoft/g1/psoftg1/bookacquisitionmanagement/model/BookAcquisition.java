@@ -27,7 +27,7 @@ public class BookAcquisition extends EntityWithPhoto {
     private Long version;
 
     @Setter
-    private Isbn isbn;
+    private AcqID acqID;
 
     @Getter
     private Title title;
@@ -41,8 +41,8 @@ public class BookAcquisition extends EntityWithPhoto {
 
     private void setTitle(String title) {this.title = new Title(title);}
 
-    private void setIsbn(String isbn) {
-        this.isbn = new Isbn(isbn);
+    private void setAcqID(String acqID) {
+        this.acqID = new AcqID(acqID);
     }
 
 
@@ -54,9 +54,9 @@ public class BookAcquisition extends EntityWithPhoto {
 
     public String getDescription(){ return this.description.toString(); }
 
-    public BookAcquisition(String isbn, String title, String description, Genre genre, List<Author> authors, String photoURI) {
+    public BookAcquisition(String acqID, String title, String description, Genre genre, List<Author> authors, String photoURI) {
         setTitle(title);
-        setIsbn(isbn);
+        setAcqID(acqID);
         if(description != null)
             setDescription(description);
         if(genre==null)
@@ -119,7 +119,7 @@ public class BookAcquisition extends EntityWithPhoto {
         return this.genre;
     }
 
-    public String getIsbn(){
-        return this.isbn.toString();
+    public String getAcqID(){
+        return this.acqID.toString();
     }
 }

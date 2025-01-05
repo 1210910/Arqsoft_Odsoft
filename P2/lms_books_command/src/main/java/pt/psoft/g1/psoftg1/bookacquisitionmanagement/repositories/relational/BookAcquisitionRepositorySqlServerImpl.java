@@ -75,11 +75,11 @@ public class BookAcquisitionRepositorySqlServerImpl implements BookAcquisitionRe
 //    }
 //
     @Override
-    public Optional<BookAcquisition> findByIsbn(String isbn) {
-        if (bookAcquisitionRepositorySqlServer.findByIsbn(isbn).isEmpty()) {
+    public Optional<BookAcquisition> findByAcqID(String acqID) {
+        if (bookAcquisitionRepositorySqlServer.findByAcqID(acqID).isEmpty()) {
             return Optional.empty();
         }else{
-            BookAcquisitionEntity bookAcquisition = bookAcquisitionRepositorySqlServer.findByIsbn(isbn).get();
+            BookAcquisitionEntity bookAcquisition = bookAcquisitionRepositorySqlServer.findByAcqID(acqID).get();
 
             return Optional.of(bookAcquisitionEntityMapper.toModel(bookAcquisition)) ;
         }

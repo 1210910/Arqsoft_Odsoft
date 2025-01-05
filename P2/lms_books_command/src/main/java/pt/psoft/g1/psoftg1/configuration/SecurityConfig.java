@@ -138,7 +138,7 @@ public class SecurityConfig  {
                 .requestMatchers(HttpMethod.GET, "/api/readers/{year}/{seq}").hasRole(Role.LIBRARIAN)
                 //end readers
                 // acquisitions
-                .requestMatchers(HttpMethod.PUT, "/api/acquisitions/{isbn}").hasRole(Role.LIBRARIAN)
+                .requestMatchers(HttpMethod.PUT, "/api/acquisitions/{acqID}").hasRole(Role.LIBRARIAN)
                 //end acquisitions
                 //genres
                 .requestMatchers(HttpMethod.GET,"/api/genres/top5").hasRole(Role.LIBRARIAN)

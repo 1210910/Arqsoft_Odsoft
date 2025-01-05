@@ -25,9 +25,9 @@ public class BookAcquisitionController {
     private final BookAcquisitionViewMapper bookAcquisitionViewMapper;
 
     @Operation(summary = "Register a new Book Acquisition")
-    @PutMapping(value = "/{isbn}")
+    @PutMapping(value = "/{acqID}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<BookAcquisitionView> create(CreateBookAcquisitionRequest resource, @PathVariable("isbn") String isbn) {
+    public ResponseEntity<BookAcquisitionView> create(CreateBookAcquisitionRequest resource, @PathVariable("acqID") String isbn) {
 
         System.out.println("Entered on the Controller to create a new Book Acquisition");
 
@@ -55,8 +55,8 @@ public class BookAcquisitionController {
 
         // Construir o URI com base no `pk`
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
-                        .path("/{isbn}")
-                        .buildAndExpand(bookAcquisition.getIsbn())
+                        .path("/{acqID}")
+                        .buildAndExpand(bookAcquisition.getAcqID())
                         .toUri())
                 .body(bookAcquisitionViewMapper.toBookAcquisitionView(bookAcquisition));
     }

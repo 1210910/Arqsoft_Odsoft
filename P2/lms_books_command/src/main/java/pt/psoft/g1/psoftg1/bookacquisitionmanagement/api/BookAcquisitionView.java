@@ -29,7 +29,7 @@ public class BookAcquisitionView {
     private String description;
 
     @NotNull
-    private String isbn;
+    private String acqID;
 
     @Setter
     @Getter
