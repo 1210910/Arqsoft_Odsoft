@@ -59,7 +59,7 @@ public class BookAcquisitionEventListenerTest {
         body.array("authorIds")
                 .stringType("3")
                 .closeArray();
-        body.stringType("isbn", "1439549719859");
+        body.stringType("acqID", "1439549719859");
         body.stringType("description", "The biography of the absolute best of Formula 1");
         body.stringType("genre", "Informação");
         body.stringType("version", "1");
@@ -81,7 +81,7 @@ public class BookAcquisitionEventListenerTest {
         body.array("authorIds")
                 .stringType("3")
                 .closeArray();
-        body.stringType("isbn", "1439549719859");
+        body.stringType("acqID", "1439549719859");
         body.stringType("description", "The biography of the absolute best of Formula 1");
         body.stringType("genre", "Informação");
         body.stringType("version", "1");

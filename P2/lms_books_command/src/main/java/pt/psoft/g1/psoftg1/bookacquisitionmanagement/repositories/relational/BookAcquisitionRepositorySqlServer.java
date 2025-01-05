@@ -9,8 +9,8 @@ import java.util.Optional;
 public interface BookAcquisitionRepositorySqlServer extends CrudRepository<pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.BookAcquisitionEntity, Long> {
     @Query("SELECT ba " +
             "FROM BookAcquisitionEntity ba " +
-            "WHERE ba.isbn.isbn = :isbn")
-    Optional<pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.BookAcquisitionEntity> findByIsbn(@Param("isbn") String isbn);
+            "WHERE ba.acqIdEntity.acqID = :acqID")
+    Optional<pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.relational.BookAcquisitionEntity> findByAcqID(@Param("acqID") String isbn);
 
 
     //@Query("SELECT new pt.psoft.g1.psoftg1.bookmanagement.services.BookCountDTO(b, COUNT(l)) " +

@@ -15,7 +15,7 @@ public interface BookAcquisitionRepository {
 //    List<Book> findByGenre(@Param("genre") String genre);
 //    List<Book> findByTitle(@Param("title") String title);
 //    List<Book> findByAuthorName(@Param("authorName") String authorName);
-    Optional<BookAcquisition> findByIsbn(@Param("isbn") String isbn);
+    Optional<BookAcquisition> findByAcqID(@Param("acqID") String isbn);
 //    Page<BookCountDTO> findTop5BooksLent(@Param("oneYearAgo") LocalDate oneYearAgo, Pageable pageable);
 //    List<Book> findBooksByAuthorNumber(String authorNumber);
 //

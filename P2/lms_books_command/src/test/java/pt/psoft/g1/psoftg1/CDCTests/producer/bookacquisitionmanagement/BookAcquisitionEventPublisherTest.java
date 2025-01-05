@@ -97,7 +97,7 @@ public class BookAcquisitionEventPublisherTest {
         BookAcquisitionViewAMQP bookAcquisitionViewAMQP = new BookAcquisitionViewAMQP();
         bookAcquisitionViewAMQP.setTitle(bookAcquisition.getTitle().toString());
         bookAcquisitionViewAMQP.setAuthorIds(bookAcquisition.getAuthors().stream().map(Author::getAuthorNumber).collect(Collectors.toList()));
-        bookAcquisitionViewAMQP.setIsbn(bookAcquisition.getIsbn());
+        bookAcquisitionViewAMQP.setAcqID(bookAcquisition.getAcqID());
         bookAcquisitionViewAMQP.setDescription(bookAcquisition.getDescription());
         bookAcquisitionViewAMQP.setGenre(bookAcquisition.getGenre().toString());
         bookAcquisitionViewAMQP.setVersion(bookAcquisition.getVersion().toString());
@@ -133,7 +133,7 @@ public class BookAcquisitionEventPublisherTest {
         bookAcquisitionViewAMQP.setTitle(bookAcquisition.getTitle().toString());
         bookAcquisitionViewAMQP.setAuthorIds(bookAcquisition.getAuthors().stream().map(Author::getAuthorNumber).
                 collect(Collectors.toList()));
-        bookAcquisitionViewAMQP.setIsbn(bookAcquisition.getIsbn());
+        bookAcquisitionViewAMQP.setAcqID(bookAcquisition.getAcqID());
         bookAcquisitionViewAMQP.setDescription(bookAcquisition.getDescription());
         bookAcquisitionViewAMQP.setGenre(bookAcquisition.getGenre().toString());
         bookAcquisitionViewAMQP.setVersion(bookAcquisition.getVersion().toString());

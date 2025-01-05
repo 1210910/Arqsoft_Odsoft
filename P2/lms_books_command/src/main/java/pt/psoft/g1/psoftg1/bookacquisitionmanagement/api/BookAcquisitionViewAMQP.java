@@ -17,7 +17,7 @@ public class BookAcquisitionViewAMQP {
     private String title;
 
     @NotNull
-    private String isbn;
+    private String acqID;
 
     @NotNull
     private List<String> authorIds;

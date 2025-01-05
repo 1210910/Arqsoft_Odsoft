@@ -35,7 +35,7 @@ public class BookAcquisitionServiceImpl implements BookAcquisitionService {
 	private final BookAcquisitionEventPublisher bookAcquisitionEventPublisher;
 
 	@Override
-	public BookAcquisition create(CreateBookAcquisitionRequest request, String isbn) {
+	public BookAcquisition create(CreateBookAcquisitionRequest request, String acqID) {
 
 		System.out.println("Entered on the create method inside the service class");
 
@@ -45,7 +45,7 @@ public class BookAcquisitionServiceImpl implements BookAcquisitionService {
 		final String genre = request.getGenre();
 		final List<String> authorIds = request.getAuthors();
 
-		BookAcquisition savedBookAcquisition = create(isbn, title, description, photoURI, genre, authorIds);
+		BookAcquisition savedBookAcquisition = create(acqID, title, description, photoURI, genre, authorIds);
 
 		System.out.println("Saved book acquisition pk: " + savedBookAcquisition.getPk());
 
@@ -63,28 +63,28 @@ public class BookAcquisitionServiceImpl implements BookAcquisitionService {
 	@Override
 	public BookAcquisition create(BookAcquisitionViewAMQP bookAcquisitionViewAMQP) {
 
-		final String isbn = bookAcquisitionViewAMQP.getIsbn();
+		final String acqID = bookAcquisitionViewAMQP.getAcqID();
 		final String description = bookAcquisitionViewAMQP.getDescription();
 		final String title = bookAcquisitionViewAMQP.getTitle();
 		final String photoURI = null;
 		final String genre = bookAcquisitionViewAMQP.getGenre();
 		final List<String> authorIds = bookAcquisitionViewAMQP.getAuthorIds();
 
-		BookAcquisition bookAcquisition = create(isbn, title, description, photoURI, genre, authorIds);
+		BookAcquisition bookAcquisition = create(acqID, title, description, photoURI, genre, authorIds);
 
 		return bookAcquisition;
 	}
 
 	private BookAcquisition create(
-						String isbn,
+						String acqID,
 						String title,
                         String description,
                         String photoURI,
                         String genreName,
                         List<String> authorIds) {
 
-		if (bookAcquisitionRepository.findByIsbn(isbn).isPresent()) {
-			throw new ConflictException("Book Acquisition with acqId " + isbn + " already exists");
+		if (bookAcquisitionRepository.findByAcqID(acqID).isPresent()) {
+			throw new ConflictException("Book Acquisition with acqId " + acqID + " already exists");
 		}
 
 		List<Author> authors = getAuthors(authorIds);
@@ -92,7 +92,7 @@ public class BookAcquisitionServiceImpl implements BookAcquisitionService {
 		final Genre genre = genreRepository.findByString(String.valueOf(genreName))
 				.orElseThrow(() -> new NotFoundException("Genre not found"));
 
-		BookAcquisition newBookAcquisition = new BookAcquisition(isbn, title, description, genre, authors, photoURI);
+		BookAcquisition newBookAcquisition = new BookAcquisition(acqID, title, description, genre, authors, photoURI);
 
 		return bookAcquisitionRepository.save(newBookAcquisition);
 	}

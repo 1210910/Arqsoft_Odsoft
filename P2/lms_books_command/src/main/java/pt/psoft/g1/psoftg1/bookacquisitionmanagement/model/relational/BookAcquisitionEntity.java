@@ -24,7 +24,7 @@ public class BookAcquisitionEntity extends EntityWithPhoto {
     private Long version;
 
     @Embedded
-    IsbnEntity isbn;
+    AcqIdEntity acqIdEntity;
 
     @Getter
     @Embedded
@@ -47,8 +47,8 @@ public class BookAcquisitionEntity extends EntityWithPhoto {
 
     private void setDescription(String description) {this.description = new DescriptionEntity(description); }
 
-    private void setIsbn(String isbn) {
-        this.isbn = new IsbnEntity(isbn);
+    private void setAcqID(String acqID) {
+        this.acqIdEntity = new AcqIdEntity(acqID);
     }
 
     public void setGenre(GenreEntity genre) {this.genre = genre; }
@@ -57,9 +57,9 @@ public class BookAcquisitionEntity extends EntityWithPhoto {
 
     public String getDescription(){ return this.description.toString(); }
 
-    public BookAcquisitionEntity(String isbn, String title, String description, GenreEntity genre, List<AuthorEntity> authors, String photoURI) {
+    public BookAcquisitionEntity(String acqID, String title, String description, GenreEntity genre, List<AuthorEntity> authors, String photoURI) {
         setTitle(title);
-        setIsbn(isbn);
+        setAcqID(acqID);
         if(description != null)
             setDescription(description);
         if(genre==null)
@@ -78,7 +78,7 @@ public class BookAcquisitionEntity extends EntityWithPhoto {
         // got ORM only
     }
 
-    public String getIsbn(){
-        return this.isbn.toString();
+    public String getAcqID(){
+        return this.acqIdEntity.toString();
     }
 }
