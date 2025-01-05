@@ -129,6 +129,13 @@
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
+		<!-- PostgresSQL Driver -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version><!-- Use the latest version available -->
+		</dependency>
+
 		<!-- Firebase Auth -->
 		<dependency>
 			<groupId>com.google.firebase</groupId>
