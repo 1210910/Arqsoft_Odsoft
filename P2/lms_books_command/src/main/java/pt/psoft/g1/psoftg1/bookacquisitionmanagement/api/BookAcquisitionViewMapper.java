@@ -6,7 +6,6 @@ import org.mapstruct.Named;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.bookacquisitionmanagement.model.BookAcquisition;
-import pt.psoft.g1.psoftg1.bookmanagement.api.BookView;
 import pt.psoft.g1.psoftg1.shared.api.MapperInterface;
 
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public abstract class BookAcquisitionViewMapper extends MapperInterface {
     @Mapping(target = "pk", source = "pk")
-    @Mapping(target = "isbn", source = "isbn")
+    @Mapping(target = "acqID", source = "acqID")
     @Mapping(target = "genre", source = "genre")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "title", source = "title")
@@ -25,7 +24,7 @@ public abstract class BookAcquisitionViewMapper extends MapperInterface {
     @Mapping(target = "_links", expression = "java(mapLinks(book))")
     public abstract BookAcquisitionView toBookAcquisitionView(BookAcquisition book);
 
-    public abstract List<BookView> toBookAcquisitionView(List<BookAcquisition> bookList);
+    public abstract List<BookAcquisitionView> toBookAcquisitionView(List<BookAcquisition> bookList);
 
     protected List<String> mapAuthors(List<Author> authors) {
         return authors.stream()
@@ -37,7 +36,7 @@ public abstract class BookAcquisitionViewMapper extends MapperInterface {
     public Map<String, Object> mapLinks(final BookAcquisition bookAcquisition) {
         String bookAcquisitionUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/acquisitions/")
-                .path(bookAcquisition.getIsbn())
+                .path(bookAcquisition.getAcqID())
                 .toUriString();
 
         Map<String, Object> links = new HashMap<>();
