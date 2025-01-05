@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lms_book_command.consumer.bookacquisitionmanagement;
+package pt.psoft.g1.psoftg1.CDCTests.consumer.bookacquisitionmanagement;
 
 import au.com.dius.pact.consumer.MessagePactBuilder;
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
@@ -112,7 +112,8 @@ public class BookAcquisitionEventListenerTest {
         verify(bookAcquisitionService, times(1)).create(any(BookAcquisitionViewAMQP.class));
     }
 
-    // Teste do evento "Book Updated"
+    // Teste do evento "Book Acquisition Updated"
+
     @Test
     @PactTestFor(pactMethod = "createBookAcquisitionUpdatedPact")
     void testBookUpdated(List<V4Interaction.AsynchronousMessage> messages) throws Exception {
@@ -128,4 +129,6 @@ public class BookAcquisitionEventListenerTest {
 
         verify(bookAcquisitionService, times(1)).update(any(BookAcquisitionViewAMQP.class));
     }
+
+
 }

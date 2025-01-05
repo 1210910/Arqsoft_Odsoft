@@ -1,0 +1,4 @@
+Label,# Samples,Average,Median,90% Line,95% Line,99% Line,Min,Max,Error %,Throughput,Received KB/sec,Sent KB/sec
+Thread Group:Set reader_auth_token from Authentication thread,100000,0,0,1,1,1,0,769,0.000%,252.07839,0.00,0.00
+Thread Group:GET books by ISBN,100000,3,3,4,4,5,0,48,1.578%,252.56735,382.90,243.23
+TOTAL,200000,1,1,4,4,5,0,769,0.789%,504.15169,382.15,242.75

@@ -1,0 +1,4 @@
+Label,# Samples,Average,Median,90% Line,95% Line,99% Line,Min,Max,Error %,Throughput,Received KB/sec,Sent KB/sec
+Thread Group:Set reader_auth_token from Authentication thread,50000,0,0,1,1,1,0,10,0.000%,19.94349,0.00,0.00
+Thread Group:GET Lendings by LendingNumber,50000,249,252,262,264,277,203,490,0.000%,19.94144,17.99,19.40
+TOTAL,100000,125,10,258,262,270,0,490,0.000%,39.88273,17.99,19.40
