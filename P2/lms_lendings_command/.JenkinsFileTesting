@@ -26,7 +26,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
-                git branch: 'production', url: "${REPO_URL}"
+                git branch: 'testing', url: "${REPO_URL}"
 
             }
         }
@@ -181,11 +181,11 @@ stage('Test') {
                     dir('P2/lms_lendings_command'){
                     if (isUnix()){
                         sh """
-                    docker build -t lmslendingscommand:latest .
+                    docker build -t lmslendingscommand:testing .
                     """
                     } else{
                         bat """
-                    docker build -f Dockerfile -t lmslendingscommand:latest .
+                    docker build -f Dockerfile -t lmslendingscommand:testing .
                     """
                     }
                     }
@@ -202,8 +202,8 @@ stage('Test') {
                     dir('P2/lms_lendings_command'){
                     if (isUnix()) {
                         // Nome do serviço Docker e da imagem
-                        def serviceName = 'lmslendingscommand_lmslendings'
-                        def newImageTag = 'lmslendingscommand:latest'
+                        def serviceName = 'lmslendingscommandtesting_lmslendings'
+                        def newImageTag = 'lmslendingscommand:testing'
 
                         // Verifica se o serviço já existe
                         def serviceExists = sh(
@@ -240,7 +240,7 @@ stage('Test') {
 
                             // Cria um novo serviço
                             sh """
-                            docker stack deploy -c docker-compose-swarm.yml lmslendingscommand
+                            docker stack deploy -c docker-compose-swarm-testing.yml lmslendingscommandtesting
                             """
 
                             echo 'New service created successfully.'
@@ -249,8 +249,8 @@ stage('Test') {
                             echo 'Deploying using Docker Swarm (Windows)...'
 
                         // Nome do serviço Docker e da imagem
-                            def serviceName = 'lmslendingscommand_lmslendings'
-                            def newImageTag = 'lmslendingscommand:latest'
+                            def serviceName = 'lmslendingscommandtesting_lmslendings'
+                            def newImageTag = 'lmslendingscommand:testing'
 
                         // Verifica se o serviço já existe
                             def serviceExists = bat(
@@ -289,7 +289,7 @@ stage('Test') {
 
                             // Cria um novo serviço usando Docker Stack
                             bat """
-                            docker stack deploy -c docker-compose-swarm.yml lmslendingscommand
+                            docker stack deploy -c docker-compose-swarm-testing.yml lmslendingscommandtesting
                             """
 
                             echo 'New service created successfully.'

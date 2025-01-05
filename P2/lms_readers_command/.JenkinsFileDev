@@ -26,7 +26,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
-                git branch: 'production', url: "${REPO_URL}"
+                git branch: 'dev', url: "${REPO_URL}"
 
             }
         }
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     echo 'Cleaning workspace...'
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()) {
                         sh "${env.MAVEN_HOME}mvn clean"
                     } else {
@@ -50,7 +50,7 @@ pipeline {
             steps {
                 script {
                     echo 'Validating code...'
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()) {
                         sh "${env.MAVEN_HOME}mvn validate"
                     } else {
@@ -65,7 +65,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building the project...'
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()) {
                         sh "${env.MAVEN_HOME}mvn compile"
                     } else {
@@ -83,7 +83,7 @@ stage('Test') {
                 script {
                     echo 'Building Docker image...'
             // Construa a imagem Docker a partir do Dockerfile
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                         if (isUnix()){
                         sh 'docker build -f DockerfileUnitTests -t my-maven-tests .'
                         }else{
@@ -99,7 +99,7 @@ stage('Test') {
                 script {
                     echo 'Running Unit Tests...'
                     // Executa o comando CMD configurado no Dockerfile (testes unitários)
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()){
                          sh 'docker run --rm my-maven-tests'
                     }else{
@@ -115,7 +115,7 @@ stage('Test') {
                 script {
                     echo 'Running Unit Tests...'
                     // Executa o comando CMD configurado no Dockerfile (testes unitários)
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()){
                          sh 'docker run --rm -e TEST_TYPE=CDCTests my-maven-tests'
                     }else{
@@ -130,7 +130,7 @@ stage('Test') {
             steps {
                 script {
                     echo 'Running Mutation Tests...'
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()){
                          sh 'docker run --rm -e TEST_TYPE=mutation my-maven-tests'
                     }else{
@@ -142,28 +142,13 @@ stage('Test') {
             }
         }
 
-        stage('Integration Testing') {
-            steps {
-                script {
-                    echo 'Running Integration Tests...'
-                    dir('P2/lms_lendings_command'){
-                    if (isUnix()){
-                        sh 'docker run --rm -e TEST_TYPE=integration my-maven-tests'
-                    }else{
-                        bat 'docker run --rm -e TEST_TYPE=integration my-maven-tests'
-                    }
-                    // Construir a imagem Docker e rodar os testes de integração
-                    }
-                }
-            }
-        }
     }
 }
        stage('Install') {
             steps {
                 script {
                     echo 'Building the final package...'
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()) {
                         sh "${env.MAVEN_HOME}mvn package -DskipTests"
                     } else {
@@ -178,14 +163,14 @@ stage('Test') {
             steps {
                 script {
                     echo 'Building Docker image before deployment...'
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()){
                         sh """
-                    docker build -t lmslendingscommand:latest .
+                    docker build -t lmsreaderscommand:dev .
                     """
                     } else{
                         bat """
-                    docker build -f Dockerfile -t lmslendingscommand:latest .
+                    docker build -f Dockerfile -t lmsreaderscommand:dev .
                     """
                     }
                     }
@@ -199,11 +184,11 @@ stage('Test') {
                 script {
 
                     echo 'Deploying using Docker Swarm...'
-                    dir('P2/lms_lendings_command'){
+                    dir('P2/lms_readers_command'){
                     if (isUnix()) {
                         // Nome do serviço Docker e da imagem
-                        def serviceName = 'lmslendingscommand_lmslendings'
-                        def newImageTag = 'lmslendingscommand:latest'
+                        def serviceName = 'lmsreaderscommanddev_lmsreaders'
+                        def newImageTag = 'lmsreaderscommand:dev'
 
                         // Verifica se o serviço já existe
                         def serviceExists = sh(
@@ -240,7 +225,7 @@ stage('Test') {
 
                             // Cria um novo serviço
                             sh """
-                            docker stack deploy -c docker-compose-swarm.yml lmslendingscommand
+                            docker stack deploy -c docker-compose-swarm-dev.yml lmsreaderscommanddev
                             """
 
                             echo 'New service created successfully.'
@@ -249,8 +234,8 @@ stage('Test') {
                             echo 'Deploying using Docker Swarm (Windows)...'
 
                         // Nome do serviço Docker e da imagem
-                            def serviceName = 'lmslendingscommand_lmslendings'
-                            def newImageTag = 'lmslendingscommand:latest'
+                            def serviceName = 'lmsreaderscommanddev_lmsreaders'
+                            def newImageTag = 'lmsreaderscommand:dev'
 
                         // Verifica se o serviço já existe
                             def serviceExists = bat(
@@ -289,7 +274,7 @@ stage('Test') {
 
                             // Cria um novo serviço usando Docker Stack
                             bat """
-                            docker stack deploy -c docker-compose-swarm.yml lmslendingscommand
+                            docker stack deploy -c docker-compose-swarm-dev.yml lmsreaderscommanddev
                             """
 
                             echo 'New service created successfully.'
@@ -307,7 +292,7 @@ stage('Notify User') {
             // Enviar e-mail de notificação
             mail(
                 to: 'DarkSceth@gmail.com',
-                subject: "Review Lending Command Deployment #${env.BUILD_NUMBER}",
+                subject: "Review Reader Command Deployment #${env.BUILD_NUMBER}",
                 body: """
                     <p>Dear User,</p>
                     <p>The deployment is ready for review at: <a href="${env.JENKINS_URL}job/${env.JOB_NAME}/${env.BUILD_NUMBER}/">this link</a>.</p>
