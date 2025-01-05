@@ -26,7 +26,7 @@ participant "Mapper" as MAP <<component>>
 participant "Persistence" as PER <<component>>
 participant "Domain Model" as BA <<component>>
 
-?o->> CTRL : POST /acquisitions/{acqID}
+?o->> CTRL : PUT /acquisitions/{acqID}
 activate CTRL
 CTRL -> SER : create new Book Acquisition
 activate SER
