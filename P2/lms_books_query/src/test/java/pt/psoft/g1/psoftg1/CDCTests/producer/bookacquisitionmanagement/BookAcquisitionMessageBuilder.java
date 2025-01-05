@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lms_book_command.producer.bookacquisitionmanagement;
+package pt.psoft.g1.psoftg1.CDCTests.producer.bookacquisitionmanagement;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

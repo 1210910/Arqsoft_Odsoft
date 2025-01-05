@@ -1,4 +1,4 @@
-package pt.psoft.g1.psoftg1.lms_book_command.producer.bookacquisitionmanagement;
+package pt.psoft.g1.psoftg1.CDCTests.producer.bookacquisitionmanagement;
 
 import au.com.dius.pact.core.model.Interaction;
 import au.com.dius.pact.core.model.Pact;
@@ -28,8 +28,7 @@ import pt.psoft.g1.psoftg1.bookacquisitionmanagement.publishers.BookAcquisitionE
 import pt.psoft.g1.psoftg1.bookmanagement.api.BookViewAMQP;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
-import pt.psoft.g1.psoftg1.lms_book_command.producer.bookmanagement.BookEventPublisherTest;
-import pt.psoft.g1.psoftg1.lms_book_command.producer.bookmanagement.BookMessageBuilder;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +96,7 @@ public class BookAcquisitionEventPublisherTest {
         BookAcquisitionViewAMQP bookAcquisitionViewAMQP = new BookAcquisitionViewAMQP();
         bookAcquisitionViewAMQP.setTitle(bookAcquisition.getTitle().toString());
         bookAcquisitionViewAMQP.setAuthorIds(bookAcquisition.getAuthors().stream().map(Author::getAuthorNumber).collect(Collectors.toList()));
-        bookAcquisitionViewAMQP.setIsbn(bookAcquisition.getIsbn());
+        bookAcquisitionViewAMQP.setAcqID(bookAcquisition.getAcqID());
         bookAcquisitionViewAMQP.setDescription(bookAcquisition.getDescription());
         bookAcquisitionViewAMQP.setGenre(bookAcquisition.getGenre().toString());
         bookAcquisitionViewAMQP.setVersion(bookAcquisition.getVersion().toString());
@@ -133,7 +132,7 @@ public class BookAcquisitionEventPublisherTest {
         bookAcquisitionViewAMQP.setTitle(bookAcquisition.getTitle().toString());
         bookAcquisitionViewAMQP.setAuthorIds(bookAcquisition.getAuthors().stream().map(Author::getAuthorNumber).
                 collect(Collectors.toList()));
-        bookAcquisitionViewAMQP.setIsbn(bookAcquisition.getIsbn());
+        bookAcquisitionViewAMQP.setAcqID(bookAcquisition.getAcqID());
         bookAcquisitionViewAMQP.setDescription(bookAcquisition.getDescription());
         bookAcquisitionViewAMQP.setGenre(bookAcquisition.getGenre().toString());
         bookAcquisitionViewAMQP.setVersion(bookAcquisition.getVersion().toString());
